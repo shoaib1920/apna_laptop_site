@@ -49,7 +49,7 @@ export const MessagesView: React.FC<MessagesViewProps> = ({
       </div>
 
       {messages.length === 0 ? (
-        <div className="bg-surface-container-lowest rounded-3xl p-12 text-center border border-outline-variant space-y-3">
+        <div className="bg-surface-container-lowest rounded-lg p-12 text-center border border-outline-variant space-y-3">
           <MessageSquare className="w-12 h-12 text-outline mx-auto" />
           <h3 className="font-bold text-on-surface text-sm">No active message threads</h3>
           <p className="text-xs text-on-surface-variant">
@@ -57,7 +57,7 @@ export const MessagesView: React.FC<MessagesViewProps> = ({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-surface-container-lowest rounded-3xl border border-outline-variant shadow-sm overflow-hidden min-h-[500px]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-surface-container-lowest rounded-lg border border-outline-variant shadow-sm overflow-hidden min-h-[500px]">
           {/* Threads List (4 cols) */}
           <div className="md:col-span-4 border-r border-outline-variant p-4 space-y-2 bg-surface-container-low/50">
             <h3 className="font-bold text-on-surface text-xs px-2 mb-2">Conversations</h3>
@@ -69,7 +69,7 @@ export const MessagesView: React.FC<MessagesViewProps> = ({
                 <button
                   key={lid}
                   onClick={() => setActiveListingId(lid)}
-                  className={`w-full text-left p-3 rounded-2xl transition-all ${
+                  className={`w-full text-left p-3 rounded transition-all ${
                     isSelected ? 'bg-surface-container-lowest shadow-md border border-outline-variant' : 'hover:bg-surface-container'
                   }`}
                 >
@@ -115,7 +115,7 @@ export const MessagesView: React.FC<MessagesViewProps> = ({
                 return (
                   <div key={m.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                     <div
-                      className={`max-w-md p-3.5 rounded-2xl text-xs space-y-1 shadow-sm ${
+                      className={`max-w-md p-3.5 rounded text-xs space-y-1 shadow-sm ${
                         isMe
                           ? 'bg-whatsapp text-white rounded-br-none'
                           : 'bg-surface-container-low text-on-surface rounded-bl-none'

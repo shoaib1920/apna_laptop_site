@@ -97,7 +97,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header Banner */}
-      <div className="bg-primary-container text-on-primary rounded-3xl p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-primary-container text-on-primary rounded-lg p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
@@ -129,7 +129,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
       {/* Form & Result Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Form Inputs (7 cols) */}
-        <div className="lg:col-span-7 bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
+        <div className="lg:col-span-7 bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
           <div className="border-b border-outline-variant pb-3">
             <h2 className="text-base font-extrabold text-on-surface font-display">
               1. Laptop Specifications & Identity
@@ -340,7 +340,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
         {/* Output Valuation Card (5 cols) */}
         <div className="lg:col-span-5 space-y-6 sticky top-24">
           {/* Main Price Card */}
-          <div className="bg-primary text-on-primary rounded-3xl p-6 border border-whatsapp/30 shadow-2xl space-y-5">
+          <div className="bg-primary text-on-primary rounded-lg p-6 border border-whatsapp/30 shadow-2xl space-y-5">
             <div className="flex items-center justify-between border-b border-on-primary/10 pb-3">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-whatsapp" />
@@ -365,7 +365,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
             </div>
 
             {/* Spec summary capsule */}
-            <div className="bg-on-primary/5 p-3 rounded-2xl border border-on-primary/10 text-xs text-on-primary-container text-center">
+            <div className="bg-on-primary/5 p-3 rounded border border-on-primary/10 text-xs text-on-primary-container text-center">
               <span className="font-bold text-on-primary block">{valuationResult.specsSummary}</span>
               <span className="text-[11px] text-on-primary-container">
                 Market Demand: <strong className="text-whatsapp">{valuationResult.marketDemandTier}</strong> in Pakistani IT hubs
@@ -405,7 +405,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
               <button
                 id="list-on-apna-laptop-btn"
                 onClick={handleListOnMarketplace}
-                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] shadow-lg shadow-whatsapp/20"
+                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] shadow-sm"
               >
                 <PlusCircle className="w-4 h-4 text-white" />
                 <span>{romanUrduMode ? 'Apna Laptop Par Free List Karein (Pre-filled)' : 'List it Now on Apna Laptop (Auto-fills)'}</span>
@@ -417,7 +417,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
                 href={generateWhatsAppValuationLink(valuationResult, inputs)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-transparent hover:bg-whatsapp/10 text-whatsapp font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 transition-colors border border-whatsapp/50"
+                className="w-full bg-transparent hover:bg-whatsapp/10 text-whatsapp font-bold py-3 rounded text-xs flex items-center justify-center gap-2 transition-colors border border-whatsapp/50"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>{romanUrduMode ? 'Humein Direct Bechein (WhatsApp Offer)' : 'Sell Directly to Us on WhatsApp'}</span>

@@ -79,10 +79,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setRomanUrduMode(!romanUrduMode)}
-              className="flex items-center gap-1 bg-primary-container hover:opacity-90 px-2.5 py-0.5 rounded text-xs text-whatsapp transition-colors"
+              className="flex items-center gap-1.5 bg-primary-container hover:opacity-90 px-2.5 py-0.5 rounded text-xs text-whatsapp transition-colors"
               title="Toggle Roman Urdu Trust Mode"
             >
-              <span>{romanUrduMode ? '🟢 Roman Urdu ON' : '⚪ English Base'}</span>
+              <span className={`w-1.5 h-1.5 rounded-full ${romanUrduMode ? 'bg-whatsapp' : 'bg-white/40'}`} />
+              <span>{romanUrduMode ? 'Roman Urdu ON' : 'English Base'}</span>
             </button>
             <a
               href="https://wa.me/923001234567"

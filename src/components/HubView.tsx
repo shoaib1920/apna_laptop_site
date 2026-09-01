@@ -115,7 +115,7 @@ export const HubView: React.FC<HubViewProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Header & Slogan */}
-      <div className="bg-gradient-to-r from-primary-container to-primary text-on-primary rounded-3xl p-6 sm:p-8 border border-primary shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-primary-container to-primary text-on-primary rounded-lg p-6 sm:p-8 border border-primary shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
@@ -136,7 +136,7 @@ export const HubView: React.FC<HubViewProps> = ({
         </div>
 
         {/* Quick Quiz CTA */}
-        <div className="bg-primary/80 p-4 rounded-2xl border border-primary/80 flex items-center gap-3">
+        <div className="bg-primary/80 p-4 rounded border border-primary/80 flex items-center gap-3">
           <div>
             <p className="text-xs font-bold text-on-primary">Confused about specs?</p>
             <p className="text-[11px] text-on-primary-container">Take our 1-min Finder Quiz</p>
@@ -153,7 +153,7 @@ export const HubView: React.FC<HubViewProps> = ({
       {/* Main Layout: Filters Sidebar + Products Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         {/* Desktop Filter Sidebar */}
-        <aside className="hidden lg:block bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant shadow-sm space-y-6 sticky top-24">
+        <aside className="hidden lg:block bg-surface-container-lowest rounded p-5 border border-outline-variant shadow-sm space-y-6 sticky top-24">
           <div className="flex items-center justify-between border-b border-outline-variant pb-3">
             <h3 className="font-bold text-on-surface text-sm flex items-center gap-2">
               <Filter className="w-4 h-4 text-whatsapp-dark" />
@@ -289,7 +289,7 @@ export const HubView: React.FC<HubViewProps> = ({
         {/* Products Grid & Sorting */}
         <div className="lg:col-span-3 space-y-4">
           {/* Top Bar: Total Count & Sort By */}
-          <div className="bg-surface-container-lowest p-3.5 rounded-2xl border border-outline-variant flex items-center justify-between flex-wrap gap-3">
+          <div className="bg-surface-container-lowest p-3.5 rounded border border-outline-variant flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant">
               <span>Showing <strong>{filteredListings.length}</strong> Verified Laptops</span>
               {globalSearchQuery && (
@@ -332,7 +332,7 @@ export const HubView: React.FC<HubViewProps> = ({
 
           {/* Mobile Filter Sheet */}
           {mobileFilterOpen && (
-            <div className="lg:hidden bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant shadow-md space-y-4">
+            <div className="lg:hidden bg-surface-container-lowest p-4 rounded border border-outline-variant shadow-md space-y-4">
               <div className="flex justify-between items-center pb-2 border-b border-outline-variant">
                 <span className="font-bold text-xs text-on-surface">Filter Products</span>
                 <button onClick={() => setMobileFilterOpen(false)} className="text-xs text-on-surface-variant">

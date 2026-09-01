@@ -108,7 +108,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
         {/* Left Column: Photos & Details */}
         <div className="lg:col-span-7 space-y-6">
           {/* Main Photo */}
-          <div className="aspect-4/3 rounded-3xl overflow-hidden bg-surface-container-highest border border-outline-variant relative shadow-md">
+          <div className="aspect-4/3 rounded-lg overflow-hidden bg-surface-container-highest border border-outline-variant relative shadow-md">
             <img
               src={listing.images[activeImageIndex] || listing.images[0]}
               alt={listing.title}
@@ -143,7 +143,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
           )}
 
           {/* Detailed Seller Description */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant shadow-sm space-y-4">
+          <div className="bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-4">
             <h2 className="text-base font-extrabold text-on-surface font-display">
               Seller Description & Condition Notes
             </h2>
@@ -174,7 +174,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
           </div>
 
           {/* Specifications Table */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant shadow-sm space-y-4">
+          <div className="bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-4">
             <h2 className="text-base font-extrabold text-on-surface font-display flex items-center gap-2">
               <Layers className="w-4 h-4 text-whatsapp-dark" />
               <span>Hardware Specifications</span>
@@ -212,7 +212,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
         {/* Right Column: Seller Profile & Actions */}
         <div className="lg:col-span-5 space-y-6">
           {/* Price & Title Card */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant shadow-sm space-y-4">
+          <div className="bg-surface-container-lowest rounded-lg p-6 border border-outline-variant shadow-sm space-y-4">
             <div>
               <span className="text-xs text-outline block">Asking Price</span>
               <span className="text-2xl sm:text-3xl font-extrabold text-on-surface font-display">
@@ -233,7 +233,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                 href={getP2PWhatsAppLink(listing, currentUser?.name)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-whatsapp/20 transition-all hover:scale-[1.01]"
+                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3 px-4 rounded flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.01]"
               >
                 <MessageCircle className="w-5 h-5" />
                 <span>{romanUrduMode ? 'Seller Se WhatsApp Par Baat Karein' : 'Chat on WhatsApp with Seller'}</span>
@@ -241,7 +241,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
 
               <button
                 onClick={() => setShowInAppChat(!showInAppChat)}
-                className="w-full bg-surface-container hover:bg-surface-container-high text-on-surface font-bold py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 transition-colors"
+                className="w-full bg-surface-container hover:bg-surface-container-high text-on-surface font-bold py-2.5 rounded text-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <Send className="w-3.5 h-3.5 text-on-surface-variant" />
                 <span>Send In-App Message (Backup)</span>
@@ -250,7 +250,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
 
             {/* In-app chat drawer */}
             {showInAppChat && (
-              <div className="bg-surface-container-low p-4 rounded-2xl border border-outline-variant space-y-3">
+              <div className="bg-surface-container-low p-4 rounded border border-outline-variant space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-xs text-on-surface">Message {listing.seller_name}</span>
                   <button onClick={() => setShowInAppChat(false)} className="text-xs text-outline">✕</button>
@@ -284,9 +284,9 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
           </div>
 
           {/* Seller Profile Card */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant shadow-sm space-y-4">
+          <div className="bg-surface-container-lowest rounded-lg p-6 border border-outline-variant shadow-sm space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-surface-container-low text-on-surface flex items-center justify-center font-bold text-lg">
+              <div className="w-12 h-12 rounded bg-surface-container-low text-on-surface flex items-center justify-center font-bold text-lg">
                 {listing.seller_name[0]}
               </div>
               <div>
@@ -323,7 +323,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
           </div>
 
           {/* Optional "Get it Verified by Apna Laptop" Feature Promotion */}
-          <div className="bg-primary-container/5 rounded-3xl p-5 border border-outline-variant text-xs space-y-2">
+          <div className="bg-primary-container/5 rounded-lg p-5 border border-outline-variant text-xs space-y-2">
             <div className="flex items-center gap-1.5 text-on-surface font-bold">
               <Sparkles className="w-4 h-4 text-whatsapp-dark" />
               <span>Want Physical Verification?</span>

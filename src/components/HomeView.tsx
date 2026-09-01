@@ -56,11 +56,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="space-y-12 pb-12">
       {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary-container via-primary-container to-primary text-on-primary pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-primary">
-        {/* Background decorative glow */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-whatsapp/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-80 h-80 bg-whatsapp/10 rounded-full blur-3xl pointer-events-none" />
-
+      <section className="relative overflow-hidden bg-primary-container text-on-primary pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-primary">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Content */}
@@ -101,7 +97,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </p>
 
               {/* Quick Search in Hero */}
-              <div className="max-w-xl mx-auto lg:mx-0 bg-primary/90 p-2 rounded-2xl border border-primary-container shadow-xl flex flex-col sm:flex-row gap-2">
+              <div className="max-w-xl mx-auto lg:mx-0 bg-primary/90 p-2 rounded border border-primary-container shadow-xl flex flex-col sm:flex-row gap-2">
                 <div className="relative flex-1">
                   <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-on-primary-container" />
                   <input
@@ -118,7 +114,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <button
                   id="hero-search-btn"
                   onClick={() => navigateTo('hub')}
-                  className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold px-6 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-whatsapp/30"
+                  className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold px-6 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
                 >
                   <Search className="w-4 h-4" />
                   <span>Search Hub</span>
@@ -174,16 +170,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             {/* Right Card / Visual Showcase */}
             <div className="lg:col-span-5 relative">
-              <div className="bg-primary/80 rounded-3xl p-5 border border-primary-container/80 shadow-2xl backdrop-blur-sm relative space-y-4">
+              <div className="bg-primary/80 rounded-lg p-5 border border-primary-container/80 shadow-lg backdrop-blur-sm relative space-y-4">
                 <div className="flex items-center justify-between border-b border-primary-container pb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
-                    <span className="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
-                    <span className="w-3 h-3 rounded-full bg-whatsapp inline-block"></span>
-                    <span className="text-xs font-bold text-on-primary-container ml-1">Live Market Pulse</span>
-                  </div>
-                  <span className="text-[11px] bg-whatsapp/15 text-whatsapp px-2 py-0.5 rounded-full border border-whatsapp/30">
-                    🟢 Hafeez Centre Lot Active
+                  <span className="text-xs font-bold text-on-primary-container">This Week's Featured Lot</span>
+                  <span className="flex items-center gap-1.5 text-[11px] bg-whatsapp/15 text-whatsapp px-2 py-0.5 rounded-full border border-whatsapp/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-whatsapp animate-pulse"></span>
+                    Hafeez Centre Lot Active
                   </span>
                 </div>
 
@@ -191,7 +183,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {hubListings[0] && (
                   <div
                     onClick={() => navigateTo('hub_detail', { hubId: hubListings[0].id })}
-                    className="group cursor-pointer bg-primary/90 rounded-2xl p-4 border border-primary-container/60 hover:border-whatsapp/50 transition-all space-y-3"
+                    className="group cursor-pointer bg-primary/90 rounded p-4 border border-primary-container/60 hover:border-whatsapp/50 transition-all space-y-3"
                   >
                     <div className="relative h-44 rounded-xl overflow-hidden bg-primary">
                       <img
@@ -230,7 +222,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {/* Quick valuation teaser */}
                 <div
                   onClick={() => navigateTo('calculator')}
-                  className="cursor-pointer bg-gradient-to-r from-whatsapp/10 to-primary p-3.5 rounded-2xl border border-whatsapp/30 flex items-center justify-between hover:border-whatsapp transition-colors"
+                  className="cursor-pointer bg-gradient-to-r from-whatsapp/10 to-primary p-3.5 rounded border border-whatsapp/30 flex items-center justify-between hover:border-whatsapp transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-whatsapp/20 text-whatsapp flex items-center justify-center shrink-0">
@@ -507,7 +499,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* 4. RECENT P2P COMMUNITY LISTINGS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-primary-container rounded-2xl p-6 sm:p-7 text-on-primary shadow-md border border-primary">
+        <div className="bg-primary-container rounded p-6 sm:p-7 text-on-primary shadow-md border border-primary">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-6">
             <div>
               <div className="flex items-center gap-2">
@@ -621,7 +613,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* 5. HOW APNA LAPTOP WORKS (DUAL PATH) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-surface-container-lowest rounded-3xl p-6 sm:p-10 border border-outline-variant shadow-sm space-y-8">
+        <div className="bg-surface-container-lowest rounded-lg p-6 sm:p-10 border border-outline-variant shadow-sm space-y-8">
           <div className="text-center max-w-xl mx-auto space-y-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-on-surface font-display">
               {romanUrduMode ? 'Apna Laptop Kaise Kaam Karta Hai?' : 'How Apna Laptop Works'}
@@ -633,7 +625,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Buyer Path */}
-            <div className="bg-whatsapp/10 rounded-2xl p-6 border border-whatsapp/20 space-y-4">
+            <div className="bg-whatsapp/10 rounded p-6 border border-whatsapp/20 space-y-4">
               <div className="flex items-center gap-2 text-whatsapp-dark font-bold">
                 <Store className="w-5 h-5 text-whatsapp-dark" />
                 <h3 className="text-base font-bold">For Buyers (Laptop Khareednay Walay)</h3>
@@ -670,7 +662,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
 
             {/* Seller Path */}
-            <div className="bg-whatsapp/10 rounded-2xl p-6 border border-whatsapp/20 space-y-4">
+            <div className="bg-whatsapp/10 rounded p-6 border border-whatsapp/20 space-y-4">
               <div className="flex items-center gap-2 text-whatsapp-dark font-bold">
                 <PlusCircle className="w-5 h-5 text-whatsapp-dark" />
                 <h3 className="text-base font-bold">For Sellers (Laptop Bechnay Walay)</h3>
@@ -722,7 +714,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {(reviews || []).map((rev) => (
             <div
               key={rev.id}
-              className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant shadow-sm space-y-3"
+              className="bg-surface-container-lowest rounded p-5 border border-outline-variant shadow-sm space-y-3"
             >
               <div className="flex items-center justify-between">
                 <div>

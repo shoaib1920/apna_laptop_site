@@ -85,7 +85,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Banner */}
-      <div className="bg-primary-container text-on-primary rounded-3xl p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-primary-container text-on-primary rounded-lg p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
@@ -108,7 +108,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => navigateTo('sell')}
-            className="bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-whatsapp/20 transition-all hover:scale-[1.02]"
+            className="bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.02]"
           >
             <PlusCircle className="w-4 h-4 text-white" />
             <span>{romanUrduMode ? 'Apna Laptop Post Karein (Free)' : 'Post Free Ad'}</span>
@@ -116,7 +116,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
 
           <button
             onClick={() => navigateTo('calculator')}
-            className="bg-on-primary/10 hover:bg-on-primary/20 text-on-primary font-semibold text-xs px-4 py-3 rounded-2xl border border-on-primary/10 transition-colors"
+            className="bg-on-primary/10 hover:bg-on-primary/20 text-on-primary font-semibold text-xs px-4 py-3 rounded border border-on-primary/10 transition-colors"
           >
             Check Fair Price First
           </button>
@@ -124,7 +124,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
       </div>
 
       {/* Safety Notice Strip for Pakistan P2P */}
-      <div className="bg-secondary-container rounded-2xl p-3.5 border border-secondary/20 flex items-start gap-2.5 text-xs text-on-secondary-container">
+      <div className="bg-secondary-container rounded p-3.5 border border-secondary/20 flex items-start gap-2.5 text-xs text-on-secondary-container">
         <AlertTriangle className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
         <div>
           <strong>{romanUrduMode ? 'Yaqeeni Deal Rehnumai:' : 'Safe Trading Tip:'}</strong>{' '}
@@ -135,7 +135,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant shadow-sm space-y-4">
+      <div className="bg-surface-container-lowest p-4 rounded border border-outline-variant shadow-sm space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search Input */}
           <div className="relative">
@@ -156,7 +156,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
               onChange={(e) => setSelectedCity(e.target.value)}
               className="w-full bg-surface-container-low text-xs px-3 py-2.5 rounded-xl border border-outline-variant text-on-surface font-semibold focus:outline-none focus:border-whatsapp"
             >
-              <option value="all">📍 All Pakistan Cities</option>
+              <option value="all">All Pakistan Cities</option>
               {PAKISTAN_CITIES.map((city) => (
                 <option key={city} value={city}>
                   {city}
@@ -172,7 +172,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
               onChange={(e) => setSelectedBrand(e.target.value)}
               className="w-full bg-surface-container-low text-xs px-3 py-2.5 rounded-xl border border-outline-variant text-on-surface font-semibold focus:outline-none focus:border-whatsapp"
             >
-              <option value="all">💻 All Brands</option>
+              <option value="all">All Brands</option>
               {brands.filter((b) => b !== 'all').map((brand) => (
                 <option key={brand} value={brand}>
                   {brand}
@@ -225,7 +225,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
 
       {/* Listings Grid */}
       {filteredListings.length === 0 ? (
-        <div className="bg-surface-container-lowest rounded-2xl p-12 text-center border border-outline-variant space-y-4">
+        <div className="bg-surface-container-lowest rounded p-12 text-center border border-outline-variant space-y-4">
           <Users className="w-12 h-12 text-outline mx-auto" />
           <div>
             <h3 className="font-bold text-on-surface text-base">No P2P listings found</h3>
@@ -246,7 +246,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
             <div
               key={listing.id}
               onClick={() => navigateTo('marketplace_detail', { p2pId: listing.id })}
-              className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-xl hover:border-whatsapp/40 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer group"
+              className="bg-surface-container-lowest rounded border border-outline-variant shadow-sm hover:shadow-xl hover:border-whatsapp/40 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer group"
             >
               <div>
                 {/* Photo Header */}

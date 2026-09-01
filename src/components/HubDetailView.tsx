@@ -149,7 +149,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
         {/* Left Gallery (5 cols) */}
         <div className="lg:col-span-6 space-y-3">
           {/* Main Large Image */}
-          <div className="relative aspect-4/3 rounded-3xl overflow-hidden bg-primary border border-outline-variant shadow-md">
+          <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-primary border border-outline-variant shadow-md">
             <img
               src={listing.images[activeImageIndex] || listing.images[0]}
               alt={listing.title}
@@ -187,7 +187,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           )}
 
           {/* Supplier Verification Card */}
-          <div className="bg-whatsapp/10 rounded-2xl p-4 border border-whatsapp/30 text-xs text-whatsapp-dark space-y-2">
+          <div className="bg-whatsapp/10 rounded p-4 border border-whatsapp/30 text-xs text-whatsapp-dark space-y-2">
             <div className="flex items-center gap-2 font-bold text-whatsapp-dark">
               <ShieldCheck className="w-5 h-5 text-whatsapp-dark" />
               <span>Apna Laptop Supplier Verification</span>
@@ -229,7 +229,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           </div>
 
           {/* Price Box */}
-          <div className="bg-primary text-on-primary rounded-2xl p-4 sm:p-5 flex items-center justify-between flex-wrap gap-3">
+          <div className="bg-primary text-on-primary rounded p-4 sm:p-5 flex items-center justify-between flex-wrap gap-3">
             <div>
               <span className="text-xs text-on-primary-container block">Total Sale Price (PKR)</span>
               <div className="flex items-baseline gap-2">
@@ -259,7 +259,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
 
           {/* UPGRADE ADDON SELECTOR */}
           {listing.availableUpgrades && (
-            <div className="bg-surface-container-low rounded-2xl p-4 border border-outline-variant space-y-3">
+            <div className="bg-surface-container-low rounded p-4 border border-outline-variant space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-on-surface flex items-center gap-1.5">
                   <Plus className="w-4 h-4 text-whatsapp-dark" />
@@ -342,7 +342,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               href={getHubWhatsAppLink(listing)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2.5 shadow-lg shadow-whatsapp/25 transition-all hover:scale-[1.01]"
+              className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3.5 px-4 rounded flex items-center justify-center gap-2.5 shadow-sm transition-all hover:scale-[1.01]"
             >
               <MessageCircle className="w-5 h-5" />
               <span>{romanUrduMode ? 'WhatsApp Par Baat Karein & Deal Lock Karein' : 'Chat on WhatsApp to Buy'}</span>
@@ -352,7 +352,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               <button
                 id="add-to-cart-btn"
                 onClick={handleAddToCart}
-                className="bg-primary hover:bg-primary-container text-on-primary font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 transition-colors"
+                className="bg-primary hover:bg-primary-container text-on-primary font-bold py-3 rounded text-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <ShoppingCart className="w-4 h-4" />
                 <span>Add to Cart</span>
@@ -361,7 +361,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               <button
                 id="buy-now-cod-btn"
                 onClick={handleBuyNow}
-                className="bg-whatsapp-dark hover:bg-whatsapp text-white font-extrabold py-3 rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
+                className="bg-whatsapp-dark hover:bg-whatsapp text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
               >
                 <Truck className="w-4 h-4" />
                 <span>Order with COD</span>
@@ -401,7 +401,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
       </div>
 
       {/* FULL SPECIFICATION SHEET */}
-      <section className="bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
+      <section className="bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
         <div className="border-b border-outline-variant pb-3 flex items-center justify-between">
           <h2 className="text-lg font-extrabold text-on-surface font-display flex items-center gap-2">
             <Layers className="w-5 h-5 text-whatsapp-dark" />
@@ -462,14 +462,14 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
         </div>
 
         {/* Detailed description */}
-        <div className="bg-surface-container-low p-4 rounded-2xl text-xs text-on-surface-variant space-y-2 border border-outline-variant/70">
+        <div className="bg-surface-container-low p-4 rounded text-xs text-on-surface-variant space-y-2 border border-outline-variant/70">
           <h4 className="font-bold text-on-surface">About this Unit & Usage Suitability</h4>
           <p className="leading-relaxed">{listing.fullDescription}</p>
         </div>
       </section>
 
       {/* REVIEWS & RATINGS SECTION */}
-      <section className="bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
+      <section className="bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
         <div className="flex items-center justify-between border-b border-outline-variant pb-3">
           <div>
             <h2 className="text-lg font-extrabold text-on-surface font-display flex items-center gap-2">
@@ -494,7 +494,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
             </div>
           ) : (
             itemReviews.map((rev) => (
-              <div key={rev.id} className="p-4 rounded-2xl bg-surface-container-low border border-outline-variant space-y-2">
+              <div key={rev.id} className="p-4 rounded bg-surface-container-low border border-outline-variant space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-on-surface text-xs">{rev.reviewer_name}</span>
@@ -520,7 +520,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
       {/* Review Modal */}
       {showReviewModal && (
         <div className="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest rounded-3xl p-6 max-w-md w-full border border-outline-variant shadow-2xl space-y-4 animate-scale-up">
+          <div className="bg-surface-container-lowest rounded-lg p-6 max-w-md w-full border border-outline-variant shadow-2xl space-y-4 animate-scale-up">
             <div className="flex items-center justify-between border-b border-outline-variant pb-2">
               <h3 className="font-bold text-on-surface text-sm">Leave a Customer Review</h3>
               <button onClick={() => setShowReviewModal(false)} className="text-xs text-outline hover:text-on-surface">

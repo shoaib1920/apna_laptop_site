@@ -12,6 +12,12 @@ import {
   Cpu,
   Layers,
   Zap,
+  Code,
+  GraduationCap,
+  Palette,
+  Gamepad2,
+  BarChart3,
+  Plane,
 } from 'lucide-react';
 import { FinderQuizAnswers, FinderMatch, HubListing, P2PListing } from '../types';
 import { matchLaptopsForQuiz } from '../services/finderEngine';
@@ -70,7 +76,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Header */}
-      <div className="bg-primary-container text-on-primary rounded-3xl p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex items-center justify-between gap-4">
+      <div className="bg-primary-container text-on-primary rounded-lg p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
@@ -100,7 +106,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
 
       {!isCompleted ? (
         /* QUIZ STEPS */
-        <div className="bg-surface-container-lowest rounded-3xl p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
+        <div className="bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
           {/* Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-on-surface-variant font-semibold">
@@ -131,49 +137,49 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     id: 'Programming & Dev',
                     title: 'Software Development & Coding',
                     desc: 'VS Code, Docker, Web Dev, Python, Flutter, Virtual Machines',
-                    icon: '💻',
+                    icon: Code,
                   },
                   {
                     id: 'Study & Online Classes',
                     title: 'University / College Student',
                     desc: 'Assignments, Zoom, Presentations, Research, Long Battery Life',
-                    icon: '🎓',
+                    icon: GraduationCap,
                   },
                   {
                     id: 'Video & Graphic Editing',
                     title: 'Graphic Design & Video Editing',
                     desc: 'Premiere Pro, Photoshop, After Effects, Illustrator, 3D',
-                    icon: '🎨',
+                    icon: Palette,
                   },
                   {
                     id: 'Gaming',
                     title: 'AAA Gaming & Streaming',
                     desc: 'GTA V, Valorant, Cyberpunk, High FPS, Dedicated GPU',
-                    icon: '🎮',
+                    icon: Gamepad2,
                   },
                   {
                     id: 'Office & Daily Work',
                     title: 'Office Work & Freelance Browsing',
                     desc: 'MS Excel, Accounting, Google Docs, Multiple Tabs, Email',
-                    icon: '📊',
+                    icon: BarChart3,
                   },
                   {
                     id: 'Business & Frequent Travel',
                     title: 'Business & Frequent Travel',
                     desc: 'Ultra lightweight, all-day battery, sleek metal chassis',
-                    icon: '✈️',
+                    icon: Plane,
                   },
                 ].map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleSelect('primaryUseCase', item.id)}
-                    className={`p-4 rounded-2xl border text-left flex items-start gap-3 transition-all ${
+                    className={`p-4 rounded border text-left flex items-start gap-3 transition-all ${
                       answers.primaryUseCase === item.id
                         ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
                     }`}
                   >
-                    <span className="text-2xl">{item.icon}</span>
+                    <item.icon className="w-5 h-5 text-whatsapp-dark shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-bold text-on-surface text-xs">{item.title}</h4>
                       <p className="text-[11px] text-on-surface-variant mt-0.5">{item.desc}</p>
@@ -225,7 +231,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => handleSelect('budgetTier', item.id)}
-                    className={`p-4 rounded-2xl border text-left transition-all ${
+                    className={`p-4 rounded border text-left transition-all ${
                       answers.budgetTier === item.id
                         ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
@@ -270,7 +276,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => handleSelect('portability', item.id)}
-                    className={`w-full p-4 rounded-2xl border text-left transition-all ${
+                    className={`w-full p-4 rounded border text-left transition-all ${
                       answers.portability === item.id
                         ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
@@ -315,7 +321,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => handleSelect('batteryPriority', item.id)}
-                    className={`w-full p-4 rounded-2xl border text-left transition-all ${
+                    className={`w-full p-4 rounded border text-left transition-all ${
                       answers.batteryPriority === item.id
                         ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
@@ -360,7 +366,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => handleSelect('conditionPref', item.id)}
-                    className={`w-full p-4 rounded-2xl border text-left transition-all ${
+                    className={`w-full p-4 rounded border text-left transition-all ${
                       answers.conditionPref === item.id
                         ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
@@ -387,7 +393,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
 
             <button
               onClick={handleNext}
-              className="bg-whatsapp hover:bg-whatsapp-dark text-white text-xs font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-whatsapp/20 transition-transform hover:scale-[1.02]"
+              className="bg-whatsapp hover:bg-whatsapp-dark text-white text-xs font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-transform hover:scale-[1.02]"
             >
               <span>{currentStep === 5 ? 'Show Recommended Matches' : 'Next Question'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -397,7 +403,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
       ) : (
         /* RESULTS VIEW */
         <div className="space-y-6 animate-fade-in">
-          <div className="bg-primary text-on-primary rounded-3xl p-6 sm:p-8 border border-whatsapp/30 shadow-xl space-y-4">
+          <div className="bg-primary text-on-primary rounded-lg p-6 sm:p-8 border border-whatsapp/30 shadow-xl space-y-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-whatsapp" />
               <h2 className="text-base font-extrabold font-display text-whatsapp uppercase tracking-wider">
@@ -419,7 +425,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
               return (
                 <div
                   key={idx}
-                  className="bg-surface-container-lowest rounded-3xl border-2 border-whatsapp/60 p-5 shadow-md flex flex-col justify-between space-y-4"
+                  className="bg-surface-container-lowest rounded-lg border-2 border-whatsapp/60 p-5 shadow-md flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -431,7 +437,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                       </span>
                     </div>
 
-                    <div className="aspect-16/9 rounded-2xl overflow-hidden bg-surface-container-high">
+                    <div className="aspect-16/9 rounded overflow-hidden bg-surface-container-high">
                       <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
                     </div>
 
@@ -481,7 +487,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
           </div>
 
           {/* Sourcing WhatsApp Consultation CTA */}
-          <div className="bg-whatsapp/10 rounded-3xl p-6 border border-whatsapp/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-whatsapp/10 rounded-lg p-6 border border-whatsapp/20 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1">
               <h4 className="font-bold text-on-surface text-sm">Need a custom lot configuration?</h4>
               <p className="text-xs text-on-surface-variant">
@@ -493,7 +499,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
               href={`https://wa.me/923001234567?text=${encodeURIComponent(`Salam Apna Laptop team! I took the Finder Quiz for ${answers.primaryUseCase} with budget ${answers.budgetTier}. Can you share current available stock?`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-5 py-3 rounded-2xl flex items-center gap-2 whitespace-nowrap shadow-md transition-colors"
+              className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-5 py-3 rounded flex items-center gap-2 whitespace-nowrap shadow-md transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Consult on WhatsApp</span>
