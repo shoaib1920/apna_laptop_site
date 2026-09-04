@@ -26,6 +26,12 @@
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
+  /* Deal/price accent — real marketplaces (Daraz, OLX) reserve a warm red/orange
+     purely for price + discount urgency, distinct from the whatsapp trust-green */
+  --color-deal: #e2461f;
+  --color-deal-dark: #c23a17;
+  --color-deal-container: #fdece7;
+
   --color-surface: #f7fafc;
   --color-surface-dim: #d7dadc;
   --color-surface-bright: #f7fafc;

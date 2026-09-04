@@ -233,13 +233,18 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
             <div>
               <span className="text-xs text-on-primary-container block">Total Sale Price (PKR)</span>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl sm:text-3xl font-extrabold text-on-primary font-display">
+                <span className="text-2xl sm:text-3xl font-extrabold text-deal font-display">
                   {formatPKR(finalPrice)}
                 </span>
-                {listing.original_price && (
-                  <span className="text-sm text-on-primary-container line-through">
-                    {formatPKR(listing.original_price)}
-                  </span>
+                {listing.original_price && listing.original_price > finalPrice && (
+                  <>
+                    <span className="text-sm text-on-primary-container line-through">
+                      {formatPKR(listing.original_price)}
+                    </span>
+                    <span className="text-[11px] font-extrabold text-deal bg-deal-container px-1.5 py-0.5 rounded">
+                      -{Math.round((1 - finalPrice / listing.original_price) * 100)}%
+                    </span>
+                  </>
                 )}
               </div>
               {upgradeTotal > 0 && (

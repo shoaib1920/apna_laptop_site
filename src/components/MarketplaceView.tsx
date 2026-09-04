@@ -241,116 +241,63 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {filteredListings.map((listing) => (
             <div
               key={listing.id}
               onClick={() => navigateTo('marketplace_detail', { p2pId: listing.id })}
-              className="bg-surface-container-lowest rounded border border-outline-variant shadow-sm hover:shadow-xl hover:border-whatsapp/40 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer group"
+              className="bg-surface-container-lowest rounded border border-outline-variant hover:border-outline hover:shadow-sm transition-all overflow-hidden cursor-pointer group flex flex-col"
             >
-              <div>
-                {/* Photo Header */}
-                <div className="relative h-48 bg-surface-container-high overflow-hidden">
-                  <img
-                    src={listing.images[0]}
-                    alt={listing.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div
-                    className={`absolute top-2.5 left-2.5 text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                      listing.condition === 'Brand New'
-                        ? 'bg-primary text-on-primary'
-                        : listing.condition === 'Like New (Open Box)'
-                        ? 'bg-surface-container-lowest border border-outline-variant text-on-surface'
-                        : 'bg-surface-container-lowest/90 backdrop-blur-md text-on-surface-variant'
-                    }`}
-                  >
-                    {listing.condition}
-                  </div>
-                  <div className="absolute bottom-2.5 left-2.5 bg-primary/90 text-on-primary text-[10px] font-semibold px-2 py-0.5 rounded flex items-center gap-1 backdrop-blur-md">
-                    <MapPin className="w-3 h-3 text-whatsapp" />
-                    <span>{listing.seller_city}</span>
-                  </div>
-                  {listing.is_verified_badge && (
-                    <div className="absolute top-2.5 right-2.5 bg-whatsapp text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 shadow">
-                      <ShieldCheck className="w-3 h-3" />
-                      <span>Verified Phone</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Body Content */}
-                <div className="p-4 space-y-2.5">
-                  <div className="flex items-center justify-between text-xs text-on-surface-variant">
-                    <span className="font-semibold text-on-surface">{listing.seller_name}</span>
-                    <span className="text-[11px] text-outline">Posted {listing.created_at}</span>
-                  </div>
-
-                  <h3 className="font-bold text-on-surface text-sm line-clamp-1 group-hover:text-whatsapp-dark transition-colors">
-                    {listing.title}
-                  </h3>
-
-                  <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
-                    {listing.description}
-                  </p>
-
-                  {/* Spec badges */}
-                  <div className="grid grid-cols-2 gap-1 text-[11px] text-on-surface-variant pt-1">
-                    <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                      <span className="font-mono-spec text-[10px] uppercase text-outline tracking-wide">CPU:</span> {listing.specs.cpu.split('(')[0]}
-                    </div>
-                    <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                      <span className="font-mono-spec text-[10px] uppercase text-outline tracking-wide">RAM:</span> {listing.specs.ram}
-                    </div>
-                    <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                      <span className="font-mono-spec text-[10px] uppercase text-outline tracking-wide">Storage:</span> {listing.specs.storage}
-                    </div>
-                    <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                      <span className="font-mono-spec text-[10px] uppercase text-outline tracking-wide">Battery:</span> {listing.specs.batteryHealth || 'Good'}
-                    </div>
-                  </div>
-                </div>
+              {/* Photo */}
+              <div className="relative aspect-square bg-surface-container-high overflow-hidden">
+                <img
+                  src={listing.images[0]}
+                  alt={listing.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                {listing.is_verified_badge && (
+                  <span className="absolute top-1.5 left-1.5 bg-whatsapp/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                    Verified
+                  </span>
+                )}
+                <button
+                  onClick={(e) => handleReport(listing.id, e)}
+                  className="absolute top-1.5 right-1.5 p-1 bg-surface-container-lowest/90 rounded-full text-on-surface-variant hover:text-error transition-colors"
+                  title="Report Listing"
+                >
+                  <Flag className="w-3.5 h-3.5" />
+                </button>
               </div>
 
-              {/* Bottom Price & Action */}
-              <div className="p-4 pt-0 border-t border-outline-variant mt-2">
-                <div className="flex items-baseline justify-between pt-3 pb-2">
-                  <div>
-                    <span className="text-[10px] text-outline block leading-none">Asking Price</span>
-                    <span className="text-lg font-extrabold text-on-surface font-display">
-                      {formatPKR(listing.asking_price)}
+              {/* Body */}
+              <div className="p-2.5 space-y-1 flex-1 flex flex-col">
+                <h3 className="font-semibold text-on-surface text-xs line-clamp-2 leading-snug min-h-[2.4em] group-hover:text-whatsapp-dark transition-colors">
+                  {listing.title}
+                </h3>
+                <p className="text-[10px] text-on-surface-variant font-mono-spec truncate">
+                  {listing.specs.cpu.split('(')[0].trim()} · {listing.specs.ram} · {listing.specs.storage}
+                </p>
+
+                <div className="pt-1 mt-auto">
+                  <span className="text-sm font-extrabold text-deal font-display block">{formatPKR(listing.asking_price)}</span>
+                  <div className="flex items-center justify-between text-[10px] text-on-surface-variant pt-1">
+                    <span className="flex items-center gap-0.5 truncate">
+                      <MapPin className="w-3 h-3 shrink-0" /> {listing.seller_city}
                     </span>
+                    <span className="text-outline shrink-0">{listing.created_at}</span>
                   </div>
-
-                  <button
-                    onClick={(e) => handleReport(listing.id, e)}
-                    className="text-[10px] text-outline hover:text-error flex items-center gap-0.5"
-                    title="Report Listing"
-                  >
-                    <Flag className="w-3 h-3" />
-                    <span>Report</span>
-                  </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <a
-                    href={getP2PWhatsAppLink(listing, currentUser?.name)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-whatsapp hover:bg-whatsapp-dark text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-sm"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>WhatsApp</span>
-                  </a>
-
-                  <button
-                    onClick={() => navigateTo('marketplace_detail', { p2pId: listing.id })}
-                    className="bg-primary hover:bg-primary-container text-on-primary text-xs font-bold py-2.5 rounded-xl transition-colors"
-                  >
-                    View Ad
-                  </button>
-                </div>
+                <a
+                  href={getP2PWhatsAppLink(listing, currentUser?.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="mt-2 bg-whatsapp hover:bg-whatsapp-dark text-white text-[11px] font-bold py-1.5 rounded flex items-center justify-center gap-1 transition-colors"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
+                </a>
               </div>
             </div>
           ))}

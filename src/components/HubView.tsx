@@ -115,39 +115,25 @@ export const HubView: React.FC<HubViewProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Header & Slogan */}
-      <div className="bg-gradient-to-r from-primary-container to-primary text-on-primary rounded-lg p-6 sm:p-8 border border-primary shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
-              <Store className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-display">
-              Apna Laptop <span className="text-whatsapp">Hub</span>
-            </h1>
-            <span className="bg-whatsapp/20 text-whatsapp text-xs px-2 py-0.5 rounded-md font-bold border border-whatsapp/30">
-              Verified Stock
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-on-primary-container max-w-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
+        <div>
+          <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
+            <Store className="w-5 h-5 text-whatsapp-dark" />
+            <span>Laptop Hub</span>
+            <span className="bg-whatsapp/10 text-whatsapp-dark text-[10px] px-2 py-0.5 rounded font-bold">Verified Stock</span>
+          </h1>
+          <p className="text-xs text-on-surface-variant mt-0.5">
             {romanUrduMode
-              ? 'Hafeez Centre aur Techno City ke trusted suppliers se sourced stock. 100% genuine checking warranty aur cash on delivery.'
-              : 'Directly sourced from verified laptop shops in Lahore & Karachi. Each unit undergoes strict hardware testing.'}
+              ? 'Hafeez Centre aur Techno City ke trusted suppliers se sourced stock.'
+              : 'Directly sourced from verified laptop shops in Lahore & Karachi.'}
           </p>
         </div>
-
-        {/* Quick Quiz CTA */}
-        <div className="bg-primary/80 p-4 rounded border border-primary/80 flex items-center gap-3">
-          <div>
-            <p className="text-xs font-bold text-on-primary">Confused about specs?</p>
-            <p className="text-[11px] text-on-primary-container">Take our 1-min Finder Quiz</p>
-          </div>
-          <button
-            onClick={() => navigateTo('finder')}
-            className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-colors whitespace-nowrap"
-          >
-            Start Quiz
-          </button>
-        </div>
+        <button
+          onClick={() => navigateTo('finder')}
+          className="text-xs font-bold text-whatsapp-dark border border-whatsapp/30 bg-whatsapp/10 px-3.5 py-2 rounded whitespace-nowrap self-start sm:self-auto"
+        >
+          Not sure what to pick? Take the Finder Quiz →
+        </button>
       </div>
 
       {/* Main Layout: Filters Sidebar + Products Grid */}
@@ -398,115 +384,79 @@ export const HubView: React.FC<HubViewProps> = ({
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
               {filteredListings.map((listing) => {
                 const isSaved = wishlist.includes(listing.id);
+                const discount = listing.original_price && listing.original_price > listing.sale_price
+                  ? Math.round((1 - listing.sale_price / listing.original_price) * 100)
+                  : 0;
                 return (
                   <div
                     key={listing.id}
-                    className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between overflow-hidden group p-3 space-y-3"
+                    className="bg-surface-container-lowest rounded border border-outline-variant hover:border-outline hover:shadow-sm transition-all overflow-hidden group flex flex-col"
                   >
-                    <div>
-                      {/* Image Preview & Badges */}
-                      <div className="relative rounded-lg overflow-hidden bg-surface-container">
-                        <div
-                          onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                          className="h-44 overflow-hidden cursor-pointer"
-                        >
-                          <img
-                            src={listing.images[0]}
-                            alt={listing.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-
-                        <div className="absolute top-2 left-2 bg-surface-container text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm">
-                          {listing.condition}
-                        </div>
-
-                        <button
-                          onClick={() => toggleWishlist(listing.id)}
-                          className="absolute top-2 right-2 p-1.5 bg-surface-container-lowest/90 backdrop-blur-md rounded-full shadow-sm text-on-surface-variant hover:text-error transition-colors"
-                        >
-                          <Heart className={`w-4 h-4 ${isSaved ? 'text-error fill-error' : ''}`} />
-                        </button>
-
-                        <div className="absolute bottom-2 left-2 bg-primary/80 backdrop-blur-md text-on-primary text-[9px] font-bold px-2 py-0.5 rounded">
-                          7-Day Warranty
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="pt-2 space-y-2">
-                        <div className="flex items-center justify-between text-xs text-on-surface-variant">
-                          <span className="font-bold text-on-surface uppercase tracking-wider text-[10px]">
-                            {listing.brand}
-                          </span>
-                          <span className="text-amber-500 font-semibold flex items-center gap-0.5 text-xs">
-                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {listing.rating} ({listing.reviewCount})
-                          </span>
-                        </div>
-
-                        <h3
-                          onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                          className="font-bold text-on-surface text-xs sm:text-sm line-clamp-2 hover:text-whatsapp-dark cursor-pointer transition-colors"
-                        >
-                          {listing.title}
-                        </h3>
-
-                        {/* Specs grid */}
-                        <div className="grid grid-cols-2 gap-1 text-[10px] text-on-surface-variant pt-1">
-                          <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                            <span className="font-mono-spec text-outline uppercase tracking-wide">CPU:</span> {listing.specs.cpu.split('(')[0]}
-                          </div>
-                          <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                            <span className="font-mono-spec text-outline uppercase tracking-wide">RAM:</span> {listing.specs.ram.split(' ')[0]}
-                          </div>
-                          <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                            <span className="font-mono-spec text-outline uppercase tracking-wide">SSD:</span> {listing.specs.storage.split(' ')[0]}
-                          </div>
-                          <div className="bg-surface-container-low p-1.5 rounded border border-outline-variant truncate">
-                            <span className="font-mono-spec text-outline uppercase tracking-wide">Display:</span> {listing.specs.screenSize}"
-                          </div>
-                        </div>
-                      </div>
+                    {/* Image */}
+                    <div
+                      onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
+                      className="relative aspect-square overflow-hidden bg-surface-container cursor-pointer"
+                    >
+                      <img
+                        src={listing.images[0]}
+                        alt={listing.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {discount > 0 && (
+                        <span className="absolute top-1.5 left-1.5 bg-deal text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">
+                          -{discount}%
+                        </span>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWishlist(listing.id);
+                        }}
+                        className="absolute top-1.5 right-1.5 p-1 bg-surface-container-lowest/90 rounded-full text-on-surface-variant hover:text-error transition-colors"
+                      >
+                        <Heart className={`w-3.5 h-3.5 ${isSaved ? 'text-error fill-error' : ''}`} />
+                      </button>
                     </div>
 
-                    {/* Price & CTAs */}
-                    <div className="border-t border-outline-variant pt-2.5 space-y-2">
-                      <div className="flex items-baseline justify-between">
-                        <div>
-                          <span className="text-base font-extrabold text-whatsapp-dark font-display">
-                            {formatPKR(listing.sale_price)}
+                    {/* Content */}
+                    <div className="p-2.5 space-y-1 flex-1 flex flex-col">
+                      <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wide">{listing.brand}</span>
+                      <h3
+                        onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
+                        className="font-semibold text-on-surface text-xs line-clamp-2 cursor-pointer leading-snug min-h-[2.4em]"
+                      >
+                        {listing.title}
+                      </h3>
+                      <p className="text-[10px] text-on-surface-variant font-mono-spec truncate">
+                        {listing.specs.cpu.split('(')[0].trim()} · {listing.specs.ram.split(' ')[0]} · {listing.specs.storage.split(' ')[0]}
+                      </p>
+
+                      <div className="pt-1 mt-auto">
+                        <span className="text-sm font-extrabold text-deal font-display block">{formatPKR(listing.sale_price)}</span>
+                        {discount > 0 && (
+                          <span className="text-[10px] text-outline line-through">{formatPKR(listing.original_price!)}</span>
+                        )}
+                        <div className="flex items-center justify-between text-[10px] text-on-surface-variant pt-1">
+                          <span className="flex items-center gap-0.5">
+                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> {listing.rating} ({listing.reviewCount})
                           </span>
-                          {listing.original_price && (
-                            <span className="text-[11px] text-outline line-through ml-1.5">
-                              {formatPKR(listing.original_price)}
-                            </span>
-                          )}
+                          <span className="text-whatsapp-dark font-semibold">{listing.condition.split(' ')[0]}</span>
                         </div>
-                        <span className="text-[9px] text-whatsapp-dark font-bold bg-whatsapp/10 px-1.5 py-0.5 rounded border border-whatsapp/30">
-                          Stock: {listing.stock_qty}
-                        </span>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2">
-                        <a
-                          href={getHubWhatsAppLink(listing)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-whatsapp hover:bg-whatsapp-dark text-white text-xs font-bold py-1.5 rounded-lg flex items-center justify-center gap-1 transition-colors shadow-sm"
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          <span>WhatsApp</span>
-                        </a>
-                        <button
-                          onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                          className="bg-primary hover:bg-primary-container text-on-primary text-xs font-bold py-1.5 rounded-lg flex items-center justify-center gap-1 transition-colors"
-                        >
-                          <span>Details</span>
-                        </button>
-                      </div>
+                      <a
+                        href={getHubWhatsAppLink(listing)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-2 bg-whatsapp hover:bg-whatsapp-dark text-white text-[11px] font-bold py-1.5 rounded flex items-center justify-center gap-1 transition-colors"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>WhatsApp</span>
+                      </a>
                     </div>
                   </div>
                 );
