@@ -68,7 +68,7 @@ export const WishlistView: React.FC<WishlistViewProps> = ({
                   </span>
                 </div>
                 <h3 className="font-bold text-on-surface text-sm line-clamp-1">{item.title}</h3>
-                <p className="text-xs font-extrabold text-whatsapp-dark font-display">
+                <p className="text-xs font-extrabold text-deal font-display">
                   {formatPKR(item.sale_price)}
                 </p>
               </div>
@@ -104,7 +104,7 @@ export const WishlistView: React.FC<WishlistViewProps> = ({
                   </span>
                 </div>
                 <h3 className="font-bold text-on-surface text-sm line-clamp-1">{item.title}</h3>
-                <p className="text-xs font-extrabold text-whatsapp-dark font-display">
+                <p className="text-xs font-extrabold text-deal font-display">
                   {formatPKR(item.asking_price)}
                 </p>
               </div>

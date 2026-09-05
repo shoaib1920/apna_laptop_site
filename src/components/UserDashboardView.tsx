@@ -183,7 +183,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
                 <img src={listing.images[0]} alt={listing.title} className="w-16 h-16 rounded-lg object-cover bg-surface-container" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-on-surface text-sm truncate">{listing.title}</h3>
-                  <p className="text-xs font-extrabold text-whatsapp-dark font-display">{formatPKR(listing.asking_price)}</p>
+                  <p className="text-xs font-extrabold text-deal font-display">{formatPKR(listing.asking_price)}</p>
                   <div className="flex items-center gap-3 text-[11px] text-on-surface-variant mt-1">
                     <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {listing.view_count}</span>
                     {listing.reports_count > 0 && (

@@ -432,7 +432,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                       <span className="bg-whatsapp text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">
                         {match.highlightBadge}
                       </span>
-                      <span className="font-extrabold text-on-surface font-display text-base">
+                      <span className="font-extrabold text-deal font-display text-base">
                         {formatPKR(price)}
                       </span>
                     </div>

@@ -215,7 +215,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
           <div className="bg-surface-container-lowest rounded-lg p-6 border border-outline-variant shadow-sm space-y-4">
             <div>
               <span className="text-xs text-outline block">Asking Price</span>
-              <span className="text-2xl sm:text-3xl font-extrabold text-on-surface font-display">
+              <span className="text-2xl sm:text-3xl font-extrabold text-deal font-display">
                 {formatPKR(listing.asking_price)}
               </span>
               <span className="text-[11px] text-on-surface-variant block mt-0.5">
