@@ -3,14 +3,12 @@ import {
   Search,
   ShoppingCart,
   Heart,
-  PlusCircle,
   Calculator,
   Compass,
   Sliders,
   ShieldCheck,
   User as UserIcon,
   Store,
-  Users,
   Menu,
   X,
   MessageSquare,
@@ -32,7 +30,6 @@ interface NavbarProps {
   globalSearchQuery: string;
   setGlobalSearchQuery: (query: string) => void;
   hubCount: number;
-  p2pCount: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -69,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="bg-primary text-white text-xs py-1.5 px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-2 font-medium">
-            <span className="inline-block w-2 h-2 rounded-full bg-whatsapp animate-pulse"></span>
+            <span className="inline-block w-2 h-2 rounded-full bg-steel animate-pulse"></span>
             {romanUrduMode ? (
               <span>🇵🇰 <strong>Apna Laptop:</strong> 100% Genuine Imported Lots • 7 Din Checking Warranty • Nankana Sahib & Nearby Free Delivery</span>
             ) : (
@@ -79,10 +76,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setRomanUrduMode(!romanUrduMode)}
-              className="flex items-center gap-1.5 bg-primary-container hover:opacity-90 px-2.5 py-0.5 rounded text-xs text-whatsapp transition-colors"
+              className="flex items-center gap-1.5 bg-primary-container hover:opacity-90 px-2.5 py-0.5 rounded text-xs text-steel transition-colors"
               title="Toggle Roman Urdu Trust Mode"
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${romanUrduMode ? 'bg-whatsapp' : 'bg-white/40'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${romanUrduMode ? 'bg-steel' : 'bg-white/40'}`} />
               <span>{romanUrduMode ? 'Roman Urdu ON' : 'English Base'}</span>
             </button>
             <a
@@ -108,15 +105,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex flex-col text-left group transition-transform"
             >
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-black tracking-tighter leading-none text-primary font-display group-hover:text-whatsapp-dark transition-colors">
+                <span className="text-2xl font-black tracking-tighter leading-none text-primary font-display group-hover:text-steel-dark transition-colors">
                   APNA LAPTOP
                 </span>
-                <span className="bg-whatsapp/10 text-whatsapp-dark text-[10px] font-bold px-1.5 py-0.2 rounded">
+                <span className="bg-steel-tint text-steel-dark text-[10px] font-bold px-1.5 py-0.2 rounded">
                   .PK
                 </span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-whatsapp-dark font-bold mt-0.5">
-                {romanUrduMode ? 'Yaqeeni Deal, Local Trust' : 'Curated Hub & P2P Marketplace'}
+              <span className="text-[10px] uppercase tracking-widest text-steel-dark font-bold mt-0.5">
+                {romanUrduMode ? 'Yaqeeni Deal, Local Trust' : 'Verified Laptop Hub'}
               </span>
             </button>
 
@@ -125,14 +122,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button id="nav-hub-btn" onClick={() => handleNav('hub')} className={navLinkClasses(currentRoute === 'hub' || currentRoute === 'hub_detail')}>
                 <Store className="w-4 h-4" />
                 <span>Laptop Hub</span>
-                <span className="text-[9px] bg-whatsapp/10 text-whatsapp-dark px-1.5 py-0.2 rounded font-bold">
+                <span className="text-[9px] bg-copper-tint text-copper-dark px-1.5 py-0.2 rounded font-bold">
                   Verified
                 </span>
-              </button>
-
-              <button id="nav-marketplace-btn" onClick={() => handleNav('marketplace')} className={navLinkClasses(currentRoute === 'marketplace' || currentRoute === 'marketplace_detail')}>
-                <Users className="w-4 h-4" />
-                <span>Marketplace</span>
               </button>
 
               <button id="nav-calculator-btn" onClick={() => handleNav('calculator')} className={navLinkClasses(currentRoute === 'calculator')}>
@@ -162,7 +154,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 value={globalSearchQuery}
                 onChange={(e) => {
                   setGlobalSearchQuery(e.target.value);
-                  if (e.target.value.trim() && currentRoute !== 'hub' && currentRoute !== 'marketplace') {
+                  if (e.target.value.trim() && currentRoute !== 'hub') {
                     navigateTo('hub');
                   }
                 }}
@@ -193,16 +185,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>WhatsApp Us</span>
             </a>
 
-            {/* Post Listing CTA */}
-            <button
-              id="sell-laptop-header-btn"
-              onClick={() => handleNav('sell')}
-              className="hidden sm:flex items-center gap-1.5 bg-surface-container-low hover:bg-surface-container text-whatsapp-dark font-bold px-3 py-2 rounded-lg text-xs border border-outline-variant transition-all"
-            >
-              <PlusCircle className="w-3.5 h-3.5" />
-              <span>Sell Laptop</span>
-            </button>
-
             {/* Wishlist */}
             <button
               id="wishlist-btn"
@@ -227,7 +209,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-whatsapp text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-steel text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -245,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <img
                       src={currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&auto=format&fit=crop&q=80'}
                       alt={currentUser.name}
-                      className="w-5 h-5 rounded-full object-cover border border-whatsapp"
+                      className="w-5 h-5 rounded-full object-cover border border-steel"
                     />
                     <span className="font-semibold max-w-[80px] sm:max-w-[100px] truncate">
                       {currentUser.name.split(' ')[0]}
@@ -287,8 +269,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-on-surface"
                     >
-                      <UserIcon className="w-4 h-4 text-whatsapp-dark" />
-                      <span>My Dashboard & Listings</span>
+                      <UserIcon className="w-4 h-4 text-steel-dark" />
+                      <span>My Orders</span>
                     </button>
 
                     {currentUser?.role === 'admin' && (
@@ -300,7 +282,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-primary font-semibold"
                       >
                         <ShieldCheck className="w-4 h-4" />
-                        <span>Admin Hub & Moderation</span>
+                        <span>Admin Portal</span>
                       </button>
                     )}
                   </div>
@@ -319,12 +301,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                           }}
                           className={`w-full text-left px-2 py-1 rounded text-[11px] flex items-center justify-between ${
                             currentUser?.id === u.id
-                              ? 'bg-whatsapp/10 text-whatsapp-dark font-bold'
+                              ? 'bg-steel-tint text-steel-dark font-bold'
                               : 'hover:bg-surface-container-low text-on-surface-variant'
                           }`}
                         >
                           <span>{u.name} ({u.role})</span>
-                          {currentUser?.id === u.id && <CheckCircle2 className="w-3 h-3 text-whatsapp-dark" />}
+                          {currentUser?.id === u.id && <CheckCircle2 className="w-3 h-3 text-steel-dark" />}
                         </button>
                       ))}
                       <button
@@ -334,12 +316,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                         className={`w-full text-left px-2 py-1 rounded text-[11px] flex items-center justify-between ${
                           !currentUser
-                            ? 'bg-whatsapp/10 text-whatsapp-dark font-bold'
+                            ? 'bg-steel-tint text-steel-dark font-bold'
                             : 'hover:bg-surface-container-low text-on-surface-variant'
                         }`}
                       >
                         <span>Guest (Not logged in)</span>
-                        {!currentUser && <CheckCircle2 className="w-3 h-3 text-whatsapp-dark" />}
+                        {!currentUser && <CheckCircle2 className="w-3 h-3 text-steel-dark" />}
                       </button>
                     </div>
                   </div>
@@ -367,7 +349,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               value={globalSearchQuery}
               onChange={(e) => {
                 setGlobalSearchQuery(e.target.value);
-                if (e.target.value.trim() && currentRoute !== 'hub' && currentRoute !== 'marketplace') {
+                if (e.target.value.trim() && currentRoute !== 'hub') {
                   navigateTo('hub');
                 }
               }}
@@ -381,31 +363,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-surface-container-lowest border-b border-outline-variant px-4 pt-2 pb-5 space-y-2">
-          <div className="grid grid-cols-2 gap-2 pt-2">
-            <button
-              onClick={() => handleNav('hub')}
-              className={`p-3 rounded-xl text-left font-semibold text-xs flex flex-col gap-1 border ${
-                currentRoute === 'hub' ? 'bg-whatsapp text-white border-whatsapp' : 'bg-surface-container-low text-on-surface border-outline-variant'
-              }`}
-            >
-              <Store className="w-5 h-5" />
-              <span>Laptop Hub (Store)</span>
-              <span className="text-[10px] opacity-80">Verified Stock</span>
-            </button>
-
-            <button
-              onClick={() => handleNav('marketplace')}
-              className={`p-3 rounded-xl text-left font-semibold text-xs flex flex-col gap-1 border ${
-                currentRoute === 'marketplace' ? 'bg-whatsapp text-white border-whatsapp' : 'bg-surface-container-low text-on-surface border-outline-variant'
-              }`}
-            >
-              <Users className="w-5 h-5" />
-              <span>P2P Marketplace</span>
-              <span className="text-[10px] opacity-80">Used Deals</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 pt-2">
             <button onClick={() => handleNav('calculator')} className="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-center text-xs text-on-surface flex flex-col items-center gap-1">
               <Calculator className="w-4 h-4" />
               <span className="leading-tight">Valuation Calc</span>
@@ -422,18 +380,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <div className="pt-2 flex gap-2">
             <button
-              onClick={() => handleNav('sell')}
-              className="flex-1 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"
+              onClick={() => handleNav('hub')}
+              className="flex-1 bg-steel hover:bg-steel-dark text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>{romanUrduMode ? 'Laptop Bechein (Free)' : 'Sell Laptop (Free)'}</span>
+              <Store className="w-4 h-4" />
+              <span>Browse Laptop Hub</span>
             </button>
 
             <button
               onClick={() => handleNav('dashboard')}
               className="px-4 bg-primary hover:opacity-90 text-white font-medium py-2.5 rounded-xl text-xs"
             >
-              Dashboard
+              My Orders
             </button>
           </div>
         </div>

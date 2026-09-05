@@ -120,7 +120,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 space-y-6 animate-scale-up">
         <div className="bg-surface-container-lowest rounded-lg p-8 border border-outline-variant shadow-xl text-center space-y-6">
-          <div className="w-16 h-16 bg-whatsapp/10 text-whatsapp-dark rounded-lg flex items-center justify-center mx-auto shadow-inner">
+          <div className="w-16 h-16 bg-steel-tint text-steel-dark rounded-lg flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
@@ -129,7 +129,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
               Shukriya, Order Confirmed!
             </h1>
             <p className="text-xs sm:text-sm text-on-surface-variant">
-              Tracking Order Number: <strong className="text-whatsapp-dark font-mono text-sm">{placedOrder.order_number}</strong>
+              Tracking Order Number: <strong className="text-steel-dark font-mono text-sm">{placedOrder.order_number}</strong>
             </p>
           </div>
 
@@ -153,14 +153,14 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             </div>
             <div className="flex justify-between border-t border-outline-variant pt-2 font-bold text-sm">
               <span className="text-on-surface">Total Payable on Delivery:</span>
-              <span className="text-whatsapp-dark font-display">{formatPKR(placedOrder.total_price)}</span>
+              <span className="price">{formatPKR(placedOrder.total_price)}</span>
             </div>
           </div>
 
           {/* Delivery Process Note */}
-          <div className="bg-whatsapp/10 text-on-surface p-4 rounded border border-whatsapp/20 text-xs space-y-1 text-left max-w-lg mx-auto">
-            <div className="flex items-center gap-1.5 font-bold text-whatsapp-dark">
-              <ShieldCheck className="w-4 h-4 text-whatsapp-dark" />
+          <div className="bg-steel-tint text-on-surface p-4 rounded border border-steel/20 text-xs space-y-1 text-left max-w-lg mx-auto">
+            <div className="flex items-center gap-1.5 font-bold text-steel-dark">
+              <ShieldCheck className="w-4 h-4 text-steel-dark" />
               <span>What happens next?</span>
             </div>
             <p className="text-[11px] leading-relaxed">
@@ -199,7 +199,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
         <p className="text-xs text-on-surface-variant">Explore our Laptop Hub to find verified laptops with warranty.</p>
         <button
           onClick={() => navigateTo('hub')}
-          className="bg-whatsapp hover:bg-whatsapp-dark text-white text-xs font-bold px-6 py-3 rounded-xl shadow"
+          className="bg-steel hover:bg-steel-dark text-white text-xs font-bold px-6 py-3 rounded-xl shadow"
         >
           Browse Laptop Hub
         </button>
@@ -212,7 +212,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
       {/* Header */}
       <div className="space-y-1">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-on-surface font-display flex items-center gap-2">
-          <ShoppingCart className="w-7 h-7 text-whatsapp-dark" />
+          <ShoppingCart className="w-7 h-7 text-steel-dark" />
           <span>Checkout & Secure Order</span>
         </h1>
         <p className="text-xs sm:text-sm text-on-surface-variant">
@@ -227,7 +227,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             {/* Step 1: Customer Info */}
             <div className="space-y-3">
               <h2 className="text-base font-extrabold text-on-surface font-display flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-whatsapp-dark" />
+                <MapPin className="w-4 h-4 text-steel-dark" />
                 <span>1. Delivery Details (Pakistan)</span>
               </h2>
 
@@ -296,7 +296,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             {/* Step 2: Shipping Speed */}
             <div className="space-y-3 border-t border-outline-variant pt-4">
               <h2 className="text-base font-extrabold text-on-surface font-display flex items-center gap-2">
-                <Truck className="w-4 h-4 text-whatsapp-dark" />
+                <Truck className="w-4 h-4 text-steel-dark" />
                 <span>2. Delivery Speed</span>
               </h2>
 
@@ -306,7 +306,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                   onClick={() => setDeliveryType('standard')}
                   className={`p-3.5 rounded border text-left flex items-start gap-2.5 transition-all ${
                     deliveryType === 'standard'
-                      ? 'border-whatsapp bg-whatsapp/10 ring-2 ring-whatsapp/20'
+                      ? 'border-steel bg-steel-tint ring-2 ring-steel/20'
                       : 'border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
@@ -314,7 +314,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-on-surface">Standard Delivery</span>
-                      <span className="font-bold text-whatsapp-dark">FREE</span>
+                      <span className="price">FREE</span>
                     </div>
                     <span className="text-[11px] text-on-surface-variant">Next-day via local rider (Nankana Sahib & nearby)</span>
                   </div>
@@ -325,7 +325,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                   onClick={() => setDeliveryType('express')}
                   className={`p-3.5 rounded border text-left flex items-start gap-2.5 transition-all ${
                     deliveryType === 'express'
-                      ? 'border-whatsapp bg-whatsapp/10 ring-2 ring-whatsapp/20'
+                      ? 'border-steel bg-steel-tint ring-2 ring-steel/20'
                       : 'border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
@@ -333,7 +333,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-on-surface">Same-Day Express</span>
-                      <span className="font-bold text-on-surface">Rs. 500</span>
+                      <span className="price">Rs. 500</span>
                     </div>
                     <span className="text-[11px] text-on-surface-variant">Same-day, Nankana Sahib city only</span>
                   </div>
@@ -344,7 +344,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             {/* Step 3: Payment Method */}
             <div className="space-y-3 border-t border-outline-variant pt-4">
               <h2 className="text-base font-extrabold text-on-surface font-display flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-whatsapp-dark" />
+                <CreditCard className="w-4 h-4 text-steel-dark" />
                 <span>3. Payment Method</span>
               </h2>
 
@@ -354,7 +354,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                   onClick={() => setPaymentMethod('cod')}
                   className={`w-full p-3.5 rounded border text-left flex items-center justify-between ${
                     paymentMethod === 'cod'
-                      ? 'border-whatsapp bg-whatsapp/10 font-bold text-on-surface ring-2 ring-whatsapp/20'
+                      ? 'border-steel bg-steel-tint font-bold text-on-surface ring-2 ring-steel/20'
                       : 'border-outline-variant text-on-surface-variant hover:bg-surface-container-low'
                   }`}
                 >
@@ -367,7 +367,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                       </span>
                     </div>
                   </div>
-                  <span className="bg-whatsapp/10 text-whatsapp-dark text-[10px] px-2 py-0.5 rounded font-bold">
+                  <span className="bg-steel-tint text-steel-dark text-[10px] px-2 py-0.5 rounded font-bold">
                     Zero Risk
                   </span>
                 </button>
@@ -377,7 +377,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                   onClick={() => setPaymentMethod('bank_transfer')}
                   className={`w-full p-3.5 rounded border text-left flex items-center justify-between ${
                     paymentMethod === 'bank_transfer'
-                      ? 'border-whatsapp bg-whatsapp/10 font-bold text-on-surface ring-2 ring-whatsapp/20'
+                      ? 'border-steel bg-steel-tint font-bold text-on-surface ring-2 ring-steel/20'
                       : 'border-outline-variant text-on-surface-variant hover:bg-surface-container-low'
                   }`}
                 >
@@ -397,7 +397,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
               <button
                 id="place-cod-order-btn"
                 type="submit"
-                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-4 px-6 rounded text-sm flex items-center justify-center gap-2 shadow-sm transition-transform hover:scale-[1.01]"
+                className="w-full bg-steel hover:bg-steel-dark text-white font-extrabold py-4 px-6 rounded text-sm flex items-center justify-center gap-2 shadow-sm transition-transform hover:scale-[1.01]"
               >
                 <span>Confirm Order ({formatPKR(grandTotal)})</span>
                 <ArrowRight className="w-4 h-4" />
@@ -430,14 +430,14 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
 
                       {/* Upgrades */}
                       {(item.selectedRamUpgrade || item.selectedStorageUpgrade) && (
-                        <div className="text-[10px] text-whatsapp-dark bg-whatsapp/10 px-1.5 py-0.5 rounded inline-block">
+                        <div className="text-[10px] text-steel-dark bg-steel-tint px-1.5 py-0.5 rounded inline-block">
                           {item.selectedRamUpgrade?.label && `+${item.selectedRamUpgrade.label} `}
                           {item.selectedStorageUpgrade?.label && `+${item.selectedStorageUpgrade.label}`}
                         </div>
                       )}
 
                       <div className="flex items-center justify-between pt-1">
-                        <span className="font-extrabold text-on-surface">
+                        <span className="price text-sm">
                           {formatPKR(itemUnitP)}
                         </span>
 
@@ -479,28 +479,28 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             <div className="border-t border-outline-variant pt-3 space-y-1.5 text-xs">
               <div className="flex justify-between text-on-surface-variant">
                 <span>Subtotal:</span>
-                <span className="font-bold text-on-surface">{formatPKR(subtotal)}</span>
+                <span className="price text-xs">{formatPKR(subtotal)}</span>
               </div>
               <div className="flex justify-between text-on-surface-variant">
                 <span>Delivery:</span>
-                <span className="font-bold text-whatsapp-dark">
+                <span className="price text-xs">
                   {deliveryFee === 0 ? 'FREE' : formatPKR(deliveryFee)}
                 </span>
               </div>
               <div className="flex justify-between text-on-surface-variant">
                 <span>Checking Warranty (7 Days):</span>
-                <span className="font-bold text-whatsapp-dark">FREE</span>
+                <span className="price text-xs">FREE</span>
               </div>
               <div className="flex justify-between border-t border-outline-variant pt-2 font-extrabold text-sm text-on-surface">
                 <span>Total Amount:</span>
-                <span className="text-whatsapp-dark font-display text-base">{formatPKR(grandTotal)}</span>
+                <span className="price text-base">{formatPKR(grandTotal)}</span>
               </div>
             </div>
           </div>
 
           {/* Trust Guarantees */}
           <div className="bg-primary text-on-primary rounded-lg p-5 border border-primary-container text-xs space-y-2.5">
-            <div className="flex items-center gap-2 font-bold text-whatsapp">
+            <div className="flex items-center gap-2 font-bold text-copper">
               <ShieldCheck className="w-5 h-5" />
               <span>Apna Laptop Buyer Protection</span>
             </div>

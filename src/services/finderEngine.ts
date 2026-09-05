@@ -1,13 +1,13 @@
-import { FinderQuizAnswers, FinderMatch, HubListing, P2PListing } from '../types';
+import { FinderQuizAnswers, FinderMatch, HubListing } from '../types';
 
 /**
  * Intelligent Laptop Finder Wizard Engine
- * Evaluates budget, use-case constraints, specs, and form factors.
+ * Evaluates budget, use-case constraints, specs, and form factors against
+ * the verified Hub inventory only.
  */
 export function matchLaptopsForQuiz(
   answers: FinderQuizAnswers,
-  hubListings: HubListing[],
-  p2pListings: P2PListing[]
+  hubListings: HubListing[]
 ): FinderMatch[] {
   const matches: FinderMatch[] = [];
 
@@ -31,21 +31,17 @@ export function matchLaptopsForQuiz(
     maxBudget = 600000;
   }
 
-  // Helper score function
-  const scoreItem = (
-    item: HubListing | P2PListing,
-    isHub: boolean
-  ): { score: number; reasons: string[]; highlightBadge: string } => {
+  const scoreItem = (item: HubListing): { score: number; reasons: string[]; highlightBadge: string } => {
     let score = 70; // baseline
     const reasons: string[] = [];
-    let highlightBadge = isHub ? 'Verified Hub Stock' : 'P2P Deal';
+    let highlightBadge = 'Verified Hub Stock';
 
-    const price = isHub ? (item as HubListing).sale_price : (item as P2PListing).asking_price;
+    const price = item.sale_price;
     const title = item.title.toLowerCase();
     const cpu = item.specs.cpu.toLowerCase();
     const ram = item.specs.ram.toLowerCase();
     const gpu = item.specs.gpu.toLowerCase();
-    const tags = isHub ? (item as HubListing).use_case_tags : [];
+    const tags = item.use_case_tags;
 
     // 1. Budget fit
     if (price >= minBudget && price <= maxBudget) {
@@ -97,7 +93,7 @@ export function matchLaptopsForQuiz(
         score += 15;
         reasons.push('Lightweight and portable for university backpacks and daily commute.');
       }
-      if (item.specs.batteryHealth || (isHub && (item as HubListing).specs.batteryHealth)) {
+      if (item.specs.batteryHealth) {
         score += 10;
         reasons.push('Reliable battery backup suited for study sessions during power cuts.');
       }
@@ -121,19 +117,16 @@ export function matchLaptopsForQuiz(
       }
     }
 
-    // Hub verified items get a 10 pt trust boost
-    if (isHub) {
-      score += 10;
-      reasons.push('Includes Apna Laptop 7-Day Checking Warranty and verified supplier inspection.');
-    }
+    // Every Hub listing is verified — trust boost
+    score += 10;
+    reasons.push('Includes Apna Laptop 7-Day Checking Warranty and verified supplier inspection.');
 
     return { score, reasons, highlightBadge };
   };
 
-  // Score all Hub listings
   hubListings.forEach((item) => {
     if (item.status === 'out_of_stock') return;
-    const { score, reasons, highlightBadge } = scoreItem(item, true);
+    const { score, reasons, highlightBadge } = scoreItem(item);
     matches.push({
       listing: item,
       type: 'hub',
@@ -143,22 +136,9 @@ export function matchLaptopsForQuiz(
     });
   });
 
-  // Score active P2P listings
-  p2pListings.forEach((item) => {
-    if (item.status !== 'active') return;
-    const { score, reasons, highlightBadge } = scoreItem(item, false);
-    matches.push({
-      listing: item,
-      type: 'p2p',
-      matchScore: score,
-      reasons: reasons.slice(0, 3),
-      highlightBadge,
-    });
-  });
-
   // Sort descending by score
   matches.sort((a, b) => b.matchScore - a.matchScore);
 
-  // Return top 3-4 matches
+  // Return top 3 matches
   return matches.slice(0, 3);
 }

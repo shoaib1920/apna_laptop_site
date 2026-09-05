@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Store, PlusCircle, User as UserIcon } from 'lucide-react';
+import { Home, Store, Heart, User as UserIcon } from 'lucide-react';
 import { User } from '../types';
 
 interface BottomNavProps {
@@ -12,7 +12,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentRoute, navigateTo, 
   const items = [
     { route: 'home', label: 'Home', icon: Home },
     { route: 'hub', label: 'Browse', icon: Store },
-    { route: 'sell', label: 'Sell', icon: PlusCircle },
+    { route: 'wishlist', label: 'Saved', icon: Heart },
     { route: currentUser ? 'dashboard' : 'home', label: currentUser ? 'Profile' : 'Guest', icon: UserIcon },
   ];
 

@@ -19,20 +19,18 @@ import {
   BarChart3,
   Plane,
 } from 'lucide-react';
-import { FinderQuizAnswers, FinderMatch, HubListing, P2PListing } from '../types';
+import { FinderQuizAnswers, FinderMatch, HubListing } from '../types';
 import { matchLaptopsForQuiz } from '../services/finderEngine';
-import { formatPKR, getHubWhatsAppLink, getP2PWhatsAppLink } from '../utils/helpers';
+import { formatPKR, getHubWhatsAppLink } from '../utils/helpers';
 
 interface LaptopFinderViewProps {
   hubListings: HubListing[];
-  p2pListings: P2PListing[];
   navigateTo: (route: string, params?: any) => void;
   romanUrduMode: boolean;
 }
 
 export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
   hubListings = [],
-  p2pListings = [],
   navigateTo,
   romanUrduMode,
 }) => {
@@ -70,7 +68,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
   };
 
   const matches: FinderMatch[] = isCompleted
-    ? matchLaptopsForQuiz(answers, hubListings, p2pListings)
+    ? matchLaptopsForQuiz(answers, hubListings)
     : [];
 
   return (
@@ -79,7 +77,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
       <div className="flex items-center justify-between gap-4 pb-1">
         <div>
           <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
-            <Compass className="w-5 h-5 text-whatsapp-dark" />
+            <Compass className="w-5 h-5 text-steel-dark" />
             <span>Laptop Finder Wizard</span>
           </h1>
           <p className="text-xs text-on-surface-variant mt-0.5">
@@ -111,7 +109,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
             </div>
             <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden">
               <div
-                className="h-full bg-whatsapp transition-all duration-300 rounded-full"
+                className="h-full bg-steel transition-all duration-300 rounded-full"
                 style={{ width: `${(currentStep / 5) * 100}%` }}
               />
             </div>
@@ -171,11 +169,11 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     onClick={() => handleSelect('primaryUseCase', item.id)}
                     className={`p-4 rounded border text-left flex items-start gap-3 transition-all ${
                       answers.primaryUseCase === item.id
-                        ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
+                        ? 'border-steel bg-steel-tint shadow-sm ring-2 ring-steel/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
                     }`}
                   >
-                    <item.icon className="w-5 h-5 text-whatsapp-dark shrink-0 mt-0.5" />
+                    <item.icon className="w-5 h-5 text-steel-dark shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-bold text-on-surface text-xs">{item.title}</h4>
                       <p className="text-[11px] text-on-surface-variant mt-0.5">{item.desc}</p>
@@ -229,7 +227,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     onClick={() => handleSelect('budgetTier', item.id)}
                     className={`p-4 rounded border text-left transition-all ${
                       answers.budgetTier === item.id
-                        ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
+                        ? 'border-steel bg-steel-tint shadow-sm ring-2 ring-steel/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
                     }`}
                   >
@@ -274,7 +272,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     onClick={() => handleSelect('portability', item.id)}
                     className={`w-full p-4 rounded border text-left transition-all ${
                       answers.portability === item.id
-                        ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
+                        ? 'border-steel bg-steel-tint shadow-sm ring-2 ring-steel/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
                     }`}
                   >
@@ -319,7 +317,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     onClick={() => handleSelect('batteryPriority', item.id)}
                     className={`w-full p-4 rounded border text-left transition-all ${
                       answers.batteryPriority === item.id
-                        ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
+                        ? 'border-steel bg-steel-tint shadow-sm ring-2 ring-steel/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
                     }`}
                   >
@@ -364,7 +362,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     onClick={() => handleSelect('conditionPref', item.id)}
                     className={`w-full p-4 rounded border text-left transition-all ${
                       answers.conditionPref === item.id
-                        ? 'border-whatsapp bg-whatsapp/10 shadow-sm ring-2 ring-whatsapp/20'
+                        ? 'border-steel bg-steel-tint shadow-sm ring-2 ring-steel/20'
                         : 'border-outline-variant hover:border-outline hover:bg-surface-container-low'
                     }`}
                   >
@@ -389,7 +387,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
 
             <button
               onClick={handleNext}
-              className="bg-whatsapp hover:bg-whatsapp-dark text-white text-xs font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-transform hover:scale-[1.02]"
+              className="bg-steel hover:bg-steel-dark text-white text-xs font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-transform hover:scale-[1.02]"
             >
               <span>{currentStep === 5 ? 'Show Recommended Matches' : 'Next Question'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -399,10 +397,10 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
       ) : (
         /* RESULTS VIEW */
         <div className="space-y-6 animate-fade-in">
-          <div className="bg-primary text-on-primary rounded-lg p-6 sm:p-8 border border-whatsapp/30 shadow-sm space-y-4">
+          <div className="bg-primary text-on-primary rounded-lg p-6 sm:p-8 border border-steel/30 shadow-sm space-y-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-whatsapp" />
-              <h2 className="text-base font-extrabold font-display text-whatsapp uppercase tracking-wider">
+              <Sparkles className="w-5 h-5 text-steel" />
+              <h2 className="text-base font-extrabold font-display text-steel uppercase tracking-wider">
                 Recommendation Summary
               </h2>
             </div>
@@ -414,21 +412,25 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
           {/* Matched List */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {matches.map((match, idx) => {
-              const item = match.listing;
-              const isHub = match.type === 'hub';
-              const price = isHub ? (item as HubListing).sale_price : (item as P2PListing).asking_price;
+              const item = match.listing as HubListing;
+              const price = item.sale_price;
+              const isVerifiedBadge = match.highlightBadge.toLowerCase().includes('verified');
 
               return (
                 <div
                   key={idx}
-                  className="bg-surface-container-lowest rounded-lg border-2 border-whatsapp/60 p-5 shadow-md flex flex-col justify-between space-y-4"
+                  className="bg-surface-container-lowest rounded-lg border-2 border-steel/60 p-5 shadow-md flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="bg-whatsapp text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">
+                      <span
+                        className={`text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider ${
+                          isVerifiedBadge ? 'bg-copper' : 'bg-steel'
+                        }`}
+                      >
                         {match.highlightBadge}
                       </span>
-                      <span className="font-extrabold text-deal font-display text-base">
+                      <span className="price text-base">
                         {formatPKR(price)}
                       </span>
                     </div>
@@ -440,10 +442,10 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     <h4 className="font-bold text-on-surface text-sm line-clamp-1">{item.title}</h4>
 
                     {/* Match reasons */}
-                    <div className="bg-whatsapp/10 p-2.5 rounded-xl border border-whatsapp/20 space-y-1">
+                    <div className="bg-steel-tint p-2.5 rounded-xl border border-steel/20 space-y-1">
                       {match.reasons.map((r, i) => (
-                        <div key={i} className="text-[11px] text-whatsapp-dark flex items-start gap-1">
-                          <Check className="w-3 h-3 text-whatsapp-dark shrink-0 mt-0.5" />
+                        <div key={i} className="text-[11px] text-steel-dark flex items-start gap-1">
+                          <Check className="w-3 h-3 text-steel-dark shrink-0 mt-0.5" />
                           <span>{r}</span>
                         </div>
                       ))}
@@ -457,7 +459,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
 
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant">
                     <a
-                      href={isHub ? getHubWhatsAppLink(item as HubListing) : getP2PWhatsAppLink(item as P2PListing)}
+                      href={getHubWhatsAppLink(item)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-1.5"
@@ -467,11 +469,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
                     </a>
 
                     <button
-                      onClick={() =>
-                        isHub
-                          ? navigateTo('hub_detail', { hubId: item.id })
-                          : navigateTo('marketplace_detail', { p2pId: item.id })
-                      }
+                      onClick={() => navigateTo('hub_detail', { hubId: item.id })}
                       className="bg-primary hover:bg-primary-container text-on-primary font-bold text-xs py-2.5 rounded-xl"
                     >
                       View Specs

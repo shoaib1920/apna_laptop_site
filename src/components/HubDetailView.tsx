@@ -130,7 +130,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigateTo('hub')}
-          className="flex items-center gap-1.5 text-xs font-bold text-on-surface-variant hover:text-whatsapp-dark transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-on-surface-variant hover:text-steel-dark transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Laptop Hub</span>
@@ -156,7 +156,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               className="w-full h-full object-contain p-6"
             />
             {/* Badges on image */}
-            <div className="absolute top-3 left-3 bg-whatsapp text-white text-xs font-bold px-3 py-1 rounded-lg shadow">
+            <div className="absolute top-3 left-3 bg-copper text-white text-xs font-bold px-3 py-1 rounded-lg shadow">
               Verified Stock • {listing.condition}
             </div>
             <button
@@ -176,7 +176,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                   onClick={() => setActiveImageIndex(idx)}
                   className={`w-20 h-16 rounded-xl overflow-hidden bg-white border-2 shrink-0 transition-all ${
                     activeImageIndex === idx
-                      ? 'border-whatsapp scale-105 shadow-sm'
+                      ? 'border-steel scale-105 shadow-sm'
                       : 'border-outline-variant opacity-70 hover:opacity-100'
                   }`}
                 >
@@ -187,15 +187,15 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           )}
 
           {/* Supplier Verification Card */}
-          <div className="bg-whatsapp/10 rounded p-4 border border-whatsapp/30 text-xs text-whatsapp-dark space-y-2">
-            <div className="flex items-center gap-2 font-bold text-whatsapp-dark">
-              <ShieldCheck className="w-5 h-5 text-whatsapp-dark" />
+          <div className="bg-copper/10 rounded p-4 border border-copper/30 text-xs text-copper-dark space-y-2">
+            <div className="flex items-center gap-2 font-bold text-copper-dark">
+              <ShieldCheck className="w-5 h-5 text-copper-dark" />
               <span>Apna Laptop Supplier Verification</span>
             </div>
-            <p className="text-whatsapp-dark leading-relaxed">
+            <p className="text-copper-dark leading-relaxed">
               {listing.supplierNote || 'Inspected by our verified supplier partner in Nankana Sahib.'}
             </p>
-            <div className="flex items-center gap-4 text-[11px] font-semibold text-whatsapp-dark pt-1">
+            <div className="flex items-center gap-4 text-[11px] font-semibold text-copper-dark pt-1">
               <span>✓ 7-Day Checking Warranty</span>
               <span>✓ Genuine Motherboard Guaranteed</span>
               <span>✓ Free Delivery</span>
@@ -233,7 +233,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
             <div>
               <span className="text-xs text-on-primary-container block">Total Sale Price (PKR)</span>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl sm:text-3xl font-extrabold text-deal font-display">
+                <span className="price text-2xl sm:text-3xl">
                   {formatPKR(finalPrice)}
                 </span>
                 {listing.original_price && listing.original_price > finalPrice && (
@@ -248,14 +248,14 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                 )}
               </div>
               {upgradeTotal > 0 && (
-                <span className="text-[11px] text-whatsapp block mt-0.5">
+                <span className="text-[11px] text-steel block mt-0.5">
                   Includes +{formatPKR(upgradeTotal)} in custom hardware upgrades
                 </span>
               )}
             </div>
 
             <div className="text-right">
-              <span className="inline-block bg-whatsapp/20 text-whatsapp text-xs font-bold px-2.5 py-1 rounded-lg border border-whatsapp/40">
+              <span className="inline-block bg-steel/20 text-steel text-xs font-bold px-2.5 py-1 rounded-lg border border-steel/40">
                 {listing.stock_qty > 0 ? `In Stock (${listing.stock_qty} available)` : 'Out of Stock'}
               </span>
               <span className="text-[11px] text-on-primary-container block mt-1">Cash on Delivery Available</span>
@@ -267,7 +267,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
             <div className="bg-surface-container-low rounded p-4 border border-outline-variant space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-on-surface flex items-center gap-1.5">
-                  <Plus className="w-4 h-4 text-whatsapp-dark" />
+                  <Plus className="w-4 h-4 text-steel-dark" />
                   <span>Custom Hardware Upgrades (Optional)</span>
                 </span>
                 <span className="text-[10px] text-on-surface-variant">Installed & tested before dispatch</span>
@@ -282,7 +282,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                       onClick={() => setSelectedRamUpgrade(null)}
                       className={`text-xs px-3 py-1.5 rounded-xl border text-left transition-all ${
                         !selectedRamUpgrade
-                          ? 'bg-whatsapp text-white font-bold border-whatsapp shadow-sm'
+                          ? 'bg-steel text-white font-bold border-steel shadow-sm'
                           : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
                       }`}
                     >
@@ -294,7 +294,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                         onClick={() => setSelectedRamUpgrade(opt)}
                         className={`text-xs px-3 py-1.5 rounded-xl border text-left transition-all ${
                           selectedRamUpgrade?.label === opt.label
-                            ? 'bg-whatsapp text-white font-bold border-whatsapp shadow-sm'
+                            ? 'bg-steel text-white font-bold border-steel shadow-sm'
                             : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
                         }`}
                       >
@@ -314,7 +314,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                       onClick={() => setSelectedStorageUpgrade(null)}
                       className={`text-xs px-3 py-1.5 rounded-xl border text-left transition-all ${
                         !selectedStorageUpgrade
-                          ? 'bg-whatsapp text-white font-bold border-whatsapp shadow-sm'
+                          ? 'bg-steel text-white font-bold border-steel shadow-sm'
                           : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
                       }`}
                     >
@@ -326,7 +326,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                         onClick={() => setSelectedStorageUpgrade(opt)}
                         className={`text-xs px-3 py-1.5 rounded-xl border text-left transition-all ${
                           selectedStorageUpgrade?.label === opt.label
-                            ? 'bg-whatsapp text-white font-bold border-whatsapp shadow-sm'
+                            ? 'bg-steel text-white font-bold border-steel shadow-sm'
                             : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant hover:bg-surface-container'
                         }`}
                       >
@@ -366,7 +366,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               <button
                 id="buy-now-cod-btn"
                 onClick={handleBuyNow}
-                className="bg-whatsapp-dark hover:bg-whatsapp text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
+                className="bg-steel-dark hover:bg-steel text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
               >
                 <Truck className="w-4 h-4" />
                 <span>Order with COD</span>
@@ -374,7 +374,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
             </div>
 
             {addedToCartToast && (
-              <div className="bg-whatsapp/10 text-whatsapp-dark border border-whatsapp/30 p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between animate-fade-in">
+              <div className="bg-steel/10 text-steel-dark border border-steel/30 p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between animate-fade-in">
                 <span>✓ Added to cart with selected upgrades!</span>
                 <button onClick={() => navigateTo('cart')} className="underline font-bold">
                   View Cart
@@ -386,19 +386,19 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           {/* Key Trust Checkpoints */}
           <div className="border-t border-outline-variant pt-4 grid grid-cols-2 gap-3 text-xs text-on-surface-variant">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-whatsapp-dark shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-copper-dark shrink-0" />
               <span>{listing.warrantyMonths}-Month Checking Warranty</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-whatsapp-dark shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-copper-dark shrink-0" />
               <span>Free Local Delivery</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-whatsapp-dark shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-copper-dark shrink-0" />
               <span>Open Parcel Checking Allowed</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-whatsapp-dark shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-copper-dark shrink-0" />
               <span>Original Charger Included</span>
             </div>
           </div>
@@ -409,7 +409,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
       <section className="bg-surface-container-lowest rounded-lg p-6 sm:p-8 border border-outline-variant shadow-sm space-y-6">
         <div className="border-b border-outline-variant pb-3 flex items-center justify-between">
           <h2 className="text-lg font-extrabold text-on-surface font-display flex items-center gap-2">
-            <Layers className="w-5 h-5 text-whatsapp-dark" />
+            <Layers className="w-5 h-5 text-steel-dark" />
             <span>Complete Hardware Specifications</span>
           </h2>
           <span className="text-xs text-outline font-medium">100% Genuine Lot Specs</span>
@@ -455,7 +455,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
 
           <div className="flex justify-between py-2 border-b border-outline-variant">
             <span className="font-mono-spec text-outline uppercase tracking-wide">Condition Grade:</span>
-            <span className="font-bold text-whatsapp-dark text-right">{listing.condition}</span>
+            <span className="font-bold text-copper-dark text-right">{listing.condition}</span>
           </div>
 
           {listing.specs.ports && (
@@ -485,7 +485,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           </div>
           <button
             onClick={() => setShowReviewModal(true)}
-            className="bg-whatsapp/10 hover:bg-whatsapp/20 text-whatsapp-dark text-xs font-bold px-3.5 py-2 rounded-xl border border-whatsapp/30 transition-colors"
+            className="bg-steel/10 hover:bg-steel/20 text-steel-dark text-xs font-bold px-3.5 py-2 rounded-xl border border-steel/30 transition-colors"
           >
             + Write a Review
           </button>
@@ -503,7 +503,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-on-surface text-xs">{rev.reviewer_name}</span>
-                    <span className="text-[10px] text-whatsapp-dark bg-whatsapp/10 font-bold px-1.5 py-0.2 rounded">
+                    <span className="text-[10px] text-copper-dark bg-copper/10 font-bold px-1.5 py-0.2 rounded">
                       Verified Purchase
                     </span>
                     <span className="text-[11px] text-outline">• {rev.reviewer_city}</span>
@@ -535,7 +535,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
 
             {reviewSubmitted ? (
               <div className="text-center py-6 space-y-2">
-                <CheckCircle2 className="w-10 h-10 text-whatsapp-dark mx-auto" />
+                <CheckCircle2 className="w-10 h-10 text-steel-dark mx-auto" />
                 <p className="text-sm font-bold text-on-surface">Shukriya! Your review has been posted.</p>
               </div>
             ) : (
@@ -602,7 +602,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl text-white font-bold bg-whatsapp hover:bg-whatsapp-dark shadow"
+                    className="px-5 py-2 rounded-xl text-white font-bold bg-steel hover:bg-steel-dark shadow"
                   >
                     Submit Review
                   </button>

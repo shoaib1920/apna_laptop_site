@@ -73,11 +73,10 @@ export function simulateLaptopUpgrade(
   selectedUpgradeIds: string[]
 ): UpgradeSimulationResult {
   const selectedUpgrades = UPGRADE_CATALOG.filter((u) => selectedUpgradeIds.includes(u.id));
-  
-  const totalUpgradeCost不易 = selectedUpgrades.reduce((sum, u) => sum + u.costPkr, 0);
+
+  const totalUpgradeCost = selectedUpgrades.reduce((sum, u) => sum + u.costPkr, 0);
   const totalGain = selectedUpgrades.reduce((sum, u) => sum + u.perfScoreGain, 0);
-  
-  // Base estimates
+
   let newRamCapacity = baseRam;
   let newStorageCapacity = baseStorage;
   const recommendations: string[] = [];
@@ -102,13 +101,13 @@ export function simulateLaptopUpgrade(
     recommendations.push('Fresh thermal paste prevents CPU fan roaring and battery drain.');
   }
 
-  const overallPerformanceBoostPercent不易 = Math.min(85, Math.round(totalGain * 0.9));
-  const estimatedNewValue = baseLaptopPrice + Math.round(totalUpgradeCost不易 * 0.92);
+  const overallPerformanceBoostPercent = Math.min(85, Math.round(totalGain * 0.9));
+  const estimatedNewValue = baseLaptopPrice + Math.round(totalUpgradeCost * 0.92);
 
   return {
-    totalUpgradeCost: totalUpgradeCost不易,
+    totalUpgradeCost,
     estimatedNewValue,
-    overallPerformanceBoostPercent: overallPerformanceBoostPercent不易,
+    overallPerformanceBoostPercent,
     newRamCapacity,
     newStorageCapacity,
     recommendations,

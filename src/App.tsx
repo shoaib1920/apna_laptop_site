@@ -5,21 +5,18 @@ import { Footer } from './components/Footer';
 import { HomeView } from './components/HomeView';
 import { HubView } from './components/HubView';
 import { HubDetailView } from './components/HubDetailView';
-import { MarketplaceView } from './components/MarketplaceView';
-import { MarketplaceDetailView } from './components/MarketplaceDetailView';
 import { PriceCalculatorView } from './components/PriceCalculatorView';
+import { UpgradeAdvisorView } from './components/UpgradeAdvisorView';
 import { LaptopFinderView } from './components/LaptopFinderView';
-import { SellLaptopView } from './components/SellLaptopView';
 import { CheckoutView } from './components/CheckoutView';
 import { AdminDashboardView } from './components/AdminDashboardView';
 import { WishlistView } from './components/WishlistView';
-import { MessagesView } from './components/MessagesView';
 import { UserDashboardView } from './components/UserDashboardView';
 import { AccessDenied } from './components/AccessDenied';
 import { BottomNav } from './components/BottomNav';
 import { MessageCircle, ArrowUp } from 'lucide-react';
 
-const HIDE_BOTTOM_NAV_ROUTES = ['hub_detail', 'marketplace_detail', 'checkout', 'cart', 'calculator', 'admin'];
+const HIDE_BOTTOM_NAV_ROUTES = ['hub_detail', 'checkout', 'cart', 'calculator', 'advisor', 'admin'];
 
 export default function App() {
   const store = useAppStore();
@@ -59,7 +56,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface text-on-surface font-sans antialiased selection:bg-whatsapp selection:text-white">
+    <div className="min-h-screen flex flex-col bg-surface text-on-surface font-sans antialiased selection:bg-steel selection:text-white">
       {/* Top Navigation */}
       <Navbar
         currentRoute={currentRoute}
@@ -74,7 +71,6 @@ export default function App() {
         globalSearchQuery={globalSearchQuery}
         setGlobalSearchQuery={setGlobalSearchQuery}
         hubCount={store.hubListings.length}
-        p2pCount={store.p2pListings.length}
       />
 
       {/* Main View Container */}
@@ -82,7 +78,6 @@ export default function App() {
         {currentRoute === 'home' && (
           <HomeView
             hubListings={store.hubListings}
-            p2pListings={store.p2pListings}
             reviews={store.reviews}
             wishlist={store.wishlist}
             toggleWishlist={store.toggleWishlist}
@@ -121,30 +116,16 @@ export default function App() {
           />
         )}
 
-        {currentRoute === 'marketplace' && (
-          <MarketplaceView
-            p2pListings={store.p2pListings}
-            currentUser={store.currentUser}
-            navigateTo={navigateTo}
-            reportP2PListing={store.reportP2PListing}
-            romanUrduMode={store.romanUrduMode}
-          />
-        )}
-
-        {currentRoute === 'marketplace_detail' && (
-          <MarketplaceDetailView
-            listingId={routeParams.p2pId || store.p2pListings[0]?.id}
-            p2pListings={store.p2pListings}
-            currentUser={store.currentUser}
-            navigateTo={navigateTo}
-            reportP2PListing={store.reportP2PListing}
-            sendMessage={store.sendMessage}
-            romanUrduMode={store.romanUrduMode}
-          />
-        )}
-
-        {(currentRoute === 'calculator' || currentRoute === 'advisor') && (
+        {currentRoute === 'calculator' && (
           <PriceCalculatorView
+            navigateTo={navigateTo}
+            romanUrduMode={store.romanUrduMode}
+          />
+        )}
+
+        {currentRoute === 'advisor' && (
+          <UpgradeAdvisorView
+            hubListings={store.hubListings}
             navigateTo={navigateTo}
             romanUrduMode={store.romanUrduMode}
           />
@@ -153,17 +134,6 @@ export default function App() {
         {currentRoute === 'finder' && (
           <LaptopFinderView
             hubListings={store.hubListings}
-            p2pListings={store.p2pListings}
-            navigateTo={navigateTo}
-            romanUrduMode={store.romanUrduMode}
-          />
-        )}
-
-        {currentRoute === 'sell' && (
-          <SellLaptopView
-            currentUser={store.currentUser}
-            initialSpecs={routeParams.sellSpecs}
-            createP2PListing={store.addP2PListing}
             navigateTo={navigateTo}
             romanUrduMode={store.romanUrduMode}
           />
@@ -186,13 +156,11 @@ export default function App() {
           store.currentUser?.role === 'admin' ? (
             <AdminDashboardView
               hubListings={store.hubListings}
-              p2pListings={store.p2pListings}
               orders={store.orders}
               createHubListing={store.addHubListing}
               updateHubListing={store.updateHubListing}
               updateOrderStatus={store.updateOrderStatus}
               deleteHubListing={store.deleteHubListing}
-              deleteP2PListing={store.deleteP2PListing}
               navigateTo={navigateTo}
               currentUser={store.currentUser}
             />
@@ -205,9 +173,6 @@ export default function App() {
           <UserDashboardView
             currentUser={store.currentUser}
             orders={store.orders}
-            p2pListings={store.p2pListings}
-            deleteP2PListing={store.deleteP2PListing}
-            updateP2PListing={store.updateP2PListing}
             navigateTo={navigateTo}
             romanUrduMode={store.romanUrduMode}
           />
@@ -217,17 +182,7 @@ export default function App() {
           <WishlistView
             wishlist={store.wishlist}
             hubListings={store.hubListings}
-            p2pListings={store.p2pListings}
             toggleWishlist={store.toggleWishlist}
-            navigateTo={navigateTo}
-          />
-        )}
-
-        {currentRoute === 'messages' && (
-          <MessagesView
-            messages={store.messages}
-            currentUser={store.currentUser}
-            sendMessage={store.sendMessage}
             navigateTo={navigateTo}
           />
         )}

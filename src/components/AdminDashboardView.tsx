@@ -10,18 +10,16 @@ import {
   Trash2,
   Truck,
 } from 'lucide-react';
-import { HubListing, LaptopCondition, Order, OrderStatus, P2PListing, User } from '../types';
+import { HubListing, LaptopCondition, Order, OrderStatus, User } from '../types';
 import { formatPKR } from '../utils/helpers';
 
 interface AdminDashboardViewProps {
   hubListings: HubListing[];
-  p2pListings: P2PListing[];
   orders: Order[];
   createHubListing: (listing: Omit<HubListing, 'id' | 'rating' | 'reviewCount'>) => HubListing;
   updateHubListing: (id: string, updates: Partial<HubListing>) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus, courierName?: string, trackingNumber?: string) => void;
   deleteHubListing: (id: string) => void;
-  deleteP2PListing: (id: string) => void;
   navigateTo: (route: string, params?: any) => void;
   currentUser: User | null;
 }
@@ -37,7 +35,7 @@ const LAPTOP_CONDITIONS: LaptopCondition[] = [
 const conditionBadgeClasses = (condition: string) => {
   if (condition === 'Brand New') return 'bg-primary text-on-primary';
   if (condition === 'Like New (Open Box)') return 'bg-surface-container-low text-on-surface border border-outline-variant';
-  return 'bg-whatsapp/10 text-whatsapp-dark';
+  return 'bg-copper-tint text-copper-dark';
 };
 
 const emptyForm = {
@@ -61,17 +59,15 @@ const emptyForm = {
 
 export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   hubListings = [],
-  p2pListings = [],
   orders = [],
   createHubListing,
   updateHubListing,
   updateOrderStatus,
   deleteHubListing,
-  deleteP2PListing,
   navigateTo,
   currentUser,
 }) => {
-  const [activeTab, setActiveTab] = useState<'inventory' | 'orders' | 'moderation' | 'analytics'>('inventory');
+  const [activeTab, setActiveTab] = useState<'inventory' | 'orders' | 'analytics'>('inventory');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -183,15 +179,15 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       <div className="bg-primary-container text-on-primary rounded-xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-md bg-whatsapp flex items-center justify-center text-on-primary font-bold">
+            <span className="w-8 h-8 rounded-md bg-steel flex items-center justify-center text-on-primary font-bold">
               <ShieldAlert className="w-5 h-5" />
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold font-display">
-              Apna Laptop <span className="text-whatsapp">Admin Portal</span>
+              Apna Laptop <span className="text-steel">Admin Portal</span>
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-on-primary-container mt-1">
-            Manage Hub stock, dispatch orders like a CRM, and moderate P2P listings.
+            Manage Hub stock and dispatch customer orders like a CRM.
           </p>
         </div>
 
@@ -200,7 +196,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
           <button
             onClick={() => setActiveTab('inventory')}
             className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'inventory' ? 'bg-whatsapp text-on-primary shadow' : 'text-on-primary-container hover:text-on-primary'
+              activeTab === 'inventory' ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
             }`}
           >
             <Package className="w-3.5 h-3.5" />
@@ -210,7 +206,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
           <button
             onClick={() => setActiveTab('orders')}
             className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'orders' ? 'bg-whatsapp text-on-primary shadow' : 'text-on-primary-container hover:text-on-primary'
+              activeTab === 'orders' ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
             }`}
           >
             <ShoppingCart className="w-3.5 h-3.5" />
@@ -218,19 +214,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveTab('moderation')}
-            className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'moderation' ? 'bg-whatsapp text-on-primary shadow' : 'text-on-primary-container hover:text-on-primary'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span>P2P Moderation ({p2pListings.length})</span>
-          </button>
-
-          <button
             onClick={() => setActiveTab('analytics')}
             className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'analytics' ? 'bg-whatsapp text-on-primary shadow' : 'text-on-primary-container hover:text-on-primary'
+              activeTab === 'analytics' ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
             }`}
           >
             <TrendingUp className="w-3.5 h-3.5" />
@@ -246,7 +232,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
             <h2 className="text-lg font-bold text-on-surface font-display">Verified Stock Lots & Margins</h2>
             <button
               onClick={openAddModal}
-              className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 shadow"
+              className="bg-steel hover:bg-steel-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 shadow"
             >
               <Plus className="w-4 h-4" />
               <span>Add New Lot Product</span>
@@ -288,19 +274,19 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                         <td className="p-4 text-on-surface-variant font-mono-spec text-[11px]">
                           {item.specs.cpu.split('(')[0]} • {item.specs.ram} • {item.specs.storage}
                         </td>
-                        <td className="p-4 text-on-surface-variant font-medium">
+                        <td className="p-4 price text-[11px]">
                           {formatPKR(item.cost_price)}
                         </td>
-                        <td className="p-4 font-bold text-on-surface">
+                        <td className="p-4 price text-xs">
                           {formatPKR(item.sale_price)}
                         </td>
-                        <td className="p-4 font-extrabold text-whatsapp-dark">
+                        <td className="p-4 price text-xs">
                           +{formatPKR(margin)}
                         </td>
                         <td className="p-4">
                           <span
                             className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              item.stock_qty > 0 ? 'bg-whatsapp/10 text-whatsapp-dark' : 'bg-error-container text-on-error-container'
+                              item.stock_qty > 0 ? 'bg-steel-tint text-steel-dark' : 'bg-error-container text-on-error-container'
                             }`}
                           >
                             {item.stock_qty} pcs
@@ -372,12 +358,12 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                       <td className="p-4 text-on-surface-variant max-w-xs truncate">
                         {order.items.map((i) => `${i.title} (x${i.qty})`).join(', ')}
                       </td>
-                      <td className="p-4 font-bold text-on-surface">{formatPKR(order.total_price)}</td>
+                      <td className="p-4 price text-xs">{formatPKR(order.total_price)}</td>
                       <td className="p-4">
                         <span
                           className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase ${
                             order.status === 'delivered'
-                              ? 'bg-whatsapp/10 text-whatsapp-dark'
+                              ? 'bg-steel-tint text-steel-dark'
                               : order.status === 'shipped'
                               ? 'bg-secondary-container/60 text-on-secondary-container'
                               : order.status === 'cancelled'
@@ -434,7 +420,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                             />
                             <button
                               onClick={() => handleSaveCourier(order.id)}
-                              className="flex items-center justify-center gap-1 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-[11px] px-2 py-1 rounded-md"
+                              className="flex items-center justify-center gap-1 bg-steel hover:bg-steel-dark text-white font-bold text-[11px] px-2 py-1 rounded-md"
                             >
                               <Truck className="w-3 h-3" />
                               <span>Mark Shipped</span>
@@ -451,60 +437,19 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
         </div>
       )}
 
-      {/* TAB 3: P2P AD MODERATION */}
-      {activeTab === 'moderation' && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-on-surface font-display">P2P User Submissions & Moderation Queue</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {p2pListings.map((ad) => (
-              <div key={ad.id} className="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm space-y-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span className="text-[10px] text-on-surface-variant block">Seller: {ad.seller_name} ({ad.seller_city})</span>
-                    <h3 className="font-bold text-on-surface text-sm">{ad.title}</h3>
-                  </div>
-                  <span className="font-bold text-on-surface">{formatPKR(ad.asking_price)}</span>
-                </div>
-
-                <p className="text-xs text-on-surface-variant line-clamp-2">{ad.description}</p>
-
-                <div className="flex items-center justify-between pt-2 border-t border-outline-variant text-xs">
-                  <span className="text-[11px] text-on-surface-variant">Reports: <strong>{ad.reports_count}</strong></span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => deleteP2PListing(ad.id)}
-                      className="px-3 py-1 bg-error-container text-on-error-container hover:opacity-80 rounded-md font-bold text-xs"
-                    >
-                      Delete Ad
-                    </button>
-                    <button
-                      onClick={() => navigateTo('marketplace_detail', { p2pId: ad.id })}
-                      className="px-3 py-1 bg-primary text-on-primary hover:opacity-90 rounded-md font-bold text-xs"
-                    >
-                      Inspect Details
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 4: FINANCIAL ANALYTICS */}
+      {/* TAB 3: FINANCIAL ANALYTICS */}
       {activeTab === 'analytics' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm space-y-1">
               <span className="text-xs text-on-surface-variant font-semibold">Total Gross Marketplace Volume</span>
-              <div className="text-2xl font-extrabold text-on-surface font-display">{formatPKR(totalSalesGMV)}</div>
-              <span className="text-[11px] text-whatsapp-dark font-bold">100% Cash flow tracked</span>
+              <div className="price text-2xl">{formatPKR(totalSalesGMV)}</div>
+              <span className="text-[11px] text-steel-dark font-bold">100% Cash flow tracked</span>
             </div>
 
             <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm space-y-1">
               <span className="text-xs text-on-surface-variant font-semibold">Net Platform Margin (from orders)</span>
-              <div className="text-2xl font-extrabold text-whatsapp-dark font-display">{formatPKR(totalMarginFromOrders)}</div>
+              <div className="price text-2xl">{formatPKR(totalMarginFromOrders)}</div>
               <span className="text-[11px] text-on-surface-variant">Sale price − supplier cost + upgrades, across all orders</span>
             </div>
 
@@ -653,7 +598,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-whatsapp hover:bg-whatsapp-dark text-white rounded-lg font-bold shadow"
+                  className="px-5 py-2 bg-steel hover:bg-steel-dark text-white rounded-lg font-bold shadow"
                 >
                   {editingId ? 'Save Changes' : 'Save to Hub Stock'}
                 </button>

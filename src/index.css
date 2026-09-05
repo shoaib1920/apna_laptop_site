@@ -1,54 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  /* Apna Laptop design system — see stitch_apna_laptop_marketplace/apna_laptop/DESIGN.md */
-  --color-primary: #030813;
-  --color-on-primary: #ffffff;
-  --color-primary-container: #1a202c;
-  --color-on-primary-container: #828796;
+  /* Apna Laptop v2 — graphite/steel/copper hardware palette.
+     Three accents, three jobs, never overlapping:
+       steel   = primary interactive accent (buttons, links, active states, focus)
+       copper  = price + verified/trust signals ONLY, everywhere, both marketplaces
+       whatsapp= literal WhatsApp contact actions ONLY (external brand convention) */
 
-  --color-secondary: #006d2f;
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #5dfd8a;
-  --color-on-secondary-container: #007232;
+  --color-graphite: #1c1f24;
+  --color-on-graphite: #ffffff;
+  --color-graphite-elevated: #262a31;
+  --color-on-graphite-elevated: #c7cbd1;
+  --color-graphite-line: #383d45;
 
-  /* Distinct WhatsApp CTA green, separate from --color-secondary per DESIGN.md */
+  --color-steel: #3e7c9e;
+  --color-on-steel: #ffffff;
+  --color-steel-dark: #2e6180;
+  --color-steel-tint: #e8f0f4;
+
+  --color-copper: #c17a3d;
+  --color-on-copper: #ffffff;
+  --color-copper-dark: #a6632d;
+  --color-copper-tint: #f5e9db;
+
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #1da851;
-
-  --color-tertiary: #000817;
-  --color-tertiary-container: #152031;
-  --color-on-tertiary: #ffffff;
-  --color-on-tertiary-container: #7d889c;
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
-  /* Deal/price accent — real marketplaces (Daraz, OLX) reserve a warm red/orange
-     purely for price + discount urgency, distinct from the whatsapp trust-green */
-  --color-deal: #e2461f;
-  --color-deal-dark: #c23a17;
-  --color-deal-container: #fdece7;
-
-  --color-surface: #f7fafc;
-  --color-surface-dim: #d7dadc;
-  --color-surface-bright: #f7fafc;
+  --color-paper: #f4f3f0;
+  --color-paper-dim: #e8e6e1;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f1f4f6;
-  --color-surface-container: #ebeef0;
-  --color-surface-container-high: #e5e9eb;
-  --color-surface-container-highest: #e0e3e5;
-  --color-surface-variant: #e0e3e5;
+  --color-surface-container-low: #f0efec;
+  --color-surface-container: #e8e6e1;
+  --color-surface-container-high: #ddd9d2;
+  --color-surface-container-highest: #d1cdc4;
 
-  --color-on-surface: #181c1e;
-  --color-on-surface-variant: #45474c;
-  --color-outline: #76777c;
-  --color-outline-variant: #c6c6cc;
+  --color-ink: #1c1f24;
+  --color-ink-variant: #55585e;
+  --color-outline: #7a7d82;
+  --color-outline-variant: #c7c4bd;
 
-  --color-background: #f7fafc;
-  --color-on-background: #181c1e;
+  /* Back-compat aliases so existing bg-primary / bg-surface / text-whatsapp-dark
+     etc. keep working while every file gets migrated to the new names */
+  --color-primary: var(--color-graphite);
+  --color-on-primary: var(--color-on-graphite);
+  --color-primary-container: var(--color-graphite-elevated);
+  --color-on-primary-container: var(--color-on-graphite-elevated);
+  --color-surface: var(--color-paper);
+  --color-on-surface: var(--color-ink);
+  --color-on-surface-variant: var(--color-ink-variant);
+  --color-deal: var(--color-copper);
+  --color-deal-dark: var(--color-copper-dark);
+  --color-deal-container: var(--color-copper-tint);
+  --color-secondary: var(--color-steel);
+  --color-on-secondary: var(--color-on-steel);
+  --color-secondary-container: var(--color-steel-tint);
+  --color-on-secondary-container: var(--color-steel-dark);
 
   /* Fonts */
   --font-display: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -62,15 +73,13 @@
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
 
-  /* Soft, layered elevation — replaces flat 1px-border-only cards with a real
-     (but restrained) sense of depth, the way premium product UIs do it */
-  --shadow-card: 0 1px 2px rgba(16, 24, 32, 0.04), 0 2px 8px rgba(16, 24, 32, 0.06);
-  --shadow-card-hover: 0 4px 12px rgba(16, 24, 32, 0.08), 0 2px 4px rgba(16, 24, 32, 0.05);
-  --shadow-panel: 0 1px 3px rgba(16, 24, 32, 0.05), 0 8px 24px rgba(16, 24, 32, 0.08);
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgba(28, 31, 36, 0.04), 0 2px 8px rgba(28, 31, 36, 0.06);
+  --shadow-card-hover: 0 4px 12px rgba(28, 31, 36, 0.08), 0 2px 4px rgba(28, 31, 36, 0.05);
+  --shadow-panel: 0 1px 3px rgba(28, 31, 36, 0.05), 0 8px 24px rgba(28, 31, 36, 0.08);
 }
 
-/* Type scale — a disciplined set of sizes instead of ad-hoc arbitrary values.
-   Use these for headings so hierarchy reads clearly at a glance. */
+/* Type scale */
 .text-display-1 { font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.02em; }
 .text-display-2 { font-size: 1.75rem; line-height: 1.2; letter-spacing: -0.01em; }
 .text-heading-1 { font-size: 1.375rem; line-height: 1.3; }
@@ -79,4 +88,39 @@
 @media (min-width: 640px) {
   .text-display-1 { font-size: 3rem; }
   .text-display-2 { font-size: 2.25rem; }
+}
+
+/* Price — every price on the site renders through this class: tabular mono
+   numerals in copper, so money reads as data, and looks identical in the Hub
+   spec-sheet and the P2P classifieds card. */
+.price {
+  font-family: var(--font-mono-spec);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--color-copper);
+}
+
+/* P2P asking price gets a distinct treatment from Hub's fixed price — same
+   copper color (still money), but visibly negotiable: a dashed underline
+   instead of a solid price tag. */
+.price-negotiable {
+  font-family: var(--font-mono-spec);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--color-copper);
+  border-bottom: 2px dashed var(--color-copper);
+  padding-bottom: 1px;
+}
+
+/* Visible keyboard focus — one consistent ring, steel-blue, on every
+   interactive element (buttons, links, inputs, selects). */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-steel);
+  outline-offset: 2px;
+  border-radius: 2px;
 }

@@ -3,7 +3,6 @@ import {
   Calculator,
   Sparkles,
   ArrowRight,
-  PlusCircle,
   MessageCircle,
   TrendingUp,
   CheckCircle2,
@@ -68,39 +67,13 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
     setValuationResult(calculateLaptopValuation(DEFAULT_INPUTS));
   };
 
-  const handleListOnMarketplace = () => {
-    // Pass prefilled specs to the sell form
-    navigateTo('sell', {
-      sellSpecs: {
-        brand: inputs.brand,
-        model: inputs.seriesModel,
-        title: `${inputs.brand} ${inputs.seriesModel || ''} - ${inputs.ram} RAM / ${inputs.storageSize} ${inputs.storageType}`,
-        asking_price: valuationResult.fairValue,
-        specs: {
-          cpu: inputs.cpuGen.replace(/_/g, ' ').toUpperCase(),
-          cpuGen: inputs.cpuGen,
-          ram: inputs.ram,
-          storage: `${inputs.storageSize} ${inputs.storageType}`,
-          screenSize: inputs.screenSize,
-          batteryHealth: inputs.batteryCondition.includes('90')
-            ? '90%+ Health'
-            : inputs.batteryCondition.includes('80')
-            ? '85% Health'
-            : 'Moderate Backup',
-        },
-        box_included: inputs.boxAvailable,
-        charger_included: inputs.chargerOriginal,
-      },
-    });
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
         <div>
           <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-whatsapp-dark" />
+            <Calculator className="w-5 h-5 text-steel-dark" />
             <span>Price Calculator</span>
           </h1>
           <p className="text-xs text-on-surface-variant mt-0.5">
@@ -136,7 +109,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
               <select
                 value={inputs.brand}
                 onChange={(e) => handleInputChange('brand', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface focus:outline-none focus:border-whatsapp"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface focus:outline-none focus:border-steel"
               >
                 <option value="Dell">Dell (Latitude, XPS, Inspiron)</option>
                 <option value="HP">HP (EliteBook, ProBook, Omen)</option>
@@ -157,7 +130,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
                 value={inputs.seriesModel}
                 onChange={(e) => handleInputChange('seriesModel', e.target.value)}
                 placeholder="e.g. ThinkPad T480, EliteBook 840 G6"
-                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-on-surface focus:outline-none focus:border-whatsapp"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 text-on-surface focus:outline-none focus:border-steel"
               />
             </div>
 
@@ -167,7 +140,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
               <select
                 value={inputs.cpuGen}
                 onChange={(e) => handleInputChange('cpuGen', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface focus:outline-none focus:border-whatsapp"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface focus:outline-none focus:border-steel"
               >
                 <optgroup label="Intel Core Series">
                   <option value="intel_core_4th_5th">Intel Core i3/i5/i7 (4th & 5th Gen - Haswell/Broadwell)</option>
@@ -199,7 +172,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
               <select
                 value={inputs.ram}
                 onChange={(e) => handleInputChange('ram', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface focus:outline-none focus:border-whatsapp"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface focus:outline-none focus:border-steel"
               >
                 <option value="4GB">4GB RAM</option>
                 <option value="8GB">8GB RAM</option>
@@ -311,7 +284,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
                   type="checkbox"
                   checked={inputs.chargerOriginal}
                   onChange={(e) => handleInputChange('chargerOriginal', e.target.checked)}
-                  className="w-4 h-4 accent-whatsapp rounded"
+                  className="w-4 h-4 accent-steel rounded"
                 />
                 <span className="font-bold text-on-surface">Original OEM Charger Available (+Rs. 3,500 value)</span>
               </label>
@@ -321,7 +294,7 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
                   type="checkbox"
                   checked={inputs.boxAvailable}
                   onChange={(e) => handleInputChange('boxAvailable', e.target.checked)}
-                  className="w-4 h-4 accent-whatsapp rounded"
+                  className="w-4 h-4 accent-steel rounded"
                 />
                 <span className="font-bold text-on-surface">Original Box & Manuals Included (+Rs. 3,000 value)</span>
               </label>
@@ -332,15 +305,15 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
         {/* Output Valuation Card (5 cols) */}
         <div className="lg:col-span-5 space-y-6 sticky top-24">
           {/* Main Price Card */}
-          <div className="bg-primary text-on-primary rounded-lg p-6 border border-whatsapp/30 shadow-2xl space-y-5">
+          <div className="bg-primary text-on-primary rounded-lg p-6 border border-steel/30 shadow-2xl space-y-5">
             <div className="flex items-center justify-between border-b border-on-primary/10 pb-3">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-whatsapp" />
-                <span className="text-xs font-bold text-whatsapp uppercase tracking-wider">
+                <Sparkles className="w-5 h-5 text-steel" />
+                <span className="text-xs font-bold text-steel uppercase tracking-wider">
                   Estimated Resale Value
                 </span>
               </div>
-              <span className="text-[10px] bg-whatsapp/15 text-whatsapp font-bold px-2 py-0.5 rounded-full border border-whatsapp/40">
+              <span className="text-[10px] bg-steel/15 text-steel font-bold px-2 py-0.5 rounded-full border border-steel/40">
                 Confidence: {valuationResult.confidence}
               </span>
             </div>
@@ -348,11 +321,11 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
             {/* Price Range Display */}
             <div className="text-center py-2 space-y-1">
               <span className="text-xs text-on-primary-container block">Expected Pakistani Market Range</span>
-              <div className="text-2xl sm:text-3xl font-extrabold text-on-primary font-display">
+              <div className="price text-2xl sm:text-3xl">
                 {formatPKR(valuationResult.minPrice)} – {formatPKR(valuationResult.maxPrice)}
               </div>
-              <p className="text-xs text-whatsapp font-semibold pt-1">
-                Fair Market Midpoint: ~{formatPKR(valuationResult.fairValue)}
+              <p className="text-xs text-on-primary-container font-semibold pt-1">
+                Fair Market Midpoint: ~<span className="price">{formatPKR(valuationResult.fairValue)}</span>
               </p>
             </div>
 
@@ -360,14 +333,14 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
             <div className="bg-on-primary/5 p-3 rounded border border-on-primary/10 text-xs text-on-primary-container text-center">
               <span className="font-bold text-on-primary block">{valuationResult.specsSummary}</span>
               <span className="text-[11px] text-on-primary-container">
-                Market Demand: <strong className="text-whatsapp">{valuationResult.marketDemandTier}</strong> in Pakistani IT hubs
+                Market Demand: <strong className="text-steel">{valuationResult.marketDemandTier}</strong> in Pakistani IT hubs
               </span>
             </div>
 
             {/* Positive & Negative Factors Breakdown */}
             <div className="space-y-3 pt-2 text-xs">
               <div>
-                <span className="font-bold text-whatsapp flex items-center gap-1 mb-1 text-[11px]">
+                <span className="font-bold text-steel flex items-center gap-1 mb-1 text-[11px]">
                   <CheckCircle2 className="w-3.5 h-3.5" /> What Increased Your Valuation:
                 </span>
                 <ul className="space-y-1 text-on-primary-container text-[11px] pl-4 list-disc">
@@ -391,29 +364,23 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
               )}
             </div>
 
-            {/* CTAs */}
-            <div className="border-t border-on-primary/10 pt-4 space-y-2.5">
-              {/* Option 1: List on P2P */}
-              <button
-                id="list-on-apna-laptop-btn"
-                onClick={handleListOnMarketplace}
-                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] shadow-sm"
-              >
-                <PlusCircle className="w-4 h-4 text-white" />
-                <span>{romanUrduMode ? 'Apna Laptop Par Free List Karein (Pre-filled)' : 'List it Now on Apna Laptop (Auto-fills)'}</span>
-              </button>
-
-              {/* Option 2: Sell Directly via WhatsApp */}
+            {/* CTA — we buy directly from you, no marketplace listing needed */}
+            <div className="border-t border-on-primary/10 pt-4">
               <a
                 id="sell-direct-whatsapp-btn"
                 href={generateWhatsAppValuationLink(valuationResult, inputs)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-transparent hover:bg-whatsapp/10 text-whatsapp font-bold py-3 rounded text-xs flex items-center justify-center gap-2 transition-colors border border-whatsapp/50"
+                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-bold py-3 rounded text-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>{romanUrduMode ? 'Humein Direct Bechein (WhatsApp Offer)' : 'Sell Directly to Us on WhatsApp'}</span>
+                <span>{romanUrduMode ? 'Humein Direct Bechein (WhatsApp Offer)' : 'Sell This Laptop to Us on WhatsApp'}</span>
               </a>
+              <p className="text-[11px] text-on-primary-container text-center mt-2">
+                {romanUrduMode
+                  ? 'Hum khud aap se seedha kharidte hain — koi listing ya fee nahi.'
+                  : 'We buy directly from you at this estimate — no listing, no fees, no waiting for buyers.'}
+              </p>
             </div>
           </div>
         </div>
