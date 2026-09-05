@@ -60,7 +60,7 @@ function setStored<T>(key: string, value: T): void {
   }
 }
 
-export function useAppStore() {
+export function useAppStore(isAdminAuthenticated: boolean = false) {
   // Navigation & Routing state
   const [currentRoute, setCurrentRoute] = useState<string>('home');
   const [selectedHubId, setSelectedHubId] = useState<string | null>(null);
@@ -154,16 +154,21 @@ export function useAppStore() {
 
   // When Firebase is configured, Hub inventory & orders become shared,
   // realtime state across every visitor/admin instead of per-device
-  // localStorage — seed once if the collection is empty, then let the
-  // realtime listener be the source of truth.
+  // localStorage. Catalog reads are public, so any visitor can subscribe;
+  // seeding is a write, which Firestore rules only allow for a signed-in
+  // admin, so it only runs once the admin is actually logged in.
   useEffect(() => {
     if (!isFirebaseConfigured) return;
-    seedHubListingsIfEmpty(INITIAL_HUB_LISTINGS).catch((e) =>
-      console.error('Failed to seed hub listings:', e)
-    );
     const unsubscribe = subscribeHubListings(setHubListings);
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !isAdminAuthenticated) return;
+    seedHubListingsIfEmpty(INITIAL_HUB_LISTINGS).catch((e) =>
+      console.error('Failed to seed hub listings:', e)
+    );
+  }, [isAdminAuthenticated]);
 
   useEffect(() => {
     if (!isFirebaseConfigured) return;

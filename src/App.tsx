@@ -22,18 +22,18 @@ import { MessageCircle, ArrowUp } from 'lucide-react';
 const HIDE_BOTTOM_NAV_ROUTES = ['hub_detail', 'checkout', 'cart', 'calculator', 'advisor', 'admin'];
 
 export default function App() {
-  const store = useAppStore();
+  // Real admin auth (Firebase). Until a Firebase project is configured this
+  // stays inert and the admin route falls back to the demo role-switcher.
+  const [firebaseAdmin, setFirebaseAdmin] = useState<FirebaseUser | null>(null);
+  const [authChecked, setAuthChecked] = useState<boolean>(!isFirebaseConfigured);
+
+  const store = useAppStore(!!firebaseAdmin);
 
   // Navigation router state
   const [currentRoute, setCurrentRoute] = useState<string>('home');
   const [routeParams, setRouteParams] = useState<any>({});
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
-
-  // Real admin auth (Firebase). Until a Firebase project is configured this
-  // stays inert and the admin route falls back to the demo role-switcher.
-  const [firebaseAdmin, setFirebaseAdmin] = useState<FirebaseUser | null>(null);
-  const [authChecked, setAuthChecked] = useState<boolean>(!isFirebaseConfigured);
 
   useEffect(() => {
     if (!isFirebaseConfigured || !auth) return;

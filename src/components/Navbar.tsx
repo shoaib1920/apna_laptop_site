@@ -16,6 +16,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { User } from '../types';
+import { isFirebaseConfigured } from '../services/firebase';
 
 interface NavbarProps {
   currentRoute: string;
@@ -273,7 +274,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span>My Orders</span>
                     </button>
 
-                    {currentUser?.role === 'admin' && (
+                    {(currentUser?.role === 'admin' || isFirebaseConfigured) && (
                       <button
                         onClick={() => {
                           handleNav('admin');
