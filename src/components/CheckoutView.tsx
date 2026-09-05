@@ -170,7 +170,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
 
           <div className="flex flex-col sm:flex-row justify-center gap-3">
             <a
-              href={`https://wa.me/923001234567?text=${encodeURIComponent(`Salam Apna Laptop! I just placed order ${placedOrder.order_number} for total ${formatPKR(placedOrder.total_price)}. Please confirm dispatch.`)}`}
+              href={`https://wa.me/923016672356?text=${encodeURIComponent(`Salam Apna Laptop! I just placed order ${placedOrder.order_number} for total ${formatPKR(placedOrder.total_price)}. Please confirm dispatch.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-6 py-3 rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors"

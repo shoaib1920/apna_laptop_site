@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { useAppStore } from './services/store';
+import { auth, isFirebaseConfigured } from './services/firebase';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomeView } from './components/HomeView';
@@ -10,6 +12,7 @@ import { UpgradeAdvisorView } from './components/UpgradeAdvisorView';
 import { LaptopFinderView } from './components/LaptopFinderView';
 import { CheckoutView } from './components/CheckoutView';
 import { AdminDashboardView } from './components/AdminDashboardView';
+import { AdminLoginView } from './components/AdminLoginView';
 import { WishlistView } from './components/WishlistView';
 import { UserDashboardView } from './components/UserDashboardView';
 import { AccessDenied } from './components/AccessDenied';
@@ -26,6 +29,20 @@ export default function App() {
   const [routeParams, setRouteParams] = useState<any>({});
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
+
+  // Real admin auth (Firebase). Until a Firebase project is configured this
+  // stays inert and the admin route falls back to the demo role-switcher.
+  const [firebaseAdmin, setFirebaseAdmin] = useState<FirebaseUser | null>(null);
+  const [authChecked, setAuthChecked] = useState<boolean>(!isFirebaseConfigured);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !auth) return;
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setFirebaseAdmin(user);
+      setAuthChecked(true);
+    });
+    return unsubscribe;
+  }, []);
 
   const navigateTo = (route: string, params: any = {}) => {
     setCurrentRoute(route);
@@ -153,7 +170,23 @@ export default function App() {
         )}
 
         {currentRoute === 'admin' && (
-          store.currentUser?.role === 'admin' ? (
+          isFirebaseConfigured ? (
+            !authChecked ? null : firebaseAdmin ? (
+              <AdminDashboardView
+                hubListings={store.hubListings}
+                orders={store.orders}
+                createHubListing={store.addHubListing}
+                updateHubListing={store.updateHubListing}
+                updateOrderStatus={store.updateOrderStatus}
+                deleteHubListing={store.deleteHubListing}
+                navigateTo={navigateTo}
+                currentUser={store.currentUser}
+                onLogout={() => auth && signOut(auth)}
+              />
+            ) : (
+              <AdminLoginView navigateTo={navigateTo} />
+            )
+          ) : store.currentUser?.role === 'admin' ? (
             <AdminDashboardView
               hubListings={store.hubListings}
               orders={store.orders}
@@ -210,7 +243,7 @@ export default function App() {
         )}
 
         <a
-          href="https://wa.me/923001234567?text=Salam%20Apna%20Laptop%20team,%20I%20need%20help%20choosing%20a%20laptop"
+          href="https://wa.me/923016672356?text=Salam%20Apna%20Laptop%20team,%20I%20need%20help%20choosing%20a%20laptop"
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-2.5 bg-whatsapp hover:bg-whatsapp-dark text-white px-4 py-3 rounded-full shadow-2xl shadow-whatsapp/40 transition-all hover:scale-105"

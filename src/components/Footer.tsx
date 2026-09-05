@@ -99,7 +99,7 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://wa.me/923001234567"
+                href="https://wa.me/923016672356"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-colors"

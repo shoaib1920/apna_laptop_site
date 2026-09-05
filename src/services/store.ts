@@ -16,6 +16,17 @@ import {
   INITIAL_ORDERS,
   INITIAL_REVIEWS,
 } from '../data/mockData';
+import { isFirebaseConfigured } from './firebase';
+import {
+  subscribeHubListings,
+  subscribeOrders,
+  seedHubListingsIfEmpty,
+  addHubListingFS,
+  updateHubListingFS,
+  deleteHubListingFS,
+  createOrderFS,
+  updateOrderStatusFS,
+} from './firestoreData';
 
 const STORAGE_KEYS = {
   USERS: 'apna_laptop_users_v1',
@@ -141,6 +152,25 @@ export function useAppStore() {
     setStored(STORAGE_KEYS.MESSAGES, messages);
   }, [messages]);
 
+  // When Firebase is configured, Hub inventory & orders become shared,
+  // realtime state across every visitor/admin instead of per-device
+  // localStorage — seed once if the collection is empty, then let the
+  // realtime listener be the source of truth.
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+    seedHubListingsIfEmpty(INITIAL_HUB_LISTINGS).catch((e) =>
+      console.error('Failed to seed hub listings:', e)
+    );
+    const unsubscribe = subscribeHubListings(setHubListings);
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+    const unsubscribe = subscribeOrders(setOrders);
+    return unsubscribe;
+  }, []);
+
   // Derived current user
   const currentUser: User | null = users.find((u) => u.id === currentUserId) || null;
 
@@ -257,7 +287,10 @@ export function useAppStore() {
     );
   };
 
-  // Hub inventory management (Admin)
+  // Hub inventory management (Admin). Updates local state immediately for a
+  // snappy UI; when Firebase is configured the write also goes to Firestore
+  // so every visitor/admin sees the same shared inventory in realtime (the
+  // subscription above then reconciles local state with the server copy).
   const addHubListing = (newListing: Omit<HubListing, 'id' | 'rating' | 'reviewCount'>): HubListing => {
     const id = `hub_${Date.now()}`;
     const listing: HubListing = {
@@ -267,6 +300,9 @@ export function useAppStore() {
       reviewCount: 0,
     };
     setHubListings((prev) => [listing, ...prev]);
+    if (isFirebaseConfigured) {
+      addHubListingFS(listing).catch((e) => console.error('Failed to add hub listing:', e));
+    }
     return listing;
   };
 
@@ -274,10 +310,16 @@ export function useAppStore() {
     setHubListings((prev) =>
       prev.map((item) => (item.id === id ? { ...item, ...updates } : item))
     );
+    if (isFirebaseConfigured) {
+      updateHubListingFS(id, updates).catch((e) => console.error('Failed to update hub listing:', e));
+    }
   };
 
   const deleteHubListing = (id: string) => {
     setHubListings((prev) => prev.filter((item) => item.id !== id));
+    if (isFirebaseConfigured) {
+      deleteHubListingFS(id).catch((e) => console.error('Failed to delete hub listing:', e));
+    }
   };
 
   // Order management
@@ -292,6 +334,9 @@ export function useAppStore() {
       status: 'pending',
     };
     setOrders((prev) => [newOrder, ...prev]);
+    if (isFirebaseConfigured) {
+      createOrderFS(newOrder).catch((e) => console.error('Failed to save order:', e));
+    }
     clearCart();
     return newOrder;
   };
@@ -309,6 +354,11 @@ export function useAppStore() {
           : order
       )
     );
+    if (isFirebaseConfigured) {
+      updateOrderStatusFS(orderId, status, courierName, trackingNumber).catch((e) =>
+        console.error('Failed to update order status:', e)
+      );
+    }
   };
 
   // Reviews

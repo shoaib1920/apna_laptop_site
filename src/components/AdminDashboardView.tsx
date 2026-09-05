@@ -9,6 +9,7 @@ import {
   Edit2,
   Trash2,
   Truck,
+  LogOut,
 } from 'lucide-react';
 import { HubListing, LaptopCondition, Order, OrderStatus, User } from '../types';
 import { formatPKR } from '../utils/helpers';
@@ -22,6 +23,7 @@ interface AdminDashboardViewProps {
   deleteHubListing: (id: string) => void;
   navigateTo: (route: string, params?: any) => void;
   currentUser: User | null;
+  onLogout?: () => void;
 }
 
 const LAPTOP_CONDITIONS: LaptopCondition[] = [
@@ -66,6 +68,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   deleteHubListing,
   navigateTo,
   currentUser,
+  onLogout,
 }) => {
   const [activeTab, setActiveTab] = useState<'inventory' | 'orders' | 'analytics'>('inventory');
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -191,8 +194,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
           </p>
         </div>
 
-        {/* Tab Controls */}
-        <div className="flex bg-primary p-1.5 rounded-lg overflow-x-auto text-xs">
+        <div className="flex items-center gap-3">
+          {/* Tab Controls */}
+          <div className="flex bg-primary p-1.5 rounded-lg overflow-x-auto text-xs">
           <button
             onClick={() => setActiveTab('inventory')}
             className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
@@ -222,6 +226,17 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
             <TrendingUp className="w-3.5 h-3.5" />
             <span>Finances & Margin</span>
           </button>
+          </div>
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              title="Log out"
+              className="shrink-0 w-9 h-9 rounded-lg bg-primary text-on-primary-container hover:text-on-primary flex items-center justify-center"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 

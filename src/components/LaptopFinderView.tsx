@@ -490,7 +490,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
             </div>
 
             <a
-              href={`https://wa.me/923001234567?text=${encodeURIComponent(`Salam Apna Laptop team! I took the Finder Quiz for ${answers.primaryUseCase} with budget ${answers.budgetTier}. Can you share current available stock?`)}`}
+              href={`https://wa.me/923016672356?text=${encodeURIComponent(`Salam Apna Laptop team! I took the Finder Quiz for ${answers.primaryUseCase} with budget ${answers.budgetTier}. Can you share current available stock?`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-5 py-3 rounded flex items-center gap-2 whitespace-nowrap shadow-md transition-colors"

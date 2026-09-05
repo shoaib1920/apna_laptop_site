@@ -210,5 +210,5 @@ I calculated the valuation for my laptop on your website and want to sell it dir
 - Estimated Valuation: Rs. ${valuation.minPrice.toLocaleString()} - Rs. ${valuation.maxPrice.toLocaleString()}
 Please let me know your best offer and pickup/verification process.`;
 
-  return `https://wa.me/923001234567?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/923016672356?text=${encodeURIComponent(text)}`;
 }

@@ -297,7 +297,7 @@ export const HubView: React.FC<HubViewProps> = ({
               </div>
               <div className="flex justify-center gap-3">
                 <button onClick={clearAllFilters} className="bg-graphite text-on-graphite text-xs font-semibold px-4 py-2 rounded-lg">Clear Filters</button>
-                <a href="https://wa.me/923001234567?text=Hi%20Apna%20Laptop%20team,%20I%20am%20looking%20for%20a%20specific%20laptop%20model" target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1.5">
+                <a href="https://wa.me/923016672356?text=Hi%20Apna%20Laptop%20team,%20I%20am%20looking%20for%20a%20specific%20laptop%20model" target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1.5">
                   <MessageCircle className="w-4 h-4" />
                   <span>Ask on WhatsApp</span>
                 </a>

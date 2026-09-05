@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// Paste this into Firebase Console > Firestore Database > Rules.
+// Every Firebase Auth account in this project is an admin account (only
+// staff get logins created for them in the Firebase Console) — so
+// `request.auth != null` is the admin check for this app.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hub inventory: anyone can browse the catalog, only signed-in admins
+    // can add/edit/delete stock.
+    match /hub_listings/{listingId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Orders: guests can place an order at checkout, and the "My Orders"
+    // page reads the order list client-side to find the buyer's own orders
+    // (there is no real customer login in this app, only admin accounts) —
+    // so read is public but update/delete (status changes, dispatch) is
+    // admin-only. Note: this means order contact details (name/phone/
+    // address) are technically queryable by anyone with the Firestore SDK,
+    // same tradeoff as most small no-customer-auth storefronts. Revisit if
+    // real customer accounts get added later.
+    match /orders/{orderId} {
+      allow create, read: if true;
+      allow update, delete: if request.auth != null;
+    }
+  }
+}

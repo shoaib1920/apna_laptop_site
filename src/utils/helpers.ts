@@ -11,7 +11,7 @@ export function formatPKR(amount: number): string {
  * Creates WhatsApp deep link for Hub laptop purchase/inquiry
  */
 export function getHubWhatsAppLink(listing: HubListing): string {
-  const adminWhatsApp = '923001234567';
+  const adminWhatsApp = '923016672356';
   const text = `Assalam o Alaikum Apna Laptop Team!
 I am interested in buying this verified laptop:
 *${listing.title}*
@@ -45,5 +45,5 @@ From: ${buyerName || 'Interested Buyer'}`;
  */
 export function getSupportWhatsAppLink(customQuery?: string): string {
   const text = customQuery || `Assalam o Alaikum Apna Laptop! I need help finding the right laptop or have a question about your verified stock.`;
-  return `https://wa.me/923001234567?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/923016672356?text=${encodeURIComponent(text)}`;
 }

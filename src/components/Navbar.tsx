@@ -83,12 +83,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{romanUrduMode ? 'Roman Urdu ON' : 'English Base'}</span>
             </button>
             <a
-              href="https://wa.me/923001234567"
+              href="https://wa.me/923016672356"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-whatsapp text-white/80 flex items-center gap-1 font-semibold transition-colors"
             >
-              WhatsApp: +92 300 1234567
+              WhatsApp: +92 301 6672356
             </a>
           </div>
         </div>
@@ -176,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-2 sm:gap-3">
             {/* WhatsApp Quick Help Button */}
             <a
-              href="https://wa.me/923001234567?text=Salam%20Apna%20Laptop%20team,%20I%20have%20an%20inquiry"
+              href="https://wa.me/923016672356?text=Salam%20Apna%20Laptop%20team,%20I%20have%20an%20inquiry"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-whatsapp hover:bg-whatsapp-dark px-3.5 py-2 rounded-lg flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-sm transition-all hover:scale-[1.02]"
