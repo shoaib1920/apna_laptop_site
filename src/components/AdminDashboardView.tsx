@@ -56,7 +56,7 @@ const emptyForm = {
   shortDescription: 'Verified lot imported from UK/Dubai. High durability commercial grade.',
   fullDescription: 'Strictly tested motherboard, keyboard backlight, and battery health.',
   warrantyMonths: 1,
-  supplierNote: 'Direct partnership with Hafeez Centre partner shop.',
+  supplierNote: 'Direct partnership with our Nankana Sahib supplier partner.',
 };
 
 export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({

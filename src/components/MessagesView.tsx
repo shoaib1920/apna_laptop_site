@@ -44,7 +44,7 @@ export const MessagesView: React.FC<MessagesViewProps> = ({
           <span>Messages & Inquiries Inbox</span>
         </h1>
         <p className="text-xs text-on-surface-variant">
-          In-app communication between laptop buyers and sellers in Pakistan.
+          In-app communication between laptop buyers and sellers.
         </p>
       </div>
 

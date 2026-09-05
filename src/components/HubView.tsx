@@ -124,8 +124,8 @@ export const HubView: React.FC<HubViewProps> = ({
           </h1>
           <p className="text-xs text-on-surface-variant mt-0.5">
             {romanUrduMode
-              ? 'Hafeez Centre aur Techno City ke trusted suppliers se sourced stock.'
-              : 'Directly sourced from verified laptop shops in Lahore & Karachi.'}
+              ? 'Nankana Sahib ke trusted suppliers se sourced stock.'
+              : 'Directly sourced from verified laptop suppliers in Nankana Sahib.'}
           </p>
         </div>
         <button

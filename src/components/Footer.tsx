@@ -1,6 +1,6 @@
 import React from 'react';
 import { Laptop, ShieldCheck, Truck, CheckCircle2, MessageCircle, Heart } from 'lucide-react';
-import { PAKISTAN_CITIES } from '../services/pricingEngine';
+import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
 import { User } from '../types';
 
 interface FooterProps {
@@ -53,12 +53,12 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
             </div>
             <div>
               <h4 className="text-on-primary font-bold text-sm">
-                {romanUrduMode ? 'Pure Pakistan Cash on Delivery' : 'Cash on Delivery (COD)'}
+                {romanUrduMode ? 'Local Cash on Delivery' : 'Cash on Delivery (COD)'}
               </h4>
               <p className="text-xs text-on-primary-container mt-0.5">
                 {romanUrduMode
-                  ? 'TCS / Leopards courier ke zariye ghar bethe parcel receive karein.'
-                  : 'Fast courier dispatch across Karachi, Lahore, Islamabad & 50+ cities.'}
+                  ? 'Nankana Sahib aur nearby areas mein ghar bethe parcel receive karein.'
+                  : 'Local rider dispatch across Nankana Sahib, Shahkot, Manawala & nearby towns.'}
               </p>
             </div>
           </div>
@@ -171,13 +171,13 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
             </ul>
           </div>
 
-          {/* Popular Cities in Pakistan */}
+          {/* Service Area */}
           <div>
             <h5 className="text-on-primary font-bold text-xs uppercase tracking-wider mb-3">
-              Major Hub Cities
+              Areas We Serve
             </h5>
             <div className="flex flex-wrap gap-1.5 text-[11px]">
-              {PAKISTAN_CITIES.slice(0, 8).map((city) => (
+              {SERVICE_AREA_CITIES.map((city) => (
                 <span
                   key={city}
                   className="bg-primary/40 text-on-primary-container px-2 py-0.5 rounded border border-white/10"
@@ -187,7 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
               ))}
             </div>
             <p className="text-[11px] text-on-primary-container mt-2">
-              Physical Partner: Hafeez Centre Lahore & Techno City Karachi.
+              Pickup & drop-off point: Nankana Sahib.
             </p>
           </div>
         </div>
@@ -205,7 +205,7 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 bg-whatsapp rounded-full"></span>
-              <span className="text-[11px] font-bold text-on-primary-container uppercase tracking-wider">Cash on Delivery Across PK</span>
+              <span className="text-[11px] font-bold text-on-primary-container uppercase tracking-wider">Cash on Delivery in Nankana Sahib & Nearby</span>
             </div>
           </div>
           <div className="text-[11px] text-whatsapp font-semibold tracking-wide uppercase">

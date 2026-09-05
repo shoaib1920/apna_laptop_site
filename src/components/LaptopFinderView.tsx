@@ -76,27 +76,23 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Header */}
-      <div className="bg-primary-container text-on-primary rounded-lg p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex items-center justify-between gap-4">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
-              <Compass className="w-5 h-5" />
-            </span>
-            <h1 className="text-xl sm:text-2xl font-extrabold font-display">
-              Apna Laptop <span className="text-whatsapp">Finder Wizard</span>
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-on-primary-container">
+      <div className="flex items-center justify-between gap-4 pb-1">
+        <div>
+          <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
+            <Compass className="w-5 h-5 text-whatsapp-dark" />
+            <span>Laptop Finder Wizard</span>
+          </h1>
+          <p className="text-xs text-on-surface-variant mt-0.5">
             {romanUrduMode
-              ? '5 aasan sawalaat ka jawab dein aur apne kaam aur budget ke mutabiq behtareen laptop talash karein.'
-              : 'Answer 5 quick questions to get the ideal hardware match for your workflow & Pakistani budget.'}
+              ? '5 aasan sawalaat ka jawab dein aur behtareen laptop talash karein.'
+              : 'Answer 5 quick questions to get the ideal hardware match for your budget.'}
           </p>
         </div>
 
         {isCompleted && (
           <button
             onClick={handleRestart}
-            className="bg-on-primary/10 hover:bg-on-primary/20 text-xs text-on-primary px-3.5 py-2 rounded-xl flex items-center gap-1 border border-on-primary/10 transition-colors"
+            className="text-xs font-bold text-on-surface-variant border border-outline-variant px-3.5 py-2 rounded flex items-center gap-1 whitespace-nowrap"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Retake Quiz</span>
@@ -403,7 +399,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
       ) : (
         /* RESULTS VIEW */
         <div className="space-y-6 animate-fade-in">
-          <div className="bg-primary text-on-primary rounded-lg p-6 sm:p-8 border border-whatsapp/30 shadow-xl space-y-4">
+          <div className="bg-primary text-on-primary rounded-lg p-6 sm:p-8 border border-whatsapp/30 shadow-sm space-y-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-whatsapp" />
               <h2 className="text-base font-extrabold font-display text-whatsapp uppercase tracking-wider">
@@ -411,7 +407,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
               </h2>
             </div>
             <p className="text-xs text-on-primary-container leading-relaxed">
-              Based on your requirements for <strong>{answers.primaryUseCase}</strong>, here are the top-rated laptop matches currently available in Pakistan:
+              Based on your requirements for <strong>{answers.primaryUseCase}</strong>, here are the top-rated laptop matches currently available:
             </p>
           </div>
 
@@ -491,7 +487,7 @@ export const LaptopFinderView: React.FC<LaptopFinderViewProps> = ({
             <div className="space-y-1">
               <h4 className="font-bold text-on-surface text-sm">Need a custom lot configuration?</h4>
               <p className="text-xs text-on-surface-variant">
-                Send your Finder profile to our Hafeez Centre technical team on WhatsApp. We will handpick a tested unit for you today.
+                Send your Finder profile to our Nankana Sahib technical team on WhatsApp. We will handpick a tested unit for you today.
               </p>
             </div>
 

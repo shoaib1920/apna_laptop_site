@@ -329,7 +329,7 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
               <span>Want Physical Verification?</span>
             </div>
             <p className="text-on-surface-variant leading-relaxed text-[11px]">
-              You can request Apna Laptop technicians in Lahore/Karachi to physically inspect this laptop's motherboard and battery before you pay the seller.
+              You can request Apna Laptop technicians in Nankana Sahib to physically inspect this laptop's motherboard and battery before you pay the seller.
             </p>
             <a
               href={`https://wa.me/923001234567?text=${encodeURIComponent(`Hi Apna Laptop, I want to book a physical inspection service for P2P listing: ${listing.title} in ${listing.seller_city}`)}`}

@@ -1,21 +1,15 @@
 import { ValuationFormInputs, ValuationResult } from '../types';
 
-export const PAKISTAN_CITIES = [
-  'Karachi',
-  'Lahore',
-  'Islamabad',
-  'Rawalpindi',
-  'Faisalabad',
-  'Multan',
-  'Peshawar',
-  'Quetta',
-  'Sialkot',
-  'Gujranwala',
-  'Hyderabad',
-  'Abbottabad',
-  'Bahawalpur',
-  'Sargodha',
-  'Sukkur',
+// We currently only deliver/service Nankana Sahib and the surrounding towns —
+// keep this list scoped to the real service area, don't expand back to a
+// generic "major Pakistani cities" list.
+export const SERVICE_AREA_CITIES = [
+  'Nankana Sahib',
+  'Shahkot',
+  'Manawala',
+  'Mor Khunda',
+  'Bachyana',
+  'Buchaki',
 ];
 
 export const BRAND_TIERS: Record<string, { multiplier: number; name: string }> = {

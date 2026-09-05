@@ -62,7 +62,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
   const [reviewRating, setReviewRating] = useState<number>(5);
   const [reviewComment, setReviewComment] = useState<string>('');
   const [reviewName, setReviewName] = useState<string>(currentUser?.name || '');
-  const [reviewCity, setReviewCity] = useState<string>(currentUser?.city || 'Lahore');
+  const [reviewCity, setReviewCity] = useState<string>(currentUser?.city || 'Nankana Sahib');
   const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [addedToCartToast, setAddedToCartToast] = useState<boolean>(false);
@@ -103,7 +103,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
       target_type: 'hub_order',
       target_id: listing.id,
       reviewer_name: reviewName || 'Verified Buyer',
-      reviewer_city: reviewCity || 'Pakistan',
+      reviewer_city: reviewCity || 'Nankana Sahib',
       is_verified_purchase: true,
       rating: reviewRating,
       comment: reviewComment.trim(),
@@ -193,7 +193,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               <span>Apna Laptop Supplier Verification</span>
             </div>
             <p className="text-whatsapp-dark leading-relaxed">
-              {listing.supplierNote || 'Inspected by verified shop partner in Hafeez Centre, Lahore.'}
+              {listing.supplierNote || 'Inspected by our verified supplier partner in Nankana Sahib.'}
             </p>
             <div className="flex items-center gap-4 text-[11px] font-semibold text-whatsapp-dark pt-1">
               <span>✓ 7-Day Checking Warranty</span>
@@ -391,7 +391,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-whatsapp-dark shrink-0" />
-              <span>Free Delivery in Pakistan</span>
+              <span>Free Local Delivery</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-whatsapp-dark shrink-0" />
@@ -552,7 +552,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="font-bold text-on-surface-variant block mb-1">City in Pakistan</label>
+                  <label className="font-bold text-on-surface-variant block mb-1">Service Area</label>
                   <input
                     type="text"
                     value={reviewCity}

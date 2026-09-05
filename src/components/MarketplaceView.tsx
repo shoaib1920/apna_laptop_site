@@ -15,7 +15,7 @@ import {
   Phone,
 } from 'lucide-react';
 import { P2PListing, User } from '../types';
-import { PAKISTAN_CITIES } from '../services/pricingEngine';
+import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
 import { formatPKR, getP2PWhatsAppLink } from '../utils/helpers';
 
 interface MarketplaceViewProps {
@@ -84,41 +84,33 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Banner */}
-      <div className="bg-primary-container text-on-primary rounded-lg p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
-              <Users className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-display">
-              P2P Used Laptop <span className="text-whatsapp">Marketplace</span>
-            </h1>
-            <span className="bg-whatsapp/15 text-whatsapp text-xs px-2 py-0.5 rounded-md font-bold border border-whatsapp/30">
-              OLX-Style Deals
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-on-primary-container max-w-xl">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
+        <div>
+          <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
+            <Users className="w-5 h-5 text-whatsapp-dark" />
+            <span>P2P Marketplace</span>
+            <span className="bg-whatsapp/10 text-whatsapp-dark text-[10px] px-2 py-0.5 rounded font-bold">0% Commission</span>
+          </h1>
+          <p className="text-xs text-on-surface-variant mt-0.5">
             {romanUrduMode
-              ? 'Pakistan bhar ke students aur freelancers se direct used laptops khareedein ya apna laptop 0% commission par bechein.'
-              : 'Direct user-to-user marketplace. Browse community listings, verify specs, and chat on WhatsApp directly with sellers.'}
+              ? 'Nankana Sahib aur nearby areas ke students aur freelancers se direct used laptops khareedein ya bechein.'
+              : 'Direct user-to-user listings across Nankana Sahib & nearby towns. Chat on WhatsApp directly with sellers.'}
           </p>
         </div>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={() => navigateTo('sell')}
-            className="bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.02]"
-          >
-            <PlusCircle className="w-4 h-4 text-white" />
-            <span>{romanUrduMode ? 'Apna Laptop Post Karein (Free)' : 'Post Free Ad'}</span>
-          </button>
-
+        <div className="flex gap-2">
           <button
             onClick={() => navigateTo('calculator')}
-            className="bg-on-primary/10 hover:bg-on-primary/20 text-on-primary font-semibold text-xs px-4 py-3 rounded border border-on-primary/10 transition-colors"
+            className="text-xs font-bold text-on-surface-variant border border-outline-variant px-3.5 py-2 rounded whitespace-nowrap"
           >
-            Check Fair Price First
+            Check Fair Price
+          </button>
+          <button
+            onClick={() => navigateTo('sell')}
+            className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-3.5 py-2 rounded flex items-center gap-1.5 whitespace-nowrap"
+          >
+            <PlusCircle className="w-3.5 h-3.5" />
+            <span>Post Free Ad</span>
           </button>
         </div>
       </div>
@@ -156,8 +148,8 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
               onChange={(e) => setSelectedCity(e.target.value)}
               className="w-full bg-surface-container-low text-xs px-3 py-2.5 rounded-xl border border-outline-variant text-on-surface font-semibold focus:outline-none focus:border-whatsapp"
             >
-              <option value="all">All Pakistan Cities</option>
-              {PAKISTAN_CITIES.map((city) => (
+              <option value="all">All Service Areas</option>
+              {SERVICE_AREA_CITIES.map((city) => (
                 <option key={city} value={city}>
                   {city}
                 </option>
@@ -199,7 +191,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
         {/* Quick City Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
           <span className="text-outline font-medium text-[11px] shrink-0">Popular:</span>
-          {['all', 'Lahore', 'Karachi', 'Islamabad', 'Rawalpindi', 'Faisalabad'].map((city) => (
+          {['all', ...SERVICE_AREA_CITIES].map((city) => (
             <button
               key={city}
               onClick={() => setSelectedCity(city)}

@@ -96,30 +96,22 @@ export const PriceCalculatorView: React.FC<PriceCalculatorViewProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header Banner */}
-      <div className="bg-primary-container text-on-primary rounded-lg p-6 sm:p-8 border border-outline-variant/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-whatsapp flex items-center justify-center text-white font-bold">
-              <Calculator className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-display">
-              Used Laptop <span className="text-whatsapp">Price Calculator</span>
-            </h1>
-            <span className="bg-whatsapp/15 text-whatsapp text-xs px-2 py-0.5 rounded-md font-bold border border-whatsapp/30">
-              PKR Valuation
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-on-primary-container max-w-xl">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
+        <div>
+          <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
+            <Calculator className="w-5 h-5 text-whatsapp-dark" />
+            <span>Price Calculator</span>
+          </h1>
+          <p className="text-xs text-on-surface-variant mt-0.5">
             {romanUrduMode
-              ? 'Apne used laptop ke specs select karein aur Pakistani market ki fair resale price range paayein. Rule-based valuation engine.'
-              : 'Calculate the accurate fair market resale value of any used laptop in Pakistan based on actual market demand, CPU generation, RAM, and battery health.'}
+              ? 'Apne used laptop ke specs select karein aur Pakistani market ki fair resale price range paayein.'
+              : 'Get an accurate fair market resale value based on CPU generation, RAM, and battery health.'}
           </p>
         </div>
-
         <button
           onClick={handleReset}
-          className="self-start md:self-auto bg-on-primary/10 hover:bg-on-primary/20 text-on-primary-container hover:text-on-primary text-xs font-semibold px-4 py-2.5 rounded-xl border border-on-primary/10 flex items-center gap-1.5 transition-colors"
+          className="text-xs font-bold text-on-surface-variant border border-outline-variant px-3.5 py-2 rounded flex items-center gap-1.5 self-start sm:self-auto"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Reset Form</span>

@@ -71,9 +71,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-2 font-medium">
             <span className="inline-block w-2 h-2 rounded-full bg-whatsapp animate-pulse"></span>
             {romanUrduMode ? (
-              <span>🇵🇰 <strong>Apna Laptop:</strong> 100% Genuine Imported Lots • 7 Din Checking Warranty • Pure Pakistan Free Delivery</span>
+              <span>🇵🇰 <strong>Apna Laptop:</strong> 100% Genuine Imported Lots • 7 Din Checking Warranty • Nankana Sahib & Nearby Free Delivery</span>
             ) : (
-              <span>🇵🇰 <strong>Apna Laptop:</strong> Verified Supplier Stock • 7-Day Checking Warranty • Cash on Delivery Nationwide</span>
+              <span>🇵🇰 <strong>Apna Laptop:</strong> Verified Supplier Stock • 7-Day Checking Warranty • Serving Nankana Sahib & Nearby Towns</span>
             )}
           </div>
           <div className="flex items-center gap-3">
@@ -371,7 +371,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   navigateTo('hub');
                 }
               }}
-              placeholder="Search brand, model, specs in Pakistan..."
+              placeholder="Search brand, model, specs..."
               className="w-full bg-surface-container-low text-sm text-on-surface pl-9 pr-4 py-2 rounded-xl border border-outline-variant focus:outline-none focus:border-secondary placeholder:text-outline"
             />
           </div>

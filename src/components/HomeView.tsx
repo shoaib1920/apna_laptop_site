@@ -73,12 +73,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight font-display">
               {romanUrduMode
                 ? 'Apna Laptop Khareedein Ya Bechein, Baghair Kisi Faraad Ke'
-                : 'Buy & Sell Laptops in Pakistan — Zero Faraud, Full Warranty'}
+                : 'Buy & Sell Laptops in Nankana Sahib — Zero Fraud, Full Warranty'}
             </h1>
             <p className="text-sm text-on-primary-container max-w-xl mx-auto lg:mx-0">
               {romanUrduMode
-                ? 'Hafeez Centre aur Techno City ke verified supplier laptops, aur 0% commission par direct used listings.'
-                : 'Curated supplier stock with checking warranty, plus a free peer-to-peer used marketplace.'}
+                ? 'Nankana Sahib ke verified supplier laptops, aur 0% commission par direct used listings.'
+                : 'Curated supplier stock with checking warranty, serving Nankana Sahib & nearby towns.'}
             </p>
 
             <div className="max-w-lg mx-auto lg:mx-0 flex gap-2 pt-1">
@@ -261,7 +261,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <h2 className="text-base sm:text-lg font-bold text-on-surface font-display">
               {romanUrduMode ? 'P2P Used Market' : 'Recent P2P Listings'}
             </h2>
-            <p className="text-[11px] text-on-surface-variant">Posted directly by sellers across Pakistan. 0% commission.</p>
+            <p className="text-[11px] text-on-surface-variant">Posted directly by sellers in Nankana Sahib & nearby towns. 0% commission.</p>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -320,7 +320,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {reviews.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-outline-variant">
           <h2 className="text-base sm:text-lg font-bold text-on-surface font-display mb-4">
-            {romanUrduMode ? 'Pakistan Bhar Se Khush Grahak' : 'What Buyers Are Saying'}
+            {romanUrduMode ? 'Nankana Sahib Ke Khush Grahak' : 'What Buyers Are Saying'}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {reviews.slice(0, 3).map((rev) => (

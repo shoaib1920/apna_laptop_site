@@ -19,7 +19,7 @@ import {
   Banknote,
 } from 'lucide-react';
 import { CartItem, Order, OrderItem, PaymentMethod, User } from '../types';
-import { PAKISTAN_CITIES } from '../services/pricingEngine';
+import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
 import { formatPKR } from '../utils/helpers';
 
 interface CheckoutViewProps {
@@ -46,7 +46,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
   // Shipping Form State
   const [customerName, setCustomerName] = useState<string>(currentUser?.name || '');
   const [customerPhone, setCustomerPhone] = useState<string>(currentUser?.phone || '03001234567');
-  const [customerCity, setCustomerCity] = useState<string>(currentUser?.city || 'Lahore');
+  const [customerCity, setCustomerCity] = useState<string>(currentUser?.city || 'Nankana Sahib');
   const [customerAddress, setCustomerAddress] = useState<string>(
     'House 14-B, Street 3, Sector G-11/2'
   );
@@ -216,7 +216,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
           <span>Checkout & Secure Order</span>
         </h1>
         <p className="text-xs sm:text-sm text-on-surface-variant">
-          Cash on Delivery with 7-Day Checking Warranty across Pakistan.
+          Cash on Delivery with 7-Day Checking Warranty in Nankana Sahib & nearby towns.
         </p>
       </div>
 
@@ -269,7 +269,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                     onChange={(e) => setCustomerCity(e.target.value)}
                     className="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3 py-2.5 font-semibold text-on-surface"
                   >
-                    {PAKISTAN_CITIES.map((city) => (
+                    {SERVICE_AREA_CITIES.map((city) => (
                       <option key={city} value={city}>
                         {city}
                       </option>
@@ -316,7 +316,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                       <span className="font-bold text-on-surface">Standard Delivery</span>
                       <span className="font-bold text-whatsapp-dark">FREE</span>
                     </div>
-                    <span className="text-[11px] text-on-surface-variant">2-4 Business Days via TCS/Leopards</span>
+                    <span className="text-[11px] text-on-surface-variant">Next-day via local rider (Nankana Sahib & nearby)</span>
                   </div>
                 </button>
 
@@ -335,7 +335,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
                       <span className="font-bold text-on-surface">Same-Day Express</span>
                       <span className="font-bold text-on-surface">Rs. 500</span>
                     </div>
-                    <span className="text-[11px] text-on-surface-variant">Lahore & Karachi riders</span>
+                    <span className="text-[11px] text-on-surface-variant">Same-day, Nankana Sahib city only</span>
                   </div>
                 </button>
               </div>
@@ -506,7 +506,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             </div>
             <ul className="text-on-primary-container text-[11px] space-y-1.5 list-disc pl-4">
               <li>100% Genuine imported lot stock</li>
-              <li>Tested by technicians in Lahore & Karachi</li>
+              <li>Tested by our technicians in Nankana Sahib</li>
               <li>Open parcel inspection before payment</li>
               <li>Dedicated customer helpline on WhatsApp</li>
             </ul>

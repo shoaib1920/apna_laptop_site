@@ -10,7 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { LaptopCondition, P2PListing, User } from '../types';
-import { PAKISTAN_CITIES } from '../services/pricingEngine';
+import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
 import { formatPKR } from '../utils/helpers';
 
 interface SellLaptopViewProps {
@@ -44,7 +44,7 @@ export const SellLaptopView: React.FC<SellLaptopViewProps> = ({
   const [brand, setBrand] = useState<string>(initialSpecs?.brand || 'Lenovo');
   const [model, setModel] = useState<string>(initialSpecs?.model || '');
   const [askingPrice, setAskingPrice] = useState<number>(initialSpecs?.asking_price || 65000);
-  const [city, setCity] = useState<string>(currentUser?.city || 'Lahore');
+  const [city, setCity] = useState<string>(currentUser?.city || 'Nankana Sahib');
   const [cpu, setCpu] = useState<string>(initialSpecs?.specs?.cpu || 'Core i5 8th Gen');
   const [ram, setRam] = useState<string>(initialSpecs?.specs?.ram || '16GB');
   const [storage, setStorage] = useState<string>(initialSpecs?.specs?.storage || '512GB SSD');
@@ -163,7 +163,7 @@ export const SellLaptopView: React.FC<SellLaptopViewProps> = ({
               Mubarak! Your Ad is Live on Apna Laptop!
             </h2>
             <p className="text-xs text-on-surface-variant max-w-md mx-auto">
-              Buyers in {createdListing.seller_city} and across Pakistan can now view your listing and contact you on WhatsApp.
+              Buyers in {createdListing.seller_city} and nearby areas can now view your listing and contact you on WhatsApp.
             </p>
           </div>
 
@@ -220,8 +220,8 @@ export const SellLaptopView: React.FC<SellLaptopViewProps> = ({
         </div>
         <p className="text-xs sm:text-sm text-on-primary-container">
           {romanUrduMode
-            ? 'Pakistan bhar ke hazaron buyers tak apne used laptop ka ad pohonchayein. Direct WhatsApp messages aur calls receive karein.'
-            : 'Reach thousands of serious laptop buyers across Pakistan. Sell directly with zero platform commissions.'}
+            ? 'Nankana Sahib aur nearby buyers tak apne used laptop ka ad pohonchayein. Direct WhatsApp messages aur calls receive karein.'
+            : 'Reach serious laptop buyers across Nankana Sahib & nearby towns. Sell directly with zero platform commissions.'}
         </p>
       </div>
 
@@ -306,13 +306,13 @@ export const SellLaptopView: React.FC<SellLaptopViewProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-on-surface-variant block mb-1">City in Pakistan</label>
+                  <label className="font-bold text-on-surface-variant block mb-1">Service Area</label>
                   <select
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2.5 font-semibold text-on-surface"
                   >
-                    {PAKISTAN_CITIES.map((c) => (
+                    {SERVICE_AREA_CITIES.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
