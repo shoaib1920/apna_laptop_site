@@ -6,7 +6,6 @@ import {
   Calculator,
   Compass,
   Sliders,
-  ShieldCheck,
   User as UserIcon,
   Store,
   Menu,
@@ -16,7 +15,6 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { User } from '../types';
-import { isFirebaseConfigured } from '../services/firebase';
 
 interface NavbarProps {
   currentRoute: string;
@@ -96,8 +94,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-1 sm:gap-4">
           {/* Brand Logo */}
           <div className="flex items-center gap-6">
             <button
@@ -105,15 +103,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNav('home')}
               className="flex flex-col text-left group transition-transform"
             >
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black tracking-tighter leading-none text-primary font-display group-hover:text-steel-dark transition-colors">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-lg sm:text-2xl font-black tracking-tighter leading-none text-primary font-display group-hover:text-steel-dark transition-colors">
                   APNA LAPTOP
                 </span>
-                <span className="bg-steel-tint text-steel-dark text-[10px] font-bold px-1.5 py-0.2 rounded">
+                <span className="bg-steel-tint text-steel-dark text-[10px] font-bold px-1.5 py-0.5 rounded">
                   .PK
                 </span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-steel-dark font-bold mt-0.5">
+              <span className="hidden sm:block text-[10px] uppercase tracking-widest text-steel-dark font-bold mt-0.5">
                 {romanUrduMode ? 'Yaqeeni Deal, Local Trust' : 'Verified Laptop Hub'}
               </span>
             </button>
@@ -123,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button id="nav-hub-btn" onClick={() => handleNav('hub')} className={navLinkClasses(currentRoute === 'hub' || currentRoute === 'hub_detail')}>
                 <Store className="w-4 h-4" />
                 <span>Laptop Hub</span>
-                <span className="text-[9px] bg-copper-tint text-copper-dark px-1.5 py-0.2 rounded font-bold">
+                <span className="text-[9px] bg-copper-tint text-copper-dark px-1.5 py-0.5 rounded font-bold">
                   Verified
                 </span>
               </button>
@@ -180,10 +178,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               href="https://wa.me/923016672356?text=Salam%20Apna%20Laptop%20team,%20I%20have%20an%20inquiry"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-whatsapp hover:bg-whatsapp-dark px-3.5 py-2 rounded-lg flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-sm transition-all hover:scale-[1.02]"
+              className="bg-whatsapp hover:bg-whatsapp-dark p-2 sm:px-3.5 sm:py-2 rounded-lg flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-sm transition-all hover:scale-[1.02]"
+              title="WhatsApp Us"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>WhatsApp Us</span>
+              <span className="hidden sm:inline">WhatsApp Us</span>
             </a>
 
             {/* Wishlist */}
@@ -221,7 +220,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="user-menu-btn"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-1.5 bg-surface-container-low hover:bg-surface-container px-2.5 py-1.5 rounded-xl border border-outline-variant text-xs text-on-surface transition-colors"
+                className="flex items-center gap-1.5 bg-surface-container-low hover:bg-surface-container p-2 sm:px-2.5 sm:py-1.5 rounded-xl border border-outline-variant text-xs text-on-surface transition-colors"
               >
                 {currentUser ? (
                   <>
@@ -230,11 +229,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                       alt={currentUser.name}
                       className="w-5 h-5 rounded-full object-cover border border-steel"
                     />
-                    <span className="font-semibold max-w-[80px] sm:max-w-[100px] truncate">
+                    <span className="hidden sm:inline font-semibold max-w-[80px] sm:max-w-[100px] truncate">
                       {currentUser.name.split(' ')[0]}
                     </span>
                     {currentUser.role === 'admin' && (
-                      <span className="bg-primary text-white text-[9px] px-1 rounded font-bold">
+                      <span className="hidden sm:inline bg-primary text-white text-[9px] px-1 rounded font-bold">
                         Admin
                       </span>
                     )}
@@ -242,10 +241,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <>
                     <UserIcon className="w-4 h-4 text-outline" />
-                    <span>Guest</span>
+                    <span className="hidden sm:inline">Guest</span>
                   </>
                 )}
-                <ChevronDown className="w-3.5 h-3.5 text-outline" />
+                <ChevronDown className="hidden sm:inline w-3.5 h-3.5 text-outline" />
               </button>
 
               {userDropdownOpen && (
@@ -273,19 +272,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <UserIcon className="w-4 h-4 text-steel-dark" />
                       <span>My Orders</span>
                     </button>
-
-                    {(currentUser?.role === 'admin' || isFirebaseConfigured) && (
-                      <button
-                        onClick={() => {
-                          handleNav('admin');
-                          setUserDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-primary font-semibold"
-                      >
-                        <ShieldCheck className="w-4 h-4" />
-                        <span>Admin Portal</span>
-                      </button>
-                    )}
                   </div>
 
                   <div className="px-3 pt-2 pb-1 border-t border-outline-variant">

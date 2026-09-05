@@ -45,12 +45,10 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
 }) => {
   // Shipping Form State
   const [customerName, setCustomerName] = useState<string>(currentUser?.name || '');
-  const [customerPhone, setCustomerPhone] = useState<string>(currentUser?.phone || '03001234567');
+  const [customerPhone, setCustomerPhone] = useState<string>(currentUser?.phone || '');
   const [customerCity, setCustomerCity] = useState<string>(currentUser?.city || 'Nankana Sahib');
-  const [customerAddress, setCustomerAddress] = useState<string>(
-    'House 14-B, Street 3, Sector G-11/2'
-  );
-  const [orderNotes, setOrderNotes] = useState<string>('Please call before delivery');
+  const [customerAddress, setCustomerAddress] = useState<string>('');
+  const [orderNotes, setOrderNotes] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [deliveryType, setDeliveryType] = useState<'standard' | 'express'>('standard');
 

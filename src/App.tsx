@@ -29,8 +29,12 @@ export default function App() {
 
   const store = useAppStore(!!firebaseAdmin);
 
-  // Navigation router state
-  const [currentRoute, setCurrentRoute] = useState<string>('home');
+  // Navigation router state. There's no nav link to the admin panel anywhere
+  // on the site — it's only reachable by knowing to go to /admin directly,
+  // so we seed the initial route from the URL for that one case.
+  const [currentRoute, setCurrentRoute] = useState<string>(() =>
+    window.location.pathname === '/admin' ? 'admin' : 'home'
+  );
   const [routeParams, setRouteParams] = useState<any>({});
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
@@ -47,6 +51,7 @@ export default function App() {
   const navigateTo = (route: string, params: any = {}) => {
     setCurrentRoute(route);
     setRouteParams(params);
+    window.history.pushState({}, '', route === 'admin' ? '/admin' : '/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -56,6 +61,14 @@ export default function App() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentRoute(window.location.pathname === '/admin' ? 'admin' : 'home');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleUpdateCartQuantity = (listingId: string, quantity: number) => {

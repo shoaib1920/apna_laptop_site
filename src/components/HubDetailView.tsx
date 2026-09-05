@@ -503,7 +503,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-on-surface text-xs">{rev.reviewer_name}</span>
-                    <span className="text-[10px] text-copper-dark bg-copper/10 font-bold px-1.5 py-0.2 rounded">
+                    <span className="text-[10px] text-copper-dark bg-copper/10 font-bold px-1.5 py-0.5 rounded">
                       Verified Purchase
                     </span>
                     <span className="text-[11px] text-outline">• {rev.reviewer_city}</span>
