@@ -2,7 +2,7 @@
   "name": "apna-laptop",
   "private": true,
   "version": "1.0.0",
-  "description": "Apna Laptop — Pakistan's laptop marketplace: a curated Hub of verified supplier stock plus a zero-commission P2P classifieds marketplace, with a client-side admin CRM for inventory and order management.",
+  "description": "Apna Laptop — a curated Hub of verified, fixed-price laptop stock for Nankana Sahib and nearby towns, with a Firebase-backed admin panel for inventory and order management.",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
