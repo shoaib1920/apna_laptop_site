@@ -35,14 +35,23 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
         <UserIcon className="w-12 h-12 text-outline-variant mx-auto" />
         <h1 className="text-lg font-bold text-on-surface font-display">You're browsing as a guest</h1>
         <p className="text-sm text-on-surface-variant">
-          Switch to one of the demo accounts from the profile menu to see your orders here.
+          Sign in or create a free account to see your order history here. You can still check out
+          as a guest — your WhatsApp confirmation is your receipt either way.
         </p>
-        <button
-          onClick={() => navigateTo('home')}
-          className="bg-primary hover:opacity-90 text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow"
-        >
-          Back to Home
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+          <button
+            onClick={() => navigateTo('account')}
+            className="bg-primary hover:opacity-90 text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow"
+          >
+            Sign In / Create Account
+          </button>
+          <button
+            onClick={() => navigateTo('home')}
+            className="bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-bold px-6 py-2.5 rounded-lg border border-outline-variant"
+          >
+            Back to Home
+          </button>
+        </div>
       </div>
     );
   }

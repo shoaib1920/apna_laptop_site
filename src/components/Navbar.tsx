@@ -11,8 +11,9 @@ import {
   Menu,
   X,
   MessageSquare,
-  CheckCircle2,
   ChevronDown,
+  LogOut,
+  Package,
 } from 'lucide-react';
 import { User } from '../types';
 
@@ -20,8 +21,7 @@ interface NavbarProps {
   currentRoute: string;
   navigateTo: (route: string, params?: any) => void;
   currentUser: User | null;
-  users: User[];
-  switchUser: (id: string | null) => void;
+  onLogout: () => void;
   cartCount: number;
   wishlistCount: number;
   romanUrduMode: boolean;
@@ -35,8 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentRoute,
   navigateTo,
   currentUser,
-  users,
-  switchUser,
+  onLogout,
   cartCount,
   wishlistCount,
   romanUrduMode,
@@ -261,57 +260,46 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                   </div>
 
-                  <div className="py-1">
-                    <button
-                      onClick={() => {
-                        handleNav('dashboard');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-on-surface"
-                    >
-                      <UserIcon className="w-4 h-4 text-steel-dark" />
-                      <span>My Orders</span>
-                    </button>
-                  </div>
-
-                  <div className="px-3 pt-2 pb-1 border-t border-outline-variant">
-                    <p className="text-[10px] text-on-surface-variant uppercase font-semibold tracking-wider mb-1.5">
-                      Quick Demo Role Switcher:
-                    </p>
-                    <div className="space-y-1">
-                      {users.map((u) => (
-                        <button
-                          key={u.id}
-                          onClick={() => {
-                            switchUser(u.id);
-                            setUserDropdownOpen(false);
-                          }}
-                          className={`w-full text-left px-2 py-1 rounded text-[11px] flex items-center justify-between ${
-                            currentUser?.id === u.id
-                              ? 'bg-steel-tint text-steel-dark font-bold'
-                              : 'hover:bg-surface-container-low text-on-surface-variant'
-                          }`}
-                        >
-                          <span>{u.name} ({u.role})</span>
-                          {currentUser?.id === u.id && <CheckCircle2 className="w-3 h-3 text-steel-dark" />}
-                        </button>
-                      ))}
+                  {currentUser ? (
+                    <div className="py-1">
                       <button
                         onClick={() => {
-                          switchUser(null);
+                          handleNav('dashboard');
                           setUserDropdownOpen(false);
                         }}
-                        className={`w-full text-left px-2 py-1 rounded text-[11px] flex items-center justify-between ${
-                          !currentUser
-                            ? 'bg-steel-tint text-steel-dark font-bold'
-                            : 'hover:bg-surface-container-low text-on-surface-variant'
-                        }`}
+                        className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-on-surface"
                       >
-                        <span>Guest (Not logged in)</span>
-                        {!currentUser && <CheckCircle2 className="w-3 h-3 text-steel-dark" />}
+                        <Package className="w-4 h-4 text-steel-dark" />
+                        <span>My Orders</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          onLogout();
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-error"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Log Out</span>
                       </button>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="py-1">
+                      <button
+                        onClick={() => {
+                          handleNav('account');
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 hover:bg-surface-container-low flex items-center gap-2 text-on-surface font-semibold"
+                      >
+                        <UserIcon className="w-4 h-4 text-steel-dark" />
+                        <span>Sign In / Create Account</span>
+                      </button>
+                      <p className="px-3 pt-1 text-[10px] text-on-surface-variant">
+                        Optional — you can check out as a guest too.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

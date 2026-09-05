@@ -10,9 +10,11 @@ import {
   Trash2,
   Truck,
   LogOut,
+  UploadCloud,
 } from 'lucide-react';
 import { HubListing, LaptopCondition, Order, OrderStatus, User } from '../types';
 import { formatPKR } from '../utils/helpers';
+import { BulkImportModal } from './BulkImportModal';
 
 interface AdminDashboardViewProps {
   hubListings: HubListing[];
@@ -72,6 +74,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'inventory' | 'orders' | 'analytics'>('inventory');
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showBulkImport, setShowBulkImport] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [courierDrafts, setCourierDrafts] = useState<Record<string, { courier: string; tracking: string }>>({});
@@ -245,13 +248,22 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-on-surface font-display">Verified Stock Lots & Margins</h2>
-            <button
-              onClick={openAddModal}
-              className="bg-steel hover:bg-steel-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 shadow"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add New Lot Product</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowBulkImport(true)}
+                className="bg-surface-container-low hover:bg-surface-container text-on-surface font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 border border-outline-variant"
+              >
+                <UploadCloud className="w-4 h-4" />
+                <span>Bulk Import</span>
+              </button>
+              <button
+                onClick={openAddModal}
+                className="bg-steel hover:bg-steel-dark text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 shadow"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add New Lot Product</span>
+              </button>
+            </div>
           </div>
 
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
@@ -621,6 +633,10 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
             </form>
           </div>
         </div>
+      )}
+
+      {showBulkImport && (
+        <BulkImportModal onClose={() => setShowBulkImport(false)} createHubListing={createHubListing} />
       )}
     </div>
   );

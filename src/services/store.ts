@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import {
   User,
   HubListing,
@@ -10,13 +11,12 @@ import {
   LaptopCondition,
 } from '../types';
 import {
-  INITIAL_USERS,
   INITIAL_HUB_LISTINGS,
   INITIAL_P2P_LISTINGS,
   INITIAL_ORDERS,
   INITIAL_REVIEWS,
 } from '../data/mockData';
-import { isFirebaseConfigured } from './firebase';
+import { auth, isFirebaseConfigured } from './firebase';
 import {
   subscribeHubListings,
   subscribeOrders,
@@ -27,10 +27,15 @@ import {
   createOrderFS,
   updateOrderStatusFS,
 } from './firestoreData';
+import {
+  checkIsAdmin,
+  getCustomerProfile,
+  signUpCustomer,
+  signInCustomer,
+  logoutUser,
+} from './auth';
 
 const STORAGE_KEYS = {
-  USERS: 'apna_laptop_users_v1',
-  CURRENT_USER_ID: 'apna_laptop_current_user_v1',
   HUB_LISTINGS: 'apna_laptop_hub_listings_v1',
   P2P_LISTINGS: 'apna_laptop_p2p_listings_v1',
   CART: 'apna_laptop_cart_v1',
@@ -60,7 +65,7 @@ function setStored<T>(key: string, value: T): void {
   }
 }
 
-export function useAppStore(isAdminAuthenticated: boolean = false) {
+export function useAppStore() {
   // Navigation & Routing state
   const [currentRoute, setCurrentRoute] = useState<string>('home');
   const [selectedHubId, setSelectedHubId] = useState<string | null>(null);
@@ -76,13 +81,70 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
     getStored<boolean>(STORAGE_KEYS.ROMAN_URDU, true)
   );
 
-  // Users & Auth
-  const [users, setUsers] = useState<User[]>(() =>
-    getStored<User[]>(STORAGE_KEYS.USERS, INITIAL_USERS)
-  );
-  const [currentUserId, setCurrentUserId] = useState<string | null>(() =>
-    getStored<string | null>(STORAGE_KEYS.CURRENT_USER_ID, 'user_1')
-  );
+  // Real auth: a signed-in Firebase user is either a customer or an admin
+  // (decided by whether an admins/{uid} doc exists - see auth.ts). Accounts
+  // are optional - guests can browse and check out without signing in.
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
+  const [authChecked, setAuthChecked] = useState<boolean>(!isFirebaseConfigured);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [customerName, setCustomerName] = useState<string>('');
+  const [customerPhone, setCustomerPhone] = useState<string>('');
+  const [customerCity, setCustomerCity] = useState<string>('Nankana Sahib');
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !auth) return;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setFirebaseUser(user);
+      if (!user) {
+        setIsAdmin(false);
+        setCustomerName('');
+        setCustomerPhone('');
+        setCustomerCity('Nankana Sahib');
+        setAuthChecked(true);
+        return;
+      }
+      const [admin, profile] = await Promise.all([
+        checkIsAdmin(user.uid),
+        getCustomerProfile(user.uid),
+      ]);
+      setIsAdmin(admin);
+      setCustomerName(profile?.name || user.displayName || '');
+      setCustomerPhone(profile?.phone || '');
+      setCustomerCity(profile?.city || 'Nankana Sahib');
+      setAuthChecked(true);
+    });
+    return unsubscribe;
+  }, []);
+
+  const signUp = async (email: string, password: string, name: string, phone: string, city: string) => {
+    setAuthError(null);
+    try {
+      await signUpCustomer(email, password, name, phone, city);
+      // The onAuthStateChanged listener fires as soon as the account is
+      // created (before the profile doc write above finishes) and can read
+      // a stale/empty profile - set what we already know locally so the
+      // name typed at signup shows immediately instead of an email prefix.
+      setCustomerName(name);
+      setCustomerPhone(phone);
+      setCustomerCity(city);
+    } catch (e: any) {
+      setAuthError(e?.message || 'Could not create account');
+      throw e;
+    }
+  };
+
+  const signIn = async (email: string, password: string) => {
+    setAuthError(null);
+    try {
+      await signInCustomer(email, password);
+    } catch (e: any) {
+      setAuthError(e?.message || 'Invalid email or password');
+      throw e;
+    }
+  };
+
+  const logout = () => logoutUser();
 
   // Listings
   const [hubListings, setHubListings] = useState<HubListing[]>(() =>
@@ -115,14 +177,6 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
   useEffect(() => {
     setStored(STORAGE_KEYS.ROMAN_URDU, romanUrduMode);
   }, [romanUrduMode]);
-
-  useEffect(() => {
-    setStored(STORAGE_KEYS.USERS, users);
-  }, [users]);
-
-  useEffect(() => {
-    setStored(STORAGE_KEYS.CURRENT_USER_ID, currentUserId);
-  }, [currentUserId]);
 
   useEffect(() => {
     setStored(STORAGE_KEYS.HUB_LISTINGS, hubListings);
@@ -164,11 +218,11 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
   }, []);
 
   useEffect(() => {
-    if (!isFirebaseConfigured || !isAdminAuthenticated) return;
+    if (!isFirebaseConfigured || !isAdmin) return;
     seedHubListingsIfEmpty(INITIAL_HUB_LISTINGS).catch((e) =>
       console.error('Failed to seed hub listings:', e)
     );
-  }, [isAdminAuthenticated]);
+  }, [isAdmin]);
 
   useEffect(() => {
     if (!isFirebaseConfigured) return;
@@ -176,8 +230,23 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
     return unsubscribe;
   }, []);
 
-  // Derived current user
-  const currentUser: User | null = users.find((u) => u.id === currentUserId) || null;
+  // Derived current user: real Firebase account (customer or admin), or
+  // null for a guest. Guests can still browse, add to cart, and check out.
+  const currentUser: User | null = firebaseUser
+    ? {
+        id: firebaseUser.uid,
+        name: customerName || firebaseUser.email?.split('@')[0] || 'Customer',
+        email: firebaseUser.email || '',
+        phone: customerPhone,
+        whatsapp_number: customerPhone,
+        city: customerCity,
+        role: isAdmin ? 'admin' : 'user',
+        is_phone_verified: false,
+        joined_at: firebaseUser.metadata.creationTime || new Date().toISOString(),
+        rating_avg: 0,
+        total_listings_count: 0,
+      }
+    : null;
 
   // Actions
   const navigateTo = (
@@ -190,10 +259,6 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
     if (params?.sellSpecs) setPrefilledSellSpecs(params.sellSpecs);
     setCurrentRoute(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const switchUser = (userId: string | null) => {
-    setCurrentUserId(userId);
   };
 
   const toggleWishlist = (id: string) => {
@@ -394,16 +459,14 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
     setMessages((prev) => [...prev, newMsg]);
   };
 
-  // Reset demo data
+  // Reset demo data (only meaningful in local/non-Firebase mode)
   const resetDemoData = () => {
-    setUsers(INITIAL_USERS);
     setHubListings(INITIAL_HUB_LISTINGS);
     setP2PListings(INITIAL_P2P_LISTINGS);
     setOrders(INITIAL_ORDERS);
     setReviews(INITIAL_REVIEWS);
     setCart([]);
     setWishlist(['hub_1', 'p2p_1']);
-    setCurrentUserId('user_1');
   };
 
   return {
@@ -416,9 +479,13 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
     setGlobalSearchQuery,
     romanUrduMode,
     setRomanUrduMode,
-    users,
     currentUser,
-    currentUserId,
+    isAdmin,
+    authChecked,
+    authError,
+    signUp,
+    signIn,
+    logout,
     hubListings,
     p2pListings,
     cart,
@@ -427,7 +494,6 @@ export function useAppStore(isAdminAuthenticated: boolean = false) {
     reviews,
     messages,
     navigateTo,
-    switchUser,
     toggleWishlist,
     addToCart,
     updateCartQuantity,

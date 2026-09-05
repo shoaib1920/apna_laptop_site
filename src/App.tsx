@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { useAppStore } from './services/store';
-import { auth, isFirebaseConfigured } from './services/firebase';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomeView } from './components/HomeView';
@@ -13,21 +11,17 @@ import { LaptopFinderView } from './components/LaptopFinderView';
 import { CheckoutView } from './components/CheckoutView';
 import { AdminDashboardView } from './components/AdminDashboardView';
 import { AdminLoginView } from './components/AdminLoginView';
+import { AccountView } from './components/AccountView';
 import { WishlistView } from './components/WishlistView';
 import { UserDashboardView } from './components/UserDashboardView';
 import { AccessDenied } from './components/AccessDenied';
 import { BottomNav } from './components/BottomNav';
 import { MessageCircle, ArrowUp } from 'lucide-react';
 
-const HIDE_BOTTOM_NAV_ROUTES = ['hub_detail', 'checkout', 'cart', 'calculator', 'advisor', 'admin'];
+const HIDE_BOTTOM_NAV_ROUTES = ['hub_detail', 'checkout', 'cart', 'calculator', 'advisor', 'admin', 'account'];
 
 export default function App() {
-  // Real admin auth (Firebase). Until a Firebase project is configured this
-  // stays inert and the admin route falls back to the demo role-switcher.
-  const [firebaseAdmin, setFirebaseAdmin] = useState<FirebaseUser | null>(null);
-  const [authChecked, setAuthChecked] = useState<boolean>(!isFirebaseConfigured);
-
-  const store = useAppStore(!!firebaseAdmin);
+  const store = useAppStore();
 
   // Navigation router state. There's no nav link to the admin panel anywhere
   // on the site — it's only reachable by knowing to go to /admin directly,
@@ -38,15 +32,6 @@ export default function App() {
   const [routeParams, setRouteParams] = useState<any>({});
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!isFirebaseConfigured || !auth) return;
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setFirebaseAdmin(user);
-      setAuthChecked(true);
-    });
-    return unsubscribe;
-  }, []);
 
   const navigateTo = (route: string, params: any = {}) => {
     setCurrentRoute(route);
@@ -92,8 +77,7 @@ export default function App() {
         currentRoute={currentRoute}
         navigateTo={navigateTo}
         currentUser={store.currentUser}
-        users={store.users}
-        switchUser={store.switchUser}
+        onLogout={store.logout}
         cartCount={store.cart.reduce((sum, item) => sum + item.quantity, 0)}
         wishlistCount={store.wishlist.length}
         romanUrduMode={store.romanUrduMode}
@@ -183,23 +167,7 @@ export default function App() {
         )}
 
         {currentRoute === 'admin' && (
-          isFirebaseConfigured ? (
-            !authChecked ? null : firebaseAdmin ? (
-              <AdminDashboardView
-                hubListings={store.hubListings}
-                orders={store.orders}
-                createHubListing={store.addHubListing}
-                updateHubListing={store.updateHubListing}
-                updateOrderStatus={store.updateOrderStatus}
-                deleteHubListing={store.deleteHubListing}
-                navigateTo={navigateTo}
-                currentUser={store.currentUser}
-                onLogout={() => auth && signOut(auth)}
-              />
-            ) : (
-              <AdminLoginView navigateTo={navigateTo} />
-            )
-          ) : store.currentUser?.role === 'admin' ? (
+          !store.authChecked ? null : store.isAdmin ? (
             <AdminDashboardView
               hubListings={store.hubListings}
               orders={store.orders}
@@ -209,10 +177,24 @@ export default function App() {
               deleteHubListing={store.deleteHubListing}
               navigateTo={navigateTo}
               currentUser={store.currentUser}
+              onLogout={store.logout}
             />
-          ) : (
+          ) : store.currentUser ? (
             <AccessDenied navigateTo={navigateTo} />
+          ) : (
+            <AdminLoginView navigateTo={navigateTo} />
           )
+        )}
+
+        {currentRoute === 'account' && (
+          <AccountView
+            currentUser={store.currentUser}
+            authError={store.authError}
+            signUp={store.signUp}
+            signIn={store.signIn}
+            logout={store.logout}
+            navigateTo={navigateTo}
+          />
         )}
 
         {currentRoute === 'dashboard' && (

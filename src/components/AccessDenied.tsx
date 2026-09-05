@@ -13,8 +13,8 @@ export const AccessDenied: React.FC<AccessDeniedProps> = ({ navigateTo }) => {
       </div>
       <h1 className="text-xl font-extrabold text-on-surface font-display">Admins Only</h1>
       <p className="text-sm text-on-surface-variant">
-        You need an admin account to view this page. This is a client-only demo — switch to the
-        "Admin" demo account from the profile menu in the top-right to preview the CRM panel.
+        Your account doesn't have admin access. If you believe this is a mistake, contact the site
+        owner to get added as an admin.
       </p>
       <button
         onClick={() => navigateTo('home')}

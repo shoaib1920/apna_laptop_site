@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Paste this into Firebase Console > Storage > Rules (after enabling
+// Storage). Same admin model as firestore.rules: only a signed-in user with
+// a document at admins/{uid} in Firestore can upload product photos; anyone
+// can view them (they're public product images on the storefront).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /hub_listings/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+  }
+}
