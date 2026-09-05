@@ -276,7 +276,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                           <img
                             src={item.images[0]}
                             alt={item.title}
-                            className="w-10 h-10 rounded object-cover bg-surface-container"
+                            className="w-10 h-10 rounded object-contain bg-white border border-outline-variant p-0.5"
                           />
                           <div>
                             <span className="font-bold text-on-surface block">{item.title}</span>

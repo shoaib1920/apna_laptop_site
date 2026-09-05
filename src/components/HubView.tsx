@@ -393,17 +393,17 @@ export const HubView: React.FC<HubViewProps> = ({
                 return (
                   <div
                     key={listing.id}
-                    className="bg-surface-container-lowest rounded border border-outline-variant hover:border-outline hover:shadow-sm transition-all overflow-hidden group flex flex-col"
+                    className="bg-surface-container-lowest rounded border border-outline-variant/60 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group flex flex-col"
                   >
                     {/* Image */}
                     <div
                       onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                      className="relative aspect-square overflow-hidden bg-surface-container cursor-pointer"
+                      className="relative aspect-square overflow-hidden bg-white cursor-pointer"
                     >
                       <img
                         src={listing.images[0]}
                         alt={listing.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
                       />
                       {discount > 0 && (
                         <span className="absolute top-1.5 left-1.5 bg-deal text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">

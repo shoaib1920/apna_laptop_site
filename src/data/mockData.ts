@@ -67,9 +67,8 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     supplierNote: 'Supplier: TechVision Hub (Nankana Sahib)',
     images: [
       'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i5-8350U (4 Cores, 8 Threads up to 3.6GHz)',
       cpuGen: 'intel_core_8th',
@@ -115,9 +114,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: Al-Rehman Computers (Shahkot)',
     images: [
-      'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1631543561906-200fa465682a?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1660945742817-217842d82b55?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i7-1165G7 (4 Cores, 8 Threads up to 4.7GHz)',
       cpuGen: 'intel_core_11th',
@@ -162,9 +161,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: Apple Hub (Nankana Sahib)',
     images: [
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1655226569940-b0ed83f6e268?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Apple M1 Chip (8-Core CPU with 4 performance cores & 4 efficiency cores)',
       cpuGen: 'apple_m1',
@@ -201,9 +200,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: CyberLords Gamers Hub (Manawala)',
     images: [
-      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i5-11400H (6 Cores, 12 Threads up to 4.5GHz)',
       cpuGen: 'intel_core_11th',
@@ -246,9 +245,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: National Tech (Nankana Sahib)',
     images: [
-      'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1660945742817-217842d82b55?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1631543561906-200fa465682a?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i5-8350U (4 Cores, 8 Threads)',
       cpuGen: 'intel_core_8th',
@@ -293,9 +292,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: TechVision Hub (Nankana Sahib)',
     images: [
-      'https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1655226569940-b0ed83f6e268?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'AMD Ryzen 5 7535HS (6 Cores, 12 Threads up to 4.55GHz)',
       cpuGen: 'amd_ryzen_6000_7000',
@@ -333,9 +332,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: Prime Silicon (Bachyana)',
     images: [
-      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1631543561906-200fa465682a?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i7-1165G7 (up to 4.7GHz)',
       cpuGen: 'intel_core_11th',
@@ -372,9 +371,9 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     status: 'in_stock',
     supplierNote: 'Supplier: National Tech (Nankana Sahib)',
     images: [
-      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1660945742817-217842d82b55?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i5-6200U (2.3GHz up to 2.8GHz)',
       cpuGen: 'intel_core_6th_7th',
@@ -418,9 +417,9 @@ export const INITIAL_P2P_LISTINGS: P2PListing[] = [
     status: 'active',
     description: 'Selling my personal ThinkPad X1 Carbon. Ultralight carbon fiber body (weighs just 1.09 kg). Used strictly for React and Node.js software development. 100% spotless screen, original 65W Lenovo Type-C charger and original box available. Selling because I upgraded to MacBook Pro.',
     images: [
-      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
-    ],
+  ],
     specs: {
       cpu: 'Intel Core i7-8565U (4 Cores, 8 Threads up to 4.6GHz)',
       cpuGen: 'intel_core_8th',
@@ -461,9 +460,9 @@ export const INITIAL_P2P_LISTINGS: P2PListing[] = [
     status: 'active',
     description: 'Good condition gaming laptop. Upgraded RAM to 16GB dual channel. Plays Valorant, GTA V, and PUBG at high frame rates. Original ASUS 150W charger included. Price slightly negotiable on spot for serious buyers. Meetup in Gulshan near Disco Bakery.',
     images: [
-      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1655226569940-b0ed83f6e268?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'AMD Ryzen 5 3550H (4 Cores, 8 Threads)',
       cpuGen: 'amd_ryzen_2000_3000',
@@ -503,9 +502,9 @@ export const INITIAL_P2P_LISTINGS: P2PListing[] = [
     status: 'active',
     description: 'Corporate office laptop in very neat condition. Keyboard, trackpad, and ports all work 100%. Battery backup around 4-5 hours. Original Dell 65W pin charger. Cash on delivery possible or hand-to-hand deal in Manawala/Nankana Sahib.',
     images: [
-      'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&auto=format&fit=crop&q=80',
-    ],
+      'https://images.unsplash.com/photo-1631543561906-200fa465682a?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?w=800&auto=format&fit=crop&q=80',
+  ],
     specs: {
       cpu: 'Intel Core i5-8265U (4 Cores, 8 Threads)',
       cpuGen: 'intel_core_8th',

@@ -108,11 +108,11 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
         {/* Left Column: Photos & Details */}
         <div className="lg:col-span-7 space-y-6">
           {/* Main Photo */}
-          <div className="aspect-4/3 rounded-lg overflow-hidden bg-surface-container-highest border border-outline-variant relative shadow-md">
+          <div className="aspect-4/3 rounded-lg overflow-hidden bg-white border border-outline-variant relative shadow-md">
             <img
               src={listing.images[activeImageIndex] || listing.images[0]}
               alt={listing.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain p-6"
             />
             <div className="absolute top-3 left-3 bg-primary/85 backdrop-blur-md text-on-primary text-xs font-bold px-3 py-1 rounded-lg">
               P2P Community Deal • {listing.condition}
@@ -130,13 +130,13 @@ export const MarketplaceDetailView: React.FC<MarketplaceDetailViewProps> = ({
                 <button
                   key={idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`w-20 h-16 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
+                  className={`w-20 h-16 rounded-xl overflow-hidden bg-white border-2 shrink-0 transition-all ${
                     activeImageIndex === idx
                       ? 'border-whatsapp scale-105 shadow-sm'
                       : 'border-outline-variant opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                  <img src={img} alt="thumb" className="w-full h-full object-contain p-1.5" />
                 </button>
               ))}
             </div>

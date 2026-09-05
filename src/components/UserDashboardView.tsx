@@ -180,7 +180,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
                   listing.status === 'sold' ? 'opacity-60' : ''
                 }`}
               >
-                <img src={listing.images[0]} alt={listing.title} className="w-16 h-16 rounded-lg object-cover bg-surface-container" />
+                <img src={listing.images[0]} alt={listing.title} className="w-16 h-16 rounded-lg object-contain bg-white border border-outline-variant p-1" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-on-surface text-sm truncate">{listing.title}</h3>
                   <p className="text-xs font-extrabold text-deal font-display">{formatPKR(listing.asking_price)}</p>

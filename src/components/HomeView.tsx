@@ -70,7 +70,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-deal bg-deal-container px-2.5 py-1 rounded">
               {romanUrduMode ? '0% Commission • 7 Din Warranty' : 'Verified Stock • 7-Day Checking Warranty'}
             </span>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight font-display">
+            <h1 className="text-display-1 font-extrabold font-display">
               {romanUrduMode
                 ? 'Apna Laptop Khareedein Ya Bechein, Baghair Kisi Faraad Ke'
                 : 'Buy & Sell Laptops in Nankana Sahib — Zero Fraud, Full Warranty'}
@@ -174,7 +174,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* FEATURED HUB GRID */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base sm:text-lg font-bold text-on-surface font-display">
+          <h2 className="text-heading-1 font-extrabold text-on-surface font-display">
             {romanUrduMode ? 'Verified Hub Deals' : 'Verified Hub Deals'}
           </h2>
           <button
@@ -193,16 +193,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
             return (
               <div
                 key={listing.id}
-                className="bg-surface-container-lowest rounded border border-outline-variant hover:border-outline hover:shadow-sm transition-all overflow-hidden group"
+                className="bg-surface-container-lowest rounded border border-outline-variant/60 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
               >
                 <div
                   onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                  className="relative aspect-square overflow-hidden bg-surface-container cursor-pointer"
+                  className="relative aspect-square overflow-hidden bg-white cursor-pointer"
                 >
                   <img
                     src={listing.images[0]}
                     alt={listing.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
                   />
                   {discount > 0 && (
                     <span className="absolute top-1.5 left-1.5 bg-deal text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">
@@ -258,7 +258,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-outline-variant">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-on-surface font-display">
+            <h2 className="text-heading-1 font-extrabold text-on-surface font-display">
               {romanUrduMode ? 'P2P Used Market' : 'Recent P2P Listings'}
             </h2>
             <p className="text-[11px] text-on-surface-variant">Posted directly by sellers in Nankana Sahib & nearby towns. 0% commission.</p>
@@ -281,16 +281,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {recentP2P.map((listing) => (
             <div
               key={listing.id}
-              className="bg-surface-container-lowest rounded border border-outline-variant hover:border-outline hover:shadow-sm transition-all overflow-hidden group"
+              className="bg-surface-container-lowest rounded border border-outline-variant/60 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group"
             >
               <div
                 onClick={() => navigateTo('marketplace_detail', { p2pId: listing.id })}
-                className="relative aspect-square overflow-hidden bg-surface-container cursor-pointer"
+                className="relative aspect-square overflow-hidden bg-white cursor-pointer"
               >
                 <img
                   src={listing.images[0]}
                   alt={listing.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
                 />
                 {listing.is_phone_verified && (
                   <span className="absolute top-1.5 left-1.5 bg-whatsapp/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
@@ -319,7 +319,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* REVIEWS */}
       {reviews.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-outline-variant">
-          <h2 className="text-base sm:text-lg font-bold text-on-surface font-display mb-4">
+          <h2 className="text-heading-1 font-extrabold text-on-surface font-display mb-4">
             {romanUrduMode ? 'Nankana Sahib Ke Khush Grahak' : 'What Buyers Are Saying'}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

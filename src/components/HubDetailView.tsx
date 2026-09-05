@@ -149,11 +149,11 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
         {/* Left Gallery (5 cols) */}
         <div className="lg:col-span-6 space-y-3">
           {/* Main Large Image */}
-          <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-primary border border-outline-variant shadow-md">
+          <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-white border border-outline-variant shadow-md">
             <img
               src={listing.images[activeImageIndex] || listing.images[0]}
               alt={listing.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain p-6"
             />
             {/* Badges on image */}
             <div className="absolute top-3 left-3 bg-whatsapp text-white text-xs font-bold px-3 py-1 rounded-lg shadow">
@@ -174,13 +174,13 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                 <button
                   key={idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`w-20 h-16 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
+                  className={`w-20 h-16 rounded-xl overflow-hidden bg-white border-2 shrink-0 transition-all ${
                     activeImageIndex === idx
                       ? 'border-whatsapp scale-105 shadow-sm'
                       : 'border-outline-variant opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                  <img src={img} alt="thumb" className="w-full h-full object-contain p-1.5" />
                 </button>
               ))}
             </div>

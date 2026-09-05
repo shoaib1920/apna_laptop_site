@@ -62,7 +62,7 @@ export const SellLaptopView: React.FC<SellLaptopViewProps> = ({
   // Step 3: Photos & Contact
   const [images, setImages] = useState<string[]>([
     'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?auto=format&fit=crop&w=800&q=80',
   ]);
   const [sellerName, setSellerName] = useState<string>(currentUser?.name || '');
   const [sellerPhone, setSellerPhone] = useState<string>(currentUser?.whatsapp_number || currentUser?.phone || '03001234567');
@@ -96,9 +96,9 @@ export const SellLaptopView: React.FC<SellLaptopViewProps> = ({
 
   const handleAddSampleImage = () => {
     const samples = [
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1631543561906-200fa465682a?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1660945742817-217842d82b55?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?auto=format&fit=crop&w=800&q=80',
     ];
     const next = samples[images.length % samples.length];
     setImages([...images, next]);

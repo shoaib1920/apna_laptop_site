@@ -62,7 +62,7 @@ export const WishlistView: React.FC<WishlistViewProps> = ({
             >
               <div className="space-y-2">
                 <div className="relative aspect-16/9 rounded-lg overflow-hidden bg-surface-container">
-                  <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={item.images[0]} alt={item.title} className="w-full h-full object-contain p-3" />
                   <span className="absolute top-2 left-2 bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded">
                     Verified Hub
                   </span>
@@ -98,7 +98,7 @@ export const WishlistView: React.FC<WishlistViewProps> = ({
             >
               <div className="space-y-2">
                 <div className="relative aspect-16/9 rounded-lg overflow-hidden bg-surface-container">
-                  <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={item.images[0]} alt={item.title} className="w-full h-full object-contain p-3" />
                   <span className="absolute top-2 left-2 bg-whatsapp text-white text-[10px] font-bold px-2 py-0.5 rounded">
                     P2P Listing
                   </span>
