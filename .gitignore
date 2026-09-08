@@ -8,3 +8,4 @@ coverage/
 !.env.example
 .claude/scheduled_tasks.lock
 import_photos/
+vostro_needs_specs/

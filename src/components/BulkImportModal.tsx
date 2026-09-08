@@ -17,8 +17,14 @@ type RowStatus = 'pending' | 'uploading' | 'done' | 'error';
 // correct later via the normal Edit button once real supplier costs are known.
 const estimateCostPrice = (salePrice: number) => Math.round((salePrice * 0.82) / 1000) * 1000;
 
+// Same generic stock photo the "Add New Lot Product" form already defaults
+// to - used here so a listing can go live with text/pricing today and get
+// its real photo swapped in later via Edit, without needing Storage set up.
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80';
+
 export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, createHubListing }) => {
   const [files, setFiles] = useState<Record<number, File[]>>({});
+  const [skipPhotos, setSkipPhotos] = useState(false);
   const [costPrices, setCostPrices] = useState<Record<number, string>>(() =>
     Object.fromEntries(IMPORT_CATALOG.map((e, i) => [i, String(estimateCostPrice(e.listing.sale_price))]))
   );
@@ -26,6 +32,7 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
   const [running, setRunning] = useState(false);
 
   const attachedCount = Object.values(files).filter((f) => f && f.length > 0).length;
+  const readyCount = skipPhotos ? IMPORT_CATALOG.length : attachedCount;
 
   // One folder pick matches every photo to its listing by filename, instead
   // of attaching each photo one at a time - a listing can expect several
@@ -46,10 +53,14 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
     setRunning(true);
     for (let i = 0; i < IMPORT_CATALOG.length; i++) {
       const rowFiles = files[i];
-      if (!rowFiles || rowFiles.length === 0) continue;
+      const hasFiles = rowFiles && rowFiles.length > 0;
+      if (!skipPhotos && !hasFiles) continue;
       setStatuses((s) => ({ ...s, [i]: 'uploading' }));
       try {
-        const imageUrls = await Promise.all(rowFiles.map((file) => uploadHubListingImage(file)));
+        const imageUrls =
+          !skipPhotos && hasFiles
+            ? await Promise.all(rowFiles.map((file) => uploadHubListingImage(file)))
+            : [PLACEHOLDER_IMAGE];
         const entry = IMPORT_CATALOG[i];
         const costPrice = Number(costPrices[i]) || 0;
         createHubListing({
@@ -80,7 +91,11 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
           <button onClick={onClose} className="text-xs text-on-surface-variant">✕</button>
         </div>
 
-        <label className="flex items-center justify-center gap-2 border-2 border-dashed border-outline-variant rounded-xl p-4 text-xs font-bold text-steel-dark cursor-pointer hover:bg-surface-container-low">
+        <label className={`flex items-center justify-center gap-2 border-2 border-dashed rounded-xl p-4 text-xs font-bold cursor-pointer ${
+          skipPhotos
+            ? 'border-outline-variant text-on-surface-variant opacity-50 pointer-events-none'
+            : 'border-outline-variant text-steel-dark hover:bg-surface-container-low'
+        }`}>
           <FolderOpen className="w-4 h-4" />
           <span>Select the import_photos folder</span>
           <input
@@ -91,7 +106,20 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
             multiple
             onChange={handleFolderPick}
             className="hidden"
+            disabled={skipPhotos}
           />
+        </label>
+
+        <label className="flex items-center gap-2 text-xs font-semibold text-on-surface cursor-pointer px-1">
+          <input
+            type="checkbox"
+            checked={skipPhotos}
+            onChange={(e) => setSkipPhotos(e.target.checked)}
+            className="w-4 h-4"
+          />
+          <span>
+            Skip photos for now - import all {IMPORT_CATALOG.length} with a placeholder image (swap in real photos later via Edit)
+          </span>
         </label>
 
         <div className="space-y-2">
@@ -113,7 +141,9 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
                   <p className="text-on-surface-variant">
                     Sale: <span className="price">{formatPKR(entry.listing.sale_price)}</span>
                     {' · '}
-                    {hasAnyFile ? (
+                    {skipPhotos ? (
+                      <span className="text-on-surface-variant italic">will use placeholder image</span>
+                    ) : hasAnyFile ? (
                       <span className={`font-semibold ${fullyMatched ? 'text-steel-dark' : 'text-copper-dark'}`}>
                         {rowFiles.length}/{expectedCount} photos matched
                       </span>
@@ -145,15 +175,17 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
 
         <div className="flex items-center justify-between pt-2 border-t border-outline-variant">
           <p className="text-[11px] text-on-surface-variant">
-            {attachedCount} of {IMPORT_CATALOG.length} listings have photos attached
+            {skipPhotos
+              ? `All ${IMPORT_CATALOG.length} listings will import with a placeholder image`
+              : `${attachedCount} of ${IMPORT_CATALOG.length} listings have photos attached`}
           </p>
           <button
             onClick={handleImportAll}
-            disabled={running || attachedCount === 0}
+            disabled={running || readyCount === 0}
             className="flex items-center gap-2 bg-steel hover:bg-steel-dark disabled:opacity-60 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow"
           >
             {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            <span>{running ? 'Importing...' : `Import ${attachedCount} Listing${attachedCount === 1 ? '' : 's'}`}</span>
+            <span>{running ? 'Importing...' : `Import ${readyCount} Listing${readyCount === 1 ? '' : 's'}`}</span>
           </button>
         </div>
       </div>
