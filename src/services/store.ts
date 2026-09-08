@@ -20,12 +20,15 @@ import { auth, isFirebaseConfigured } from './firebase';
 import {
   subscribeHubListings,
   subscribeOrders,
+  subscribeReviews,
   seedHubListingsIfEmpty,
+  seedReviewsIfEmpty,
   addHubListingFS,
   updateHubListingFS,
   deleteHubListingFS,
   createOrderFS,
   updateOrderStatusFS,
+  addReviewFS,
 } from './firestoreData';
 import {
   checkIsAdmin,
@@ -227,6 +230,18 @@ export function useAppStore() {
   useEffect(() => {
     if (!isFirebaseConfigured) return;
     const unsubscribe = subscribeOrders(setOrders);
+    return unsubscribe;
+  }, []);
+
+  // Reviews are publicly readable/writable (anyone can leave one, same as
+  // the existing review form), so unlike hub_listings the seed doesn't need
+  // to wait for an admin - it can run on any visitor's first load.
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+    seedReviewsIfEmpty(INITIAL_REVIEWS).catch((e) =>
+      console.error('Failed to seed reviews:', e)
+    );
+    const unsubscribe = subscribeReviews(setReviews);
     return unsubscribe;
   }, []);
 
@@ -452,6 +467,9 @@ export function useAppStore() {
       created_at: new Date().toISOString().split('T')[0],
     };
     setReviews((prev) => [review, ...prev]);
+    if (isFirebaseConfigured) {
+      addReviewFS(review).catch((e) => console.error('Failed to save review:', e));
+    }
   };
 
   // Messages

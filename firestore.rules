@@ -48,5 +48,13 @@ service cloud.firestore {
       allow create, read: if true;
       allow update, delete: if isAdmin();
     }
+
+    // Reviews: the product page's review form lets any visitor leave one
+    // (no purchase verification today), so create is public like orders -
+    // only removing a bad/spam review is admin-only.
+    match /reviews/{reviewId} {
+      allow create, read: if true;
+      allow update, delete: if isAdmin();
+    }
   }
 }

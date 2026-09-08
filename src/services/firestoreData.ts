@@ -12,10 +12,11 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebase';
-import { HubListing, Order } from '../types';
+import { HubListing, Order, Review } from '../types';
 
 const HUB_COLLECTION = 'hub_listings';
 const ORDERS_COLLECTION = 'orders';
+const REVIEWS_COLLECTION = 'reviews';
 
 /** Live-subscribes to the Hub inventory collection. Every admin edit shows up
  * for every visitor immediately — this is the whole point of moving off
@@ -99,4 +100,35 @@ export async function updateOrderStatusFS(
   if (courierName) updates.courier_name = courierName;
   if (trackingNumber) updates.tracking_number = trackingNumber;
   await updateDoc(doc(db, ORDERS_COLLECTION, id), updates);
+}
+
+/** Live-subscribes to all reviews - shared across every visitor, unlike the
+ * old localStorage-only version where each browser had its own frozen copy. */
+export function subscribeReviews(callback: (reviews: Review[]) => void): () => void {
+  if (!db) return () => {};
+  const q = query(collection(db, REVIEWS_COLLECTION));
+  return onSnapshot(q, (snapshot) => {
+    const reviews = snapshot.docs.map((d) => ({ ...(d.data() as Review), id: d.id }));
+    callback(reviews);
+  });
+}
+
+export async function addReviewFS(review: Review): Promise<void> {
+  if (!db) throw new Error('Firestore is not configured');
+  const { id, ...rest } = review;
+  await setDoc(doc(db, REVIEWS_COLLECTION, id), rest);
+}
+
+/** One-time seed: pushes the two real launch reviews in if the collection is
+ * empty, same pattern as seedHubListingsIfEmpty. */
+export async function seedReviewsIfEmpty(initialReviews: Review[]): Promise<void> {
+  if (!db) return;
+  const snapshot = await getDocs(collection(db, REVIEWS_COLLECTION));
+  if (!snapshot.empty) return;
+  const batch = writeBatch(db);
+  initialReviews.forEach((review) => {
+    const { id, ...rest } = review;
+    batch.set(doc(db, REVIEWS_COLLECTION, id), rest);
+  });
+  await batch.commit();
 }
