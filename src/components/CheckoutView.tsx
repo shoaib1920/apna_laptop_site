@@ -112,6 +112,18 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
     });
 
     setPlacedOrder(newOrder);
+
+    // Nothing on our side actually notifies the shop that an order came in -
+    // this is the one real notification path (WhatsApp), so it fires
+    // immediately instead of depending on the buyer noticing and clicking a
+    // separate "Track on WhatsApp" button afterward. Opened synchronously
+    // inside this click handler so browsers don't treat it as a popup.
+    window.open(
+      `https://wa.me/923016672356?text=${encodeURIComponent(
+        `Salam Apna Laptop! I just placed order ${newOrder.order_number} for total ${formatPKR(newOrder.total_price)}. Please confirm dispatch.`
+      )}`,
+      '_blank'
+    );
   };
 
   if (placedOrder) {

@@ -32,7 +32,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'admin_1',
     name: 'Apna Laptop Admin (Supplier Hub)',
-    email: 'admin@apnalaptop.pk',
+    email: 'admin@apnalaptop.store',
     phone: '+92 301 6672356',
     whatsapp_number: '923016672356',
     city: 'Nankana Sahib',

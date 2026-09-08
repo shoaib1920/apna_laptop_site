@@ -407,6 +407,18 @@ export function useAppStore() {
     if (isFirebaseConfigured) {
       createOrderFS(newOrder).catch((e) => console.error('Failed to save order:', e));
     }
+
+    // Decrement stock for every purchased listing - without this, sold-out
+    // units keep showing as available to the next buyer.
+    newOrder.items.forEach((item) => {
+      const listing = hubListings.find((h) => h.id === item.listing_id);
+      if (!listing) return;
+      const newQty = Math.max(0, listing.stock_qty - item.qty);
+      const newStatus: HubListing['status'] =
+        newQty <= 0 ? 'out_of_stock' : newQty <= 2 ? 'low_stock' : 'in_stock';
+      updateHubListing(listing.id, { stock_qty: newQty, status: newStatus });
+    });
+
     clearCart();
     return newOrder;
   };

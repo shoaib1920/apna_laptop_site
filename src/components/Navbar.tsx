@@ -107,7 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   APNA LAPTOP
                 </span>
                 <span className="bg-steel-tint text-steel-dark text-[10px] font-bold px-1.5 py-0.5 rounded">
-                  .PK
+                  .STORE
                 </span>
               </div>
               <span className="hidden sm:block text-[10px] uppercase tracking-widest text-steel-dark font-bold mt-0.5">

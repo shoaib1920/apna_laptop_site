@@ -24,30 +24,37 @@ export const BRAND_TIERS: Record<string, { multiplier: number; name: string }> =
   other: { multiplier: 0.9, name: 'Other Brand' },
 };
 
+// Calibrated against our own real Hub sale prices (not list price - a
+// buyback/valuation offer must land below what we'd charge to resell the
+// same spec, or every valuation loses us money). E.g. real 8th-gen i5/8GB/
+// 256GB units sell for Rs. 42,000-48,000 - this table lands a comparable
+// trade-in around Rs. 28,000-34,000 after brand/condition/age, leaving room
+// for refurbishment + margin. Revisit these numbers periodically as your
+// actual buy/sell prices shift.
 export const CPU_BASE_VALUES: Record<string, number> = {
   // Intel Generations
-  'intel_core_4th_5th': 28000,
-  'intel_core_6th_7th': 42000,
-  'intel_core_8th': 58000,
-  'intel_core_9th_10th': 78000,
-  'intel_core_11th': 105000,
-  'intel_core_12th': 140000,
-  'intel_core_13th_14th': 195000,
-  'intel_celeron_pentium': 24000,
-  
+  'intel_core_4th_5th': 16000,
+  'intel_core_6th_7th': 22000,
+  'intel_core_8th': 30000,
+  'intel_core_9th_10th': 40000,
+  'intel_core_11th': 52000,
+  'intel_core_12th': 68000,
+  'intel_core_13th_14th': 95000,
+  'intel_celeron_pentium': 14000,
+
   // AMD Ryzen
-  'amd_ryzen_2000_3000': 48000,
-  'amd_ryzen_4000_5000': 85000,
-  'amd_ryzen_6000_7000': 135000,
-  'amd_ryzen_8000_ai': 190000,
-  
-  // Apple Silicon
-  'apple_m1': 165000,
-  'apple_m1_pro_max': 230000,
-  'apple_m2': 210000,
-  'apple_m2_pro_max': 290000,
-  'apple_m3': 280000,
-  'apple_intel_legacy': 75000,
+  'amd_ryzen_2000_3000': 24000,
+  'amd_ryzen_4000_5000': 42000,
+  'amd_ryzen_6000_7000': 68000,
+  'amd_ryzen_8000_ai': 95000,
+
+  // Apple Silicon (holds value better, so a smaller cut than Intel/AMD)
+  'apple_m1': 100000,
+  'apple_m1_pro_max': 140000,
+  'apple_m2': 130000,
+  'apple_m2_pro_max': 180000,
+  'apple_m3': 175000,
+  'apple_intel_legacy': 40000,
 };
 
 export const RAM_ADJUSTMENTS: Record<string, number> = {

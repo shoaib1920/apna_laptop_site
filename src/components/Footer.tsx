@@ -1,5 +1,5 @@
 import React from 'react';
-import { Laptop, ShieldCheck, Truck, CheckCircle2, MessageCircle, Heart } from 'lucide-react';
+import { Laptop, ShieldCheck, Truck, CheckCircle2, MessageCircle, Heart, Instagram } from 'lucide-react';
 import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
 import { User } from '../types';
 
@@ -91,7 +91,7 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
                 <Laptop className="w-5 h-5" />
               </div>
               <span className="text-xl font-black text-on-primary font-display">
-                Apna<span className="text-steel">Laptop</span>.pk
+                Apna<span className="text-steel">Laptop</span>.store
               </span>
             </div>
             <p className="text-xs text-on-primary-container leading-relaxed max-w-sm">
@@ -99,7 +99,7 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://wa.me/923016672356"
+                href="https://whatsapp.com/channel/0029Vb8uhPl0wajvkTWFHM24"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-colors"
@@ -107,7 +107,15 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
                 <MessageCircle className="w-4 h-4" />
                 <span>WhatsApp Channel</span>
               </a>
-              <span className="text-xs text-on-primary-container">Instagram: @apnalaptop.pk</span>
+              <a
+                href="https://www.instagram.com/apna.laptop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-on-primary-container hover:text-white transition-colors"
+              >
+                <Instagram className="w-4 h-4" />
+                <span>@apna.laptop</span>
+              </a>
             </div>
           </div>
 
