@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, CheckCircle2, Loader2, AlertCircle, FolderOpen } from 'lucide-react';
 import { HubListing } from '../types';
 import { IMPORT_CATALOG } from '../data/importCatalog';
 import { uploadHubListingImage } from '../services/firestoreData';
@@ -12,13 +12,32 @@ interface BulkImportModalProps {
 
 type RowStatus = 'pending' | 'uploading' | 'done' | 'error';
 
+// Rough placeholder margin so cost price isn't a blank you must fill in by
+// hand for every row - editable per row before importing, and easy to
+// correct later via the normal Edit button once real supplier costs are known.
+const estimateCostPrice = (salePrice: number) => Math.round((salePrice * 0.82) / 1000) * 1000;
+
 export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, createHubListing }) => {
   const [files, setFiles] = useState<Record<number, File | null>>({});
-  const [costPrices, setCostPrices] = useState<Record<number, string>>({});
+  const [costPrices, setCostPrices] = useState<Record<number, string>>(() =>
+    Object.fromEntries(IMPORT_CATALOG.map((e, i) => [i, String(estimateCostPrice(e.listing.sale_price))]))
+  );
   const [statuses, setStatuses] = useState<Record<number, RowStatus>>({});
   const [running, setRunning] = useState(false);
 
   const attachedCount = Object.values(files).filter(Boolean).length;
+
+  // One folder pick matches every photo to its listing by filename, instead
+  // of attaching 10 files one at a time.
+  const handleFolderPick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const picked = Array.from(e.target.files || []);
+    const next: Record<number, File | null> = {};
+    IMPORT_CATALOG.forEach((entry, i) => {
+      const match = picked.find((f) => f.name.toLowerCase() === entry.expectedFilename.toLowerCase());
+      if (match) next[i] = match;
+    });
+    setFiles((f) => ({ ...f, ...next }));
+  };
 
   const handleImportAll = async () => {
     setRunning(true);
@@ -51,42 +70,60 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
           <div>
             <h3 className="font-bold text-on-surface text-sm">Bulk Import New Arrivals</h3>
             <p className="text-[11px] text-on-surface-variant">
-              Attach each laptop's photo from the <code className="font-mono-spec">import_photos</code> folder,
-              set your real supplier cost, then import all at once.
+              Pick the <code className="font-mono-spec">import_photos</code> folder once to attach every photo,
+              then just review cost prices below (pre-filled as estimates) and import.
             </p>
           </div>
           <button onClick={onClose} className="text-xs text-on-surface-variant">✕</button>
         </div>
 
+        <label className="flex items-center justify-center gap-2 border-2 border-dashed border-outline-variant rounded-xl p-4 text-xs font-bold text-steel-dark cursor-pointer hover:bg-surface-container-low">
+          <FolderOpen className="w-4 h-4" />
+          <span>Select the import_photos folder</span>
+          <input
+            type="file"
+            // @ts-ignore - non-standard but supported in Chromium/Edge for folder picking
+            webkitdirectory="true"
+            directory="true"
+            multiple
+            onChange={handleFolderPick}
+            className="hidden"
+          />
+        </label>
+
         <div className="space-y-2">
           {IMPORT_CATALOG.map((entry, i) => {
             const status = statuses[i];
+            const hasFile = !!files[i];
             return (
               <div
                 key={entry.expectedFilename}
-                className="flex flex-col sm:flex-row sm:items-center gap-2 p-3 rounded-lg border border-outline-variant bg-surface-container-low text-xs"
+                className={`flex flex-col sm:flex-row sm:items-center gap-2 p-3 rounded-lg border text-xs ${
+                  hasFile ? 'border-steel-tint bg-steel-tint/20' : 'border-outline-variant bg-surface-container-low'
+                }`}
               >
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-on-surface truncate">{entry.listing.title}</p>
                   <p className="text-on-surface-variant">
-                    Sale price: <span className="price">{formatPKR(entry.listing.sale_price)}</span>
+                    Sale: <span className="price">{formatPKR(entry.listing.sale_price)}</span>
+                    {' · '}
+                    {hasFile ? (
+                      <span className="text-steel-dark font-semibold">{files[i]?.name}</span>
+                    ) : (
+                      <span className="text-error">no photo attached</span>
+                    )}
                   </p>
                 </div>
 
-                <input
-                  type="number"
-                  placeholder="Cost price (PKR)"
-                  value={costPrices[i] || ''}
-                  onChange={(e) => setCostPrices((c) => ({ ...c, [i]: e.target.value }))}
-                  className="w-full sm:w-32 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-1.5"
-                />
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setFiles((f) => ({ ...f, [i]: e.target.files?.[0] || null }))}
-                  className="w-full sm:w-56 text-[11px]"
-                />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-on-surface-variant">Cost:</span>
+                  <input
+                    type="number"
+                    value={costPrices[i] || ''}
+                    onChange={(e) => setCostPrices((c) => ({ ...c, [i]: e.target.value }))}
+                    className="w-28 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-1.5"
+                  />
+                </div>
 
                 <div className="w-6 flex justify-center shrink-0">
                   {status === 'uploading' && <Loader2 className="w-4 h-4 animate-spin text-steel" />}

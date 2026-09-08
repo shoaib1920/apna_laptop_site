@@ -3,9 +3,9 @@ import { HubListing } from '../types';
 /** Pre-filled listing data extracted from the "Apna Laptop" supplier spec-sheet
  * posters (Sept 2026 batch). Each entry expects a matching photo filename from
  * import_photos/ to be attached in the Bulk Import tool before creating the
- * listing. cost_price is intentionally left at 0 - the admin must set the
- * real supplier cost per unit before importing, since that drives the
- * Finances tab's margin numbers. */
+ * listing. cost_price below is a placeholder (0) - BulkImportModal overrides
+ * it with an estimated margin the admin can edit before importing, since the
+ * real supplier cost drives the Finances tab's margin numbers. */
 export const IMPORT_CATALOG: Array<{
   expectedFilename: string;
   listing: Omit<HubListing, 'id' | 'rating' | 'reviewCount' | 'images'>;
