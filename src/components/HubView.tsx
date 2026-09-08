@@ -102,7 +102,7 @@ export const HubView: React.FC<HubViewProps> = ({
             </span>
           </h1>
           <p className="text-xs text-on-surface-variant mt-0.5">
-            Fixed prices, in-stock guarantee, 7-day checking warranty — sourced from a trusted supplier in Nankana Sahib.
+            Fixed prices, in-stock guarantee, 7-day checking warranty — every unit verified before listing.
           </p>
         </div>
         <button

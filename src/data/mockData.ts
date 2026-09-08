@@ -61,10 +61,10 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     reviewCount: 28,
     warrantyMonths: 1, // 1 month replacement warranty
     shortDescription: 'The gold-standard coder workhorse with legendary keyboard, dual-battery support, and dual RAM slots.',
-    fullDescription: 'Clean imported lot directly inspected by our Nankana Sahib supplier. 100% genuine motherboard with zero repair history. Dual batteries offering 5-7 hours actual backup. Features backlit keyboard, Thunderbolt 3 port, and fingerprint reader.',
+    fullDescription: 'Clean imported lot directly inspected by our verified supplier. 100% genuine motherboard with zero repair history. Dual batteries offering 5-7 hours actual backup. Features backlit keyboard, Thunderbolt 3 port, and fingerprint reader.',
     use_case_tags: ['Programming & Dev', 'Student', 'Office & Business'],
     status: 'in_stock',
-    supplierNote: 'Supplier: TechVision Hub (Nankana Sahib)',
+    supplierNote: 'Supplier: TechVision Hub',
     images: [
       'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?w=800&auto=format&fit=crop&q=80',
@@ -159,7 +159,7 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     fullDescription: 'Genuine Apple unit with battery cycle count under 85 cycles (93% battery health). Retina Display with True Tone, magic keyboard, and Touch ID. Perfect for university students, content creators, and React/Node developers.',
     use_case_tags: ['Programming & Dev', 'Student', 'Video Editing', 'Business & Frequent Travel'],
     status: 'in_stock',
-    supplierNote: 'Supplier: Apple Hub (Nankana Sahib)',
+    supplierNote: 'Supplier: Apple Hub',
     images: [
       'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1655226569940-b0ed83f6e268?w=800&auto=format&fit=crop&q=80',
@@ -243,7 +243,7 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     fullDescription: 'Imported Grade A lot. Minor unnoticeable scuffs on bottom base, screen and keyboard are 100% spotless. Very snappy for office Excel, Google Sheets, Zoom calls, and university assignments.',
     use_case_tags: ['Student', 'Office & Business'],
     status: 'in_stock',
-    supplierNote: 'Supplier: National Tech (Nankana Sahib)',
+    supplierNote: 'Supplier: National Tech',
     images: [
       'https://images.unsplash.com/photo-1660945742817-217842d82b55?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1631543561906-200fa465682a?w=800&auto=format&fit=crop&q=80',
@@ -290,7 +290,7 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     fullDescription: 'Modern mica silver gaming chassis with 144Hz high refresh rate screen and OMEN Gaming Hub cooling controls. High resale demand and great longevity.',
     use_case_tags: ['Gaming', 'Programming & Dev', 'Video Editing'],
     status: 'in_stock',
-    supplierNote: 'Supplier: TechVision Hub (Nankana Sahib)',
+    supplierNote: 'Supplier: TechVision Hub',
     images: [
       'https://images.unsplash.com/photo-1655226569940-b0ed83f6e268?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1640551497504-ec05b9e50b50?w=800&auto=format&fit=crop&q=80',
@@ -369,7 +369,7 @@ export const INITIAL_HUB_LISTINGS: HubListing[] = [
     fullDescription: 'Affordable imported workhorse. Clean motherboard with zero issues. Great for shop POS billing, student online classes, and basic web surfing. Optical DVD drive & full array of legacy ports.',
     use_case_tags: ['Student', 'Office & Business'],
     status: 'in_stock',
-    supplierNote: 'Supplier: National Tech (Nankana Sahib)',
+    supplierNote: 'Supplier: National Tech',
     images: [
       'https://images.unsplash.com/photo-1620365602462-40d8f2cdd84c?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1660945742817-217842d82b55?w=800&auto=format&fit=crop&q=80',

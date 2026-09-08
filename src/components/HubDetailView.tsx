@@ -193,7 +193,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
               <span>Apna Laptop Supplier Verification</span>
             </div>
             <p className="text-copper-dark leading-relaxed">
-              {listing.supplierNote || 'Inspected by our verified supplier partner in Nankana Sahib.'}
+              {listing.supplierNote || 'Inspected by our verified supplier partner before listing.'}
             </p>
             <div className="flex items-center gap-4 text-[11px] font-semibold text-copper-dark pt-1">
               <span>✓ 7-Day Checking Warranty</span>
