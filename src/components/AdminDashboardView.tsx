@@ -11,10 +11,16 @@ import {
   Truck,
   LogOut,
   UploadCloud,
+  X,
+  Loader2,
+  ImagePlus,
 } from 'lucide-react';
 import { HubListing, LaptopCondition, Order, OrderStatus, User } from '../types';
 import { formatPKR } from '../utils/helpers';
 import { BulkImportModal } from './BulkImportModal';
+import { uploadHubListingImage } from '../services/firestoreData';
+
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80';
 
 interface AdminDashboardViewProps {
   hubListings: HubListing[];
@@ -77,6 +83,8 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   const [showBulkImport, setShowBulkImport] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [images, setImages] = useState<string[]>([]);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [courierDrafts, setCourierDrafts] = useState<Record<string, { courier: string; tracking: string }>>({});
 
   // Revenue stats — tied to real order/listing data, not a phantom field
@@ -93,6 +101,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   const openAddModal = () => {
     setEditingId(null);
     setForm(emptyForm);
+    setImages([]);
     setShowModal(true);
   };
 
@@ -116,7 +125,27 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       warrantyMonths: item.warrantyMonths,
       supplierNote: item.supplierNote || '',
     });
+    setImages(item.images || []);
     setShowModal(true);
+  };
+
+  const handleImageFilesPicked = async (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    setUploadingImages(true);
+    try {
+      const files = Array.from(fileList);
+      const urls = await Promise.all(files.map((file) => uploadHubListingImage(file)));
+      setImages((prev) => [...prev, ...urls]);
+    } catch (err) {
+      console.error('Failed to upload image(s):', err);
+      alert('One or more images failed to upload. Check the console for details.');
+    } finally {
+      setUploadingImages(false);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -139,9 +168,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
         screenSize: form.screenSize,
       },
       use_case_tags: ['Programming & Dev', 'Office & Business'],
-      images: [
-        'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80',
-      ],
+      images: images.length > 0 ? images : [PLACEHOLDER_IMAGE],
       shortDescription: form.shortDescription,
       fullDescription: form.fullDescription,
       warrantyMonths: Number(form.warrantyMonths),
@@ -159,6 +186,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
     setShowModal(false);
     setEditingId(null);
     setForm(emptyForm);
+    setImages([]);
   };
 
   const handleStatusChange = (orderId: string, status: OrderStatus) => {
@@ -503,6 +531,48 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
+              <div>
+                <label className="font-bold text-on-surface-variant block mb-1">Photos</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {images.map((url, i) => (
+                    <div key={url + i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-outline-variant bg-surface-container-low shrink-0">
+                      <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        title="Remove photo"
+                        className="absolute top-0.5 right-0.5 w-4 h-4 bg-primary/80 text-white rounded-full flex items-center justify-center"
+                      >
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                    </div>
+                  ))}
+                  <label className="w-16 h-16 rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer hover:bg-surface-container-low shrink-0 text-on-surface-variant">
+                    {uploadingImages ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <ImagePlus className="w-5 h-5" />
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      disabled={uploadingImages}
+                      onChange={(e) => {
+                        handleImageFilesPicked(e.target.files);
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                </div>
+                {images.length === 0 && (
+                  <p className="text-[10px] text-on-surface-variant">
+                    No photos added yet - a placeholder image will be used until you upload one.
+                  </p>
+                )}
+              </div>
+
               <div>
                 <label className="font-bold text-on-surface-variant block mb-1">Product Title</label>
                 <input
