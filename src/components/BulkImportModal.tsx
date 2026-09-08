@@ -18,23 +18,26 @@ type RowStatus = 'pending' | 'uploading' | 'done' | 'error';
 const estimateCostPrice = (salePrice: number) => Math.round((salePrice * 0.82) / 1000) * 1000;
 
 export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, createHubListing }) => {
-  const [files, setFiles] = useState<Record<number, File | null>>({});
+  const [files, setFiles] = useState<Record<number, File[]>>({});
   const [costPrices, setCostPrices] = useState<Record<number, string>>(() =>
     Object.fromEntries(IMPORT_CATALOG.map((e, i) => [i, String(estimateCostPrice(e.listing.sale_price))]))
   );
   const [statuses, setStatuses] = useState<Record<number, RowStatus>>({});
   const [running, setRunning] = useState(false);
 
-  const attachedCount = Object.values(files).filter(Boolean).length;
+  const attachedCount = Object.values(files).filter((f) => f && f.length > 0).length;
 
   // One folder pick matches every photo to its listing by filename, instead
-  // of attaching 10 files one at a time.
+  // of attaching each photo one at a time - a listing can expect several
+  // photos (multiple angles of the same real unit).
   const handleFolderPick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const picked = Array.from(e.target.files || []);
-    const next: Record<number, File | null> = {};
+    const next: Record<number, File[]> = {};
     IMPORT_CATALOG.forEach((entry, i) => {
-      const match = picked.find((f) => f.name.toLowerCase() === entry.expectedFilename.toLowerCase());
-      if (match) next[i] = match;
+      const matches = entry.expectedFilenames
+        .map((name) => picked.find((f) => f.name.toLowerCase() === name.toLowerCase()))
+        .filter((f): f is File => !!f);
+      if (matches.length) next[i] = matches;
     });
     setFiles((f) => ({ ...f, ...next }));
   };
@@ -42,17 +45,17 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
   const handleImportAll = async () => {
     setRunning(true);
     for (let i = 0; i < IMPORT_CATALOG.length; i++) {
-      const file = files[i];
-      if (!file) continue;
+      const rowFiles = files[i];
+      if (!rowFiles || rowFiles.length === 0) continue;
       setStatuses((s) => ({ ...s, [i]: 'uploading' }));
       try {
-        const imageUrl = await uploadHubListingImage(file);
+        const imageUrls = await Promise.all(rowFiles.map((file) => uploadHubListingImage(file)));
         const entry = IMPORT_CATALOG[i];
         const costPrice = Number(costPrices[i]) || 0;
         createHubListing({
           ...entry.listing,
           cost_price: costPrice,
-          images: [imageUrl],
+          images: imageUrls,
         });
         setStatuses((s) => ({ ...s, [i]: 'done' }));
       } catch (e) {
@@ -94,12 +97,15 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
         <div className="space-y-2">
           {IMPORT_CATALOG.map((entry, i) => {
             const status = statuses[i];
-            const hasFile = !!files[i];
+            const rowFiles = files[i] || [];
+            const expectedCount = entry.expectedFilenames.length;
+            const hasAnyFile = rowFiles.length > 0;
+            const fullyMatched = rowFiles.length === expectedCount;
             return (
               <div
-                key={entry.expectedFilename}
+                key={entry.expectedFilenames[0]}
                 className={`flex flex-col sm:flex-row sm:items-center gap-2 p-3 rounded-lg border text-xs ${
-                  hasFile ? 'border-steel-tint bg-steel-tint/20' : 'border-outline-variant bg-surface-container-low'
+                  hasAnyFile ? 'border-steel-tint bg-steel-tint/20' : 'border-outline-variant bg-surface-container-low'
                 }`}
               >
                 <div className="flex-1 min-w-0">
@@ -107,10 +113,12 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
                   <p className="text-on-surface-variant">
                     Sale: <span className="price">{formatPKR(entry.listing.sale_price)}</span>
                     {' · '}
-                    {hasFile ? (
-                      <span className="text-steel-dark font-semibold">{files[i]?.name}</span>
+                    {hasAnyFile ? (
+                      <span className={`font-semibold ${fullyMatched ? 'text-steel-dark' : 'text-copper-dark'}`}>
+                        {rowFiles.length}/{expectedCount} photos matched
+                      </span>
                     ) : (
-                      <span className="text-error">no photo attached</span>
+                      <span className="text-error">no photos attached</span>
                     )}
                   </p>
                 </div>
@@ -137,7 +145,7 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({ onClose, creat
 
         <div className="flex items-center justify-between pt-2 border-t border-outline-variant">
           <p className="text-[11px] text-on-surface-variant">
-            {attachedCount} of {IMPORT_CATALOG.length} photos attached
+            {attachedCount} of {IMPORT_CATALOG.length} listings have photos attached
           </p>
           <button
             onClick={handleImportAll}

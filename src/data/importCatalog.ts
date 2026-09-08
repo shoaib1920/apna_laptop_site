@@ -1,17 +1,23 @@
 import { HubListing } from '../types';
 
-/** Pre-filled listing data extracted from the "Apna Laptop" supplier spec-sheet
- * posters (Sept 2026 batch). Each entry expects a matching photo filename from
- * import_photos/ to be attached in the Bulk Import tool before creating the
- * listing. cost_price below is a placeholder (0) - BulkImportModal overrides
- * it with an estimated margin the admin can edit before importing, since the
- * real supplier cost drives the Finances tab's margin numbers. */
+/** Pre-filled listing data for the "Apna Laptop" inventory batch (Sept 2026).
+ * Each entry expects one or more matching photo filenames from
+ * import_photos/ (e.g. dell_latitude_5420_1.jpeg, _2.jpeg, ...) - the Bulk
+ * Import tool auto-attaches every file whose name matches one of them when
+ * you pick the folder. cost_price below is a placeholder (0) -
+ * BulkImportModal overrides it with an estimated margin the admin can edit
+ * before importing, since the real supplier cost drives the Finances tab's
+ * margin numbers.
+ *
+ * Note: a Dell Vostro unit was photographed in this batch too but had no
+ * visible spec label, so it's deliberately left out here - add it manually
+ * via "Add New Lot Product" once you have its real CPU/RAM/storage/price. */
 export const IMPORT_CATALOG: Array<{
-  expectedFilename: string;
+  expectedFilenames: string[];
   listing: Omit<HubListing, 'id' | 'rating' | 'reviewCount' | 'images'>;
 }> = [
   {
-    expectedFilename: 'dell_latitude_3410.jpeg',
+    expectedFilenames: ['dell_latitude_3410.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 3410',
@@ -37,11 +43,11 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'dell_latitude_5470.jpeg',
+    expectedFilenames: ['dell_latitude_e5470_1.jpeg', 'dell_latitude_e5470_2.jpeg', 'dell_latitude_e5470_3.jpeg', 'dell_latitude_e5470_4.jpeg', 'dell_latitude_e5470_5.jpeg'],
     listing: {
       brand: 'Dell',
-      model: 'Latitude 5470',
-      title: 'Dell Latitude 5470 - Core i5 6th Gen / 8GB / 256GB SSD',
+      model: 'Latitude E5470',
+      title: 'Dell Latitude E5470 - Core i5 6th Gen / 8GB / 256GB SSD',
       specs: {
         cpu: 'Intel Core i5-6th Generation',
         ram: '8GB DDR4',
@@ -58,12 +64,12 @@ export const IMPORT_CATALOG: Array<{
       warrantyMonths: 1,
       shortDescription: 'Clean body, no hardware faults or issues.',
       fullDescription:
-        'Dell Latitude 5470 business laptop. Ideal for office, development, freelancing and multitasking. No hardware faults or issues. Comes with original Dell charger.',
+        'Dell Latitude E5470 business laptop. Ideal for office, development, freelancing and multitasking. No hardware faults or issues. Comes with original Dell charger.',
       supplierNote: 'Face-to-face deal preferred, delivery available on request.',
     },
   },
   {
-    expectedFilename: 'dell_latitude_5420.jpeg',
+    expectedFilenames: ['dell_latitude_5420_1.jpeg', 'dell_latitude_5420_2.jpeg', 'dell_latitude_5420_3.jpeg', 'dell_latitude_5420_4.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 5420',
@@ -89,7 +95,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'dell_latitude_3420.jpeg',
+    expectedFilenames: ['dell_latitude_3420_1.jpeg', 'dell_latitude_3420_2.jpeg', 'dell_latitude_3420_3.jpeg', 'dell_latitude_3420_4.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 3420',
@@ -115,7 +121,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'dell_latitude_5270.jpeg',
+    expectedFilenames: ['dell_latitude_5270_1.jpeg', 'dell_latitude_5270_2.jpeg', 'dell_latitude_5270_3.jpeg', 'dell_latitude_5270_4.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 5270',
@@ -141,7 +147,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'dell_latitude_5290.jpeg',
+    expectedFilenames: ['dell_latitude_5290_1.jpeg', 'dell_latitude_5290_2.jpeg', 'dell_latitude_5290_3.jpeg', 'dell_latitude_5290_4.jpeg', 'dell_latitude_5290_5.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 5290',
@@ -167,7 +173,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'dell_latitude_5370.jpeg',
+    expectedFilenames: ['dell_latitude_5370_1.jpeg', 'dell_latitude_5370_2.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 5370',
@@ -193,7 +199,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'lenovo_thinkpad_t14.jpeg',
+    expectedFilenames: ['lenovo_thinkpad_t14_1.jpeg', 'lenovo_thinkpad_t14_2.jpeg', 'lenovo_thinkpad_t14_3.jpeg', 'lenovo_thinkpad_t14_4.jpeg', 'lenovo_thinkpad_t14_5.jpeg', 'lenovo_thinkpad_t14_6.jpeg'],
     listing: {
       brand: 'Lenovo',
       model: 'ThinkPad T14',
@@ -219,7 +225,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'dell_latitude_5490.jpeg',
+    expectedFilenames: ['dell_latitude_5490_1.jpeg', 'dell_latitude_5490_2.jpeg', 'dell_latitude_5490_3.jpeg', 'dell_latitude_5490_4.jpeg', 'dell_latitude_5490_5.jpeg', 'dell_latitude_5490_6.jpeg'],
     listing: {
       brand: 'Dell',
       model: 'Latitude 5490',
@@ -245,7 +251,7 @@ export const IMPORT_CATALOG: Array<{
     },
   },
   {
-    expectedFilename: 'hp_probook.jpeg',
+    expectedFilenames: ['hp_probook_1.jpeg', 'hp_probook_2.jpeg', 'hp_probook_3.jpeg', 'hp_probook_4.jpeg', 'hp_probook_5.jpeg', 'hp_probook_6.jpeg'],
     listing: {
       brand: 'HP',
       model: 'ProBook',
