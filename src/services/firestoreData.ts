@@ -10,8 +10,7 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from './firebase';
+import { db } from './firebase';
 import { HubListing, Order, Review } from '../types';
 
 const HUB_COLLECTION = 'hub_listings';
@@ -44,14 +43,6 @@ export async function updateHubListingFS(id: string, updates: Partial<HubListing
   await updateDoc(doc(db, HUB_COLLECTION, id), updates as Record<string, unknown>);
 }
 
-/** Uploads one product photo to Storage and returns its public download URL. */
-export async function uploadHubListingImage(file: File): Promise<string> {
-  if (!storage) throw new Error('Firebase Storage is not configured');
-  const path = `hub_listings/${Date.now()}_${file.name}`;
-  const storageRef = ref(storage, path);
-  await uploadBytes(storageRef, file);
-  return getDownloadURL(storageRef);
-}
 
 export async function deleteHubListingFS(id: string): Promise<void> {
   if (!db) throw new Error('Firestore is not configured');

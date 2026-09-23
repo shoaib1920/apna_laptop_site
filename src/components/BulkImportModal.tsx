@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Upload, CheckCircle2, Loader2, AlertCircle, FolderOpen } from 'lucide-react';
 import { HubListing } from '../types';
 import { IMPORT_CATALOG } from '../data/importCatalog';
-import { uploadHubListingImage } from '../services/firestoreData';
+import { uploadHubListingImage } from '../services/imageUpload';
 import { formatPKR } from '../utils/helpers';
 
 interface BulkImportModalProps {

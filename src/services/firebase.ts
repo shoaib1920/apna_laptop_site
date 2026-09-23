@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
 
 // These come from Vite env vars (see .env.example) — safe to expose client-side;
 // Firebase client config is not a secret, real access control lives in
@@ -23,4 +22,3 @@ const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
 
 export const db = app ? getFirestore(app) : null;
 export const auth = app ? getAuth(app) : null;
-export const storage = app ? getStorage(app) : null;

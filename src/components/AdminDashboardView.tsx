@@ -18,7 +18,7 @@ import {
 import { HubListing, LaptopCondition, Order, OrderStatus, User } from '../types';
 import { formatPKR } from '../utils/helpers';
 import { BulkImportModal } from './BulkImportModal';
-import { uploadHubListingImage } from '../services/firestoreData';
+import { uploadHubListingImage } from '../services/imageUpload';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80';
 
