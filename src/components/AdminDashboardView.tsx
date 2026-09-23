@@ -65,7 +65,14 @@ const emptyForm = {
   fullDescription: 'Strictly tested motherboard, keyboard backlight, and battery health.',
   warrantyMonths: 1,
   supplierNote: 'Direct partnership with our verified supplier.',
+  status: 'in_stock' as HubListing['status'],
 };
+
+const STATUS_OPTIONS: { value: HubListing['status']; label: string }[] = [
+  { value: 'in_stock', label: 'In Stock' },
+  { value: 'low_stock', label: 'Low Stock' },
+  { value: 'out_of_stock', label: 'Out of Stock / Sold' },
+];
 
 export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   hubListings = [],
@@ -124,6 +131,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       fullDescription: item.fullDescription,
       warrantyMonths: item.warrantyMonths,
       supplierNote: item.supplierNote || '',
+      status: item.status,
     });
     setImages(item.images || []);
     setShowModal(true);
@@ -174,7 +182,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       warrantyMonths: Number(form.warrantyMonths),
       isFeatured: true,
       supplierNote: form.supplierNote,
-      status: (Number(form.stockQty) <= 0 ? 'out_of_stock' : Number(form.stockQty) <= 2 ? 'low_stock' : 'in_stock') as HubListing['status'],
+      status: form.status,
     };
 
     if (editingId) {
@@ -626,7 +634,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                 </select>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="font-bold text-on-surface-variant block mb-1">Supplier Cost (PKR)</label>
                   <input
@@ -653,6 +661,18 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                     onChange={(e) => setForm((f) => ({ ...f, stockQty: Number(e.target.value) }))}
                     className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2"
                   />
+                </div>
+                <div>
+                  <label className="font-bold text-on-surface-variant block mb-1">Status</label>
+                  <select
+                    value={form.status}
+                    onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as HubListing['status'] }))}
+                    className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2"
+                  >
+                    {STATUS_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
