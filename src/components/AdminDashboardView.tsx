@@ -599,6 +599,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                     <option value="Apple">Apple</option>
                     <option value="Acer">Acer</option>
                     <option value="Asus">Asus</option>
+                    <option value="Microsoft">Microsoft</option>
                   </select>
                 </div>
                 <div>
