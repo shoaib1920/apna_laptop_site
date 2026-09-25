@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Store,
   Calculator,
@@ -55,8 +55,23 @@ export const HomeView: React.FC<HomeViewProps> = ({
   globalSearchQuery = '',
   setGlobalSearchQuery,
 }) => {
-  const heroListing = hubListings[0];
-  const featuredHub = (hubListings || []).slice(1, 7);
+  // Rotate the hero through in-stock laptops only - never feature something
+  // that's sold/out of stock, and don't leave it stuck on one unit forever.
+  const inStockListings = (hubListings || []).filter((l) => l.status !== 'out_of_stock');
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  useEffect(() => {
+    if (inStockListings.length <= 1) return;
+    const timer = setInterval(() => {
+      setHeroIndex((i) => (i + 1) % inStockListings.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [inStockListings.length]);
+
+  const heroListing = inStockListings.length > 0
+    ? inStockListings[heroIndex % inStockListings.length]
+    : hubListings[0];
+  const featuredHub = (hubListings || []).filter((l) => l.id !== heroListing?.id).slice(0, 6);
 
   return (
     <div className="pb-12">

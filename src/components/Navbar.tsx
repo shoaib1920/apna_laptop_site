@@ -60,17 +60,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-50 bg-surface border-b border-outline-variant shadow-sm">
-      {/* Top Notice Bar with Roman Urdu Toggle & Pakistan WhatsApp Trust */}
+      {/* Top Bar: Roman Urdu Toggle & Pakistan WhatsApp Trust */}
       <div className="bg-primary text-white text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2">
-          <div className="flex items-center gap-2 font-medium">
-            <span className="inline-block w-2 h-2 rounded-full bg-steel animate-pulse"></span>
-            {romanUrduMode ? (
-              <span>🇵🇰 <strong>Apna Laptop:</strong> 100% Genuine Imported Lots • 7 Din Checking Warranty • Nankana Sahib & Nearby Free Delivery</span>
-            ) : (
-              <span>🇵🇰 <strong>Apna Laptop:</strong> Verified Supplier Stock • 7-Day Checking Warranty • Serving Nankana Sahib & Nearby Towns</span>
-            )}
-          </div>
+        <div className="max-w-7xl mx-auto flex justify-end items-center flex-wrap gap-2">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setRomanUrduMode(!romanUrduMode)}
