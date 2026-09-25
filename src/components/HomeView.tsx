@@ -17,6 +17,8 @@ import {
   Users,
   Wrench,
   BadgeCheck,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { HubListing, Review } from '../types';
 import { formatPKR, getHubWhatsAppLink } from '../utils/helpers';
@@ -59,14 +61,23 @@ export const HomeView: React.FC<HomeViewProps> = ({
   // that's sold/out of stock, and don't leave it stuck on one unit forever.
   const inStockListings = (hubListings || []).filter((l) => l.status !== 'out_of_stock');
   const [heroIndex, setHeroIndex] = useState(0);
+  // Bumped whenever the visitor manually navigates, so the auto-advance
+  // timer restarts from a full interval instead of cutting in right after.
+  const [manualNavTick, setManualNavTick] = useState(0);
 
   useEffect(() => {
     if (inStockListings.length <= 1) return;
     const timer = setInterval(() => {
       setHeroIndex((i) => (i + 1) % inStockListings.length);
-    }, 6000);
+    }, 9000);
     return () => clearInterval(timer);
-  }, [inStockListings.length]);
+  }, [inStockListings.length, manualNavTick]);
+
+  const goToHero = (delta: number) => {
+    if (inStockListings.length <= 1) return;
+    setHeroIndex((i) => (i + delta + inStockListings.length) % inStockListings.length);
+    setManualNavTick((t) => t + 1);
+  };
 
   const heroListing = inStockListings.length > 0
     ? inStockListings[heroIndex % inStockListings.length]
@@ -100,10 +111,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
 
           {heroListing && (
-            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,340px)_1fr] gap-6 items-stretch">
-              <button
+            <div
+              key={heroListing.id}
+              className="grid grid-cols-1 md:grid-cols-[minmax(0,340px)_1fr] gap-6 items-stretch animate-hero-fade"
+            >
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => navigateTo('hub_detail', { hubId: heroListing.id })}
-                className="relative rounded-lg overflow-hidden bg-white group"
+                onKeyDown={(e) => { if (e.key === 'Enter') navigateTo('hub_detail', { hubId: heroListing.id }); }}
+                className="relative rounded-lg overflow-hidden bg-white group cursor-pointer"
               >
                 <img
                   src={heroListing.images[0]}
@@ -115,7 +132,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     -{discountOf(heroListing)}%
                   </span>
                 )}
-              </button>
+
+                {inStockListings.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); goToHero(-1); }}
+                      aria-label="Previous laptop"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-graphite/70 hover:bg-graphite text-on-graphite flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); goToHero(1); }}
+                      aria-label="Next laptop"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-graphite/70 hover:bg-graphite text-on-graphite flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+              </div>
 
               <div className="flex flex-col justify-center gap-3">
                 <div className="flex items-center gap-2">
