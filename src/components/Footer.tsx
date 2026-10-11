@@ -239,9 +239,6 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
         {/* Bottom copyright */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-on-primary-container">
           <p>© {new Date().getFullYear()} Apna Laptop Pakistan (Private). All rights reserved.</p>
-          <p className="flex items-center gap-1">
-            Built with <Heart className="w-3.5 h-3.5 text-error fill-error" /> for Pakistani tech enthusiasts.
-          </p>
           <p>
             A product of{' '}
             <a
@@ -253,6 +250,9 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
               Devtimize
             </a>
             .
+          </p>
+          <p className="flex items-center gap-1">
+            Built with <Heart className="w-3.5 h-3.5 text-error fill-error" /> for Pakistani tech enthusiasts.
           </p>
         </div>
       </div>
