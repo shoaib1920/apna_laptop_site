@@ -14,8 +14,13 @@ import {
   ChevronDown,
   LogOut,
   Package,
+  PackageSearch,
+  Tag,
+  Sparkles,
 } from 'lucide-react';
 import { User } from '../types';
+import { useShop } from '../services/store';
+import { discountLabel } from '../services/discounts';
 
 interface NavbarProps {
   currentRoute: string;
@@ -45,6 +50,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const { featuredDiscount, applyDiscountCode, notify, setChatOpen } = useShop();
+
+  const copyFeaturedCode = async () => {
+    if (!featuredDiscount) return;
+    try {
+      await navigator.clipboard.writeText(featuredDiscount.code);
+    } catch {
+      // clipboard unavailable - the code is still applied below
+    }
+    await applyDiscountCode(featuredDiscount.code);
+    notify(`Code ${featuredDiscount.code} copied`);
+  };
 
   const handleNav = (route: string) => {
     navigateTo(route);
@@ -62,8 +79,31 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-50 bg-surface border-b border-outline-variant shadow-sm">
       {/* Top Bar: Roman Urdu Toggle & Pakistan WhatsApp Trust */}
       <div className="bg-primary text-white text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex justify-end items-center flex-wrap gap-2">
+        <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="hidden sm:inline text-white/80">Free next-day delivery · Cash on Delivery</span>
+            {featuredDiscount && (
+              <button
+                onClick={copyFeaturedCode}
+                title="Tap to copy and apply"
+                className="flex items-center gap-1.5 bg-copper hover:bg-copper-dark px-2.5 py-0.5 rounded font-bold transition-colors"
+              >
+                <Tag className="w-3 h-3" />
+                <span>
+                  {featuredDiscount.code}: {discountLabel(featuredDiscount, false)}
+                </span>
+              </button>
+            )}
+          </div>
           <div className="flex items-center gap-3">
+            <button
+              id="track-link"
+              onClick={() => handleNav('track')}
+              className="flex items-center gap-1 text-white/80 hover:text-white font-semibold transition-colors"
+            >
+              <PackageSearch className="w-3.5 h-3.5" />
+              <span>Track Order</span>
+            </button>
             <button
               onClick={() => setRomanUrduMode(!romanUrduMode)}
               className="flex items-center gap-1.5 bg-primary-container hover:opacity-90 px-2.5 py-0.5 rounded text-xs text-steel transition-colors"
@@ -76,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               href="https://wa.me/923016672356"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-whatsapp text-white/80 flex items-center gap-1 font-semibold transition-colors"
+              className="hidden sm:flex hover:text-whatsapp text-white/80 items-center gap-1 font-semibold transition-colors"
             >
               WhatsApp: +92 301 6672356
             </a>
@@ -164,16 +204,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Icons & Auth / Role Switcher */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* AI order assistant */}
+            <button
+              id="ai-chat-btn"
+              onClick={() => setChatOpen(true)}
+              className="bg-primary hover:bg-primary-container p-2 sm:px-3 sm:py-2 rounded-lg flex items-center gap-1.5 text-xs font-bold text-on-primary shadow-sm transition-all hover:scale-[1.02]"
+              title="Order by chatting with our AI assistant"
+            >
+              <Sparkles className="w-4 h-4 text-copper" />
+              <span className="hidden sm:inline whitespace-nowrap">Order with AI</span>
+            </button>
+
             {/* WhatsApp Quick Help Button */}
             <a
               href="https://wa.me/923016672356?text=Salam%20Apna%20Laptop%20team,%20I%20have%20an%20inquiry"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-whatsapp hover:bg-whatsapp-dark p-2 sm:px-3.5 sm:py-2 rounded-lg flex items-center gap-1.5 text-xs sm:text-sm font-bold text-white shadow-sm transition-all hover:scale-[1.02]"
+              className="hidden 2xl:flex bg-whatsapp hover:bg-whatsapp-dark px-3.5 py-2 rounded-lg items-center gap-1.5 text-sm font-bold text-white shadow-sm transition-all hover:scale-[1.02]"
               title="WhatsApp Us"
             >
               <MessageSquare className="w-4 h-4" />
-              <span className="hidden sm:inline">WhatsApp Us</span>
+              <span>WhatsApp Us</span>
             </a>
 
             {/* Wishlist */}
@@ -359,6 +410,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="px-4 bg-primary hover:opacity-90 text-white font-medium py-2.5 rounded-xl text-xs"
             >
               My Orders
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 text-xs font-semibold text-on-surface-variant">
+            <button onClick={() => handleNav('track')} className="py-2 rounded-xl border border-outline-variant">
+              Track Order
+            </button>
+            <button onClick={() => handleNav('contact')} className="py-2 rounded-xl border border-outline-variant">
+              Help & FAQs
+            </button>
+            <button onClick={() => handleNav('about')} className="py-2 rounded-xl border border-outline-variant">
+              About Us
             </button>
           </div>
         </div>

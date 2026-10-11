@@ -21,7 +21,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { HubListing, Review } from '../types';
-import { formatPKR, getHubWhatsAppLink } from '../utils/helpers';
+import { formatPKR, getHubWhatsAppLink, optimizeImage, productPath } from '../utils/helpers';
+import { useShop } from '../services/store';
+import { brandPath } from '../services/router';
+import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
+import { RecentlyViewed } from './Overlays';
 
 interface HomeViewProps {
   hubListings: HubListing[];
@@ -57,6 +61,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
   globalSearchQuery = '',
   setGlobalSearchQuery,
 }) => {
+  const shop = useShop();
+  const brands = Array.from(new Set(hubListings.map((l) => l.brand))).sort();
   // Rotate the hero through in-stock laptops only - never feature something
   // that's sold/out of stock, and don't leave it stuck on one unit forever.
   const inStockListings = (hubListings || []).filter((l) => l.status !== 'out_of_stock');
@@ -197,15 +203,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <a
-                      href={getHubWhatsAppLink(heroListing)}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        shop.orderOnWhatsApp(heroListing);
+                      }}
                       className="bg-whatsapp hover:bg-whatsapp-dark text-white font-bold px-4 py-2.5 rounded text-sm flex items-center gap-2"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      WhatsApp
-                    </a>
+                      Order on WhatsApp
+                    </button>
                     <button
                       onClick={() => navigateTo('hub_detail', { hubId: heroListing.id })}
                       className="bg-steel hover:bg-steel-dark text-white font-bold px-4 py-2.5 rounded text-sm"
@@ -291,8 +298,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   className="relative aspect-square overflow-hidden bg-white cursor-pointer"
                 >
                   <img
-                    src={listing.images[0]}
+                    src={optimizeImage(listing.images[0], 400)}
                     alt={listing.title}
+                    loading="lazy"
                     className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
                   />
                   {discount > 0 && (
@@ -312,11 +320,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
 
                 <div className="p-2.5 space-y-1">
-                  <h3
-                    onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                    className="font-semibold text-on-surface text-[11px] sm:text-xs line-clamp-2 cursor-pointer leading-snug min-h-[2.4em]"
-                  >
-                    {listing.title}
+                  <h3 className="font-semibold text-on-surface text-[11px] sm:text-xs line-clamp-2 leading-snug min-h-[2.4em]">
+                    {/* A real link, so search engines can follow it. */}
+                    <a
+                      href={productPath(listing)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigateTo('hub_detail', { hubId: listing.id });
+                      }}
+                    >
+                      {listing.title}
+                    </a>
                   </h3>
                   <span className="price text-sm block">{formatPKR(listing.sale_price)}</span>
                   {listing.original_price && listing.original_price > listing.sale_price && (
@@ -367,6 +381,58 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         </section>
       )}
+
+      {/* SHOP BY BRAND */}
+      {brands.length > 1 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-outline-variant">
+          <h2 className="text-heading-1 font-extrabold text-on-surface font-display mb-4">Shop by Brand</h2>
+          <div className="flex flex-wrap gap-2">
+            {brands.map((brand) => (
+              <a
+                key={brand}
+                href={brandPath(brand)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo('hub', { brand });
+                }}
+                className="bg-surface-container-lowest border border-outline-variant hover:border-steel text-on-surface text-xs font-bold px-4 py-2.5 rounded"
+              >
+                {brand} Laptops
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <RecentlyViewed />
+      </div>
+
+      {/* WHY SHOP HERE - plain text with real links */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t border-outline-variant">
+        <h2 className="text-heading-1 font-extrabold text-on-surface font-display mb-2">Why shop at Apna Laptop?</h2>
+        <p className="text-xs text-on-surface-variant leading-relaxed max-w-3xl">
+          Apna Laptop is a verified laptop store in Nankana Sahib. Every laptop in our{' '}
+          <a href="/shop" onClick={(e) => { e.preventDefault(); navigateTo('hub'); }} className="text-steel-dark font-bold underline">
+            Laptop Hub
+          </a>{' '}
+          is tested before it is listed and sold at a fixed price with a 7-day checking warranty. We deliver free to{' '}
+          {SERVICE_AREA_CITIES.join(', ')} with Cash on Delivery, so you can check the laptop before you pay. Not sure
+          what to buy? Try the{' '}
+          <a href="/finder" onClick={(e) => { e.preventDefault(); navigateTo('finder'); }} className="text-steel-dark font-bold underline">
+            Laptop Finder
+          </a>
+          , read our{' '}
+          <a href="/contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }} className="text-steel-dark font-bold underline">
+            Help & FAQs
+          </a>{' '}
+          or{' '}
+          <a href="/track" onClick={(e) => { e.preventDefault(); navigateTo('track'); }} className="text-steel-dark font-bold underline">
+            track your order
+          </a>
+          .
+        </p>
+      </section>
     </div>
   );
 };

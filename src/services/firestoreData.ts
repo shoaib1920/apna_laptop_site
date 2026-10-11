@@ -7,14 +7,13 @@ import {
   onSnapshot,
   getDocs,
   writeBatch,
-  orderBy,
+  increment,
   query,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { HubListing, Order, Review } from '../types';
+import { HubListing, Review } from '../types';
 
 const HUB_COLLECTION = 'hub_listings';
-const ORDERS_COLLECTION = 'orders';
 const REVIEWS_COLLECTION = 'reviews';
 
 /** Live-subscribes to the Hub inventory collection. Every admin edit shows up
@@ -64,33 +63,11 @@ export async function seedHubListingsIfEmpty(initialListings: HubListing[]): Pro
   await batch.commit();
 }
 
-/** Live-subscribes to all orders, newest first — the admin CRM view. */
-export function subscribeOrders(callback: (orders: Order[]) => void): () => void {
-  if (!db) return () => {};
-  const q = query(collection(db, ORDERS_COLLECTION), orderBy('created_at', 'desc'));
-  return onSnapshot(q, (snapshot) => {
-    const orders = snapshot.docs.map((d) => ({ ...(d.data() as Order), id: d.id }));
-    callback(orders);
-  });
-}
-
-export async function createOrderFS(order: Order): Promise<void> {
+/** Admin stock adjustment that is safe against two admins editing at once:
+ * the change is applied as a delta on the server, then status follows. */
+export async function adjustHubStockFS(id: string, delta: number, status: HubListing['status']): Promise<void> {
   if (!db) throw new Error('Firestore is not configured');
-  const { id, ...rest } = order;
-  await setDoc(doc(db, ORDERS_COLLECTION, id), rest);
-}
-
-export async function updateOrderStatusFS(
-  id: string,
-  status: Order['status'],
-  courierName?: string,
-  trackingNumber?: string
-): Promise<void> {
-  if (!db) throw new Error('Firestore is not configured');
-  const updates: Record<string, unknown> = { status };
-  if (courierName) updates.courier_name = courierName;
-  if (trackingNumber) updates.tracking_number = trackingNumber;
-  await updateDoc(doc(db, ORDERS_COLLECTION, id), updates);
+  await updateDoc(doc(db, HUB_COLLECTION, id), { stock_qty: increment(delta), status });
 }
 
 /** Live-subscribes to all reviews - shared across every visitor, unlike the

@@ -5,17 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Apna Laptop - Verified Laptop Hub for Nankana Sahib</title>
     <meta name="description" content="Nankana Sahib's verified laptop store — fixed-price, checked and warrantied laptops with 7-day checking warranty, WhatsApp support, cash on delivery, price calculator, and a smart laptop finder wizard." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="/" />
+    <meta property="og:site_name" content="Apna Laptop" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
     <meta property="og:title" content="Apna Laptop - Verified Laptop Hub for Nankana Sahib" />
     <meta property="og:description" content="Nankana Sahib's verified laptop store — fixed-price, checked and warrantied laptops with 7-day checking warranty, WhatsApp support, and cash on delivery." />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Apna Laptop - Verified Laptop Hub for Nankana Sahib" />
+    <meta name="twitter:description" content="Nankana Sahib's verified laptop store — fixed-price, checked and warrantied laptops with 7-day checking warranty, WhatsApp support, and cash on delivery." />
+    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="theme-color" content="#1c1f24" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <!-- Store and website details for search engines. Page-specific data
+         (product price, availability) is added per page. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "ComputerStore",
+            "name": "Apna Laptop",
+            "description": "Verified, fixed-price laptops in Nankana Sahib with a 7-day checking warranty and cash on delivery.",
+            "telephone": "+923016672356",
+            "priceRange": "Rs.",
+            "currenciesAccepted": "PKR",
+            "paymentAccepted": "Cash on Delivery, Bank Transfer",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Nankana Sahib",
+              "addressRegion": "Punjab",
+              "addressCountry": "PK"
+            },
+            "areaServed": ["Nankana Sahib", "Shahkot", "Manawala", "Mor Khunda", "Bachyana", "Buchaki"]
+          },
+          {
+            "@type": "WebSite",
+            "name": "Apna Laptop"
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="bg-surface text-on-surface antialiased font-sans">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Readable content for crawlers and slow connections; the app replaces it once loaded. -->
+      <div id="seo-fallback" style="max-width:720px;margin:0 auto;padding:24px 16px;font-family:sans-serif">
+        <h1>Apna Laptop - Verified Laptop Hub for Nankana Sahib</h1>
+        <p>Checked, fixed-price laptops with a 7-day checking warranty. Free next-day delivery and Cash on Delivery in Nankana Sahib, Shahkot, Manawala, Mor Khunda, Bachyana and Buchaki.</p>
+        <nav><a href="/shop">Laptop Hub</a> · <a href="/finder">Laptop Finder</a> · <a href="/calculator">Price Calculator</a> · <a href="/contact">Help &amp; FAQs</a> · <a href="/about">About</a></nav>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

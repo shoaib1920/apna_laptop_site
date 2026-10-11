@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   ShieldCheck,
   Truck,
@@ -17,12 +17,27 @@ import {
   Check,
   AlertCircle,
   Plus,
+  Minus,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  BellRing,
+  MapPin,
+  Loader2,
 } from 'lucide-react';
 import { HubListing, Review, User } from '../types';
-import { formatPKR, getHubWhatsAppLink } from '../utils/helpers';
+import { useShop } from '../services/store';
+import { brandPath } from '../services/router';
+import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
+import { CITY_DELIVERY, EXPRESS_DELIVERY_FEE, LOW_STOCK_THRESHOLD } from '../config';
+import { formatPKR, getHubWhatsAppLink, isOutOfStock, optimizeImage, productPath, productUrl } from '../utils/helpers';
+import { ImageZoomViewer } from './ImageZoomViewer';
+import { RecentlyViewed } from './Overlays';
 
 interface HubDetailViewProps {
-  listingId: string;
+  /** The open laptop; undefined while the catalogue loads or if it no longer exists. */
+  listing?: HubListing;
+  catalogLoaded: boolean;
   hubListings: HubListing[];
   reviews: Review[];
   wishlist: string[];
@@ -39,7 +54,8 @@ interface HubDetailViewProps {
 }
 
 export const HubDetailView: React.FC<HubDetailViewProps> = ({
-  listingId,
+  listing,
+  catalogLoaded,
   hubListings = [],
   reviews = [],
   wishlist = [],
@@ -50,7 +66,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
   currentUser,
   romanUrduMode,
 }) => {
-  const listing = (hubListings || []).find((item) => item.id === listingId) || hubListings[0];
+  const shop = useShop();
   const isSaved = (wishlist || []).includes(listing?.id || '');
 
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
@@ -66,11 +82,26 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
   const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [addedToCartToast, setAddedToCartToast] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [zoomOpen, setZoomOpen] = useState<boolean>(false);
+  const [hoverOrigin, setHoverOrigin] = useState<string | null>(null);
+  const [checkCity, setCheckCity] = useState<string>(SERVICE_AREA_CITIES[0]);
+  const touchStartX = useRef<number | null>(null);
+
+  // A shared link can arrive before the catalogue has loaded.
+  if (!listing && !catalogLoaded) {
+    return (
+      <div className="py-24 flex justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-outline" />
+      </div>
+    );
+  }
 
   if (!listing) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4">
-        <h2 className="text-xl font-bold text-on-surface">Product not found</h2>
+        <h2 className="text-xl font-bold text-on-surface">Sorry, this laptop is no longer listed</h2>
+        <p className="text-xs text-on-surface-variant">It may have been sold. Have a look at what is in stock now.</p>
         <button
           onClick={() => navigateTo('hub')}
           className="bg-primary text-on-primary px-4 py-2 rounded-xl text-sm font-semibold"
@@ -85,15 +116,32 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
   const upgradeTotal = (selectedRamUpgrade?.price || 0) + (selectedStorageUpgrade?.price || 0);
   const finalPrice = listing.sale_price + upgradeTotal;
 
+  const soldOut = isOutOfStock(listing);
+  const imageCount = listing.images.length;
+  const showImage = (index: number) => setActiveImageIndex((index + imageCount) % imageCount);
+
+  const addSelectionToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart(listing, selectedRamUpgrade || undefined, selectedStorageUpgrade || undefined);
+    }
+  };
+
   const handleAddToCart = () => {
-    addToCart(listing, selectedRamUpgrade || undefined, selectedStorageUpgrade || undefined);
+    addSelectionToCart();
+    shop.notify('Added to bag');
     setAddedToCartToast(true);
     setTimeout(() => setAddedToCartToast(false), 3000);
   };
 
   const handleBuyNow = () => {
-    addToCart(listing, selectedRamUpgrade || undefined, selectedStorageUpgrade || undefined);
+    addSelectionToCart();
     navigateTo('checkout');
+  };
+
+  // Goes through the same checkout form so the order is saved, then opens WhatsApp.
+  const handleWhatsAppOrder = () => {
+    addSelectionToCart();
+    shop.orderOnWhatsApp();
   };
 
   const handleReviewSubmit = (e: React.FormEvent) => {
@@ -116,25 +164,54 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
     }, 1500);
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2500);
+  const handleShare = async () => {
+    const url = productUrl(listing);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: listing.title, text: `${listing.title} - ${formatPKR(listing.sale_price)}`, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } catch {
+      // share sheet dismissed
+    }
   };
+
+  const related = [
+    ...hubListings.filter((l) => l.id !== listing.id && l.brand === listing.brand),
+    ...hubListings.filter((l) => l.id !== listing.id && l.brand !== listing.brand),
+  ]
+    .filter((l) => !isOutOfStock(l))
+    .slice(0, 4);
+  const cityInfo = CITY_DELIVERY[checkCity];
 
   const itemReviews = (reviews || []).filter((r) => r.target_id === listing.id);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 pb-24 lg:pb-6">
       {/* Breadcrumb & Navigation */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigateTo('hub')}
-          className="flex items-center gap-1.5 text-xs font-bold text-on-surface-variant hover:text-steel-dark transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Laptop Hub</span>
-        </button>
+      <div className="flex items-center justify-between gap-3">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-bold text-on-surface-variant min-w-0">
+          <button onClick={() => navigateTo('hub')} className="flex items-center gap-1.5 hover:text-steel-dark shrink-0">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Laptop Hub</span>
+          </button>
+          <span className="text-outline">/</span>
+          <a
+            href={brandPath(listing.brand)}
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo('hub', { brand: listing.brand });
+            }}
+            className="hover:text-steel-dark shrink-0"
+          >
+            {listing.brand}
+          </a>
+          <span className="text-outline hidden sm:inline">/</span>
+          <span className="truncate font-medium hidden sm:inline">{listing.title}</span>
+        </nav>
         <button
           onClick={handleShare}
           className="flex items-center gap-1 text-xs text-on-surface-variant hover:text-on-surface font-semibold bg-surface-container-lowest px-3 py-1.5 rounded-lg border border-outline-variant"
@@ -149,12 +226,59 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
         {/* Left Gallery (5 cols) */}
         <div className="lg:col-span-6 space-y-3">
           {/* Main Large Image */}
-          <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-white border border-outline-variant shadow-md">
+          <div
+            className="relative aspect-4/3 rounded-lg overflow-hidden bg-white border border-outline-variant shadow-md"
+            onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null || imageCount < 2) return;
+              const dx = e.changedTouches[0].clientX - touchStartX.current;
+              touchStartX.current = null;
+              if (Math.abs(dx) > 40) showImage(activeImageIndex + (dx < 0 ? 1 : -1));
+            }}
+          >
+            {/* Hovering with a mouse magnifies the spot under the cursor; click opens the full viewer. */}
             <img
-              src={listing.images[activeImageIndex] || listing.images[0]}
+              src={optimizeImage(listing.images[activeImageIndex] || listing.images[0], 1000)}
               alt={listing.title}
-              className="w-full h-full object-contain p-6"
+              onClick={() => setZoomOpen(true)}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                setHoverOrigin(
+                  `${((e.clientX - rect.left) / rect.width) * 100}% ${((e.clientY - rect.top) / rect.height) * 100}%`
+                );
+              }}
+              onMouseLeave={() => setHoverOrigin(null)}
+              style={hoverOrigin ? { transformOrigin: hoverOrigin, transform: 'scale(2)' } : undefined}
+              className="w-full h-full object-contain p-6 cursor-zoom-in transition-transform duration-150"
             />
+            {imageCount > 1 && (
+              <>
+                <button
+                  onClick={() => showImage(activeImageIndex - 1)}
+                  aria-label="Previous photo"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-surface-container-lowest/90 rounded-full shadow"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => showImage(activeImageIndex + 1)}
+                  aria-label="Next photo"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-surface-container-lowest/90 rounded-full shadow"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+                <span className="absolute bottom-3 left-3 bg-primary/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                  {activeImageIndex + 1} / {imageCount}
+                </span>
+              </>
+            )}
+            <button
+              onClick={() => setZoomOpen(true)}
+              aria-label="Zoom photo"
+              className="absolute bottom-3 right-3 p-2 bg-surface-container-lowest/90 rounded-full shadow text-on-surface-variant"
+            >
+              <ZoomIn className="w-4 h-4" />
+            </button>
             {/* Badges on image */}
             <div className="absolute top-3 left-3 bg-copper text-white text-xs font-bold px-3 py-1 rounded-lg shadow">
               Verified Stock • {listing.condition}
@@ -180,7 +304,7 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
                       : 'border-outline-variant opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="thumb" className="w-full h-full object-contain p-1.5" />
+                  <img src={optimizeImage(img, 160)} alt="" className="w-full h-full object-contain p-1.5" />
                 </button>
               ))}
             </div>
@@ -256,7 +380,11 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
 
             <div className="text-right">
               <span className="inline-block bg-steel/20 text-steel text-xs font-bold px-2.5 py-1 rounded-lg border border-steel/40">
-                {listing.stock_qty > 0 ? `In Stock (${listing.stock_qty} available)` : 'Out of Stock'}
+                {soldOut
+                  ? 'Out of Stock'
+                  : listing.stock_qty <= LOW_STOCK_THRESHOLD
+                  ? `Only ${listing.stock_qty} left`
+                  : `In Stock (${listing.stock_qty} available)`}
               </span>
               <span className="text-[11px] text-on-primary-container block mt-1">Cash on Delivery Available</span>
             </div>
@@ -340,47 +468,124 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           )}
 
           {/* Primary Action Buttons */}
-          <div className="space-y-2.5">
-            {/* WhatsApp Deep Link Button */}
-            <a
-              id="whatsapp-buy-btn"
-              href={getHubWhatsAppLink(listing)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3.5 px-4 rounded flex items-center justify-center gap-2.5 shadow-sm transition-all hover:scale-[1.01]"
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span>{romanUrduMode ? 'WhatsApp Par Baat Karein & Deal Lock Karein' : 'Chat on WhatsApp to Buy'}</span>
-            </a>
-
-            <div className="grid grid-cols-2 gap-2">
+          {soldOut ? (
+            <div className="space-y-2.5">
               <button
-                id="add-to-cart-btn"
-                onClick={handleAddToCart}
-                className="bg-primary hover:bg-primary-container text-on-primary font-bold py-3 rounded text-xs flex items-center justify-center gap-2 transition-colors"
+                onClick={() => shop.setRestockFor(listing)}
+                className="w-full bg-primary hover:bg-primary-container text-on-primary font-extrabold py-3.5 px-4 rounded flex items-center justify-center gap-2.5"
               >
-                <ShoppingCart className="w-4 h-4" />
-                <span>Add to Cart</span>
+                <BellRing className="w-5 h-5" />
+                <span>Request restock notification</span>
               </button>
-
-              <button
-                id="buy-now-cod-btn"
-                onClick={handleBuyNow}
-                className="bg-steel-dark hover:bg-steel text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
+              <a
+                href={getHubWhatsAppLink(listing)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center text-xs font-bold text-whatsapp-dark underline"
               >
-                <Truck className="w-4 h-4" />
-                <span>Order with COD</span>
-              </button>
+                Ask on WhatsApp about a similar laptop
+              </a>
             </div>
+          ) : (
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-on-surface-variant">Quantity</span>
+                <div className="flex items-center gap-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-1">
+                  <button
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    aria-label="Decrease quantity"
+                    className="p-1 text-outline hover:text-on-surface"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="font-bold px-2 min-w-6 text-center">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity((q) => Math.min(listing.stock_qty, q + 1))}
+                    disabled={quantity >= listing.stock_qty}
+                    aria-label="Increase quantity"
+                    className="p-1 text-outline hover:text-on-surface disabled:opacity-30"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
 
-            {addedToCartToast && (
-              <div className="bg-steel/10 text-steel-dark border border-steel/30 p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between animate-fade-in">
-                <span>✓ Added to cart with selected upgrades!</span>
-                <button onClick={() => navigateTo('cart')} className="underline font-bold">
-                  View Cart
+              <button
+                id="whatsapp-buy-btn"
+                onClick={handleWhatsAppOrder}
+                className="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-extrabold py-3.5 px-4 rounded flex items-center justify-center gap-2.5 shadow-sm transition-all hover:scale-[1.01]"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>{romanUrduMode ? 'WhatsApp Par Order Karein' : 'Order on WhatsApp'}</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  id="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                  className="bg-primary hover:bg-primary-container text-on-primary font-bold py-3 rounded text-xs flex items-center justify-center gap-2 transition-colors"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Add to Cart ({formatPKR(finalPrice * quantity)})</span>
+                </button>
+
+                <button
+                  id="buy-now-cod-btn"
+                  onClick={handleBuyNow}
+                  className="bg-steel-dark hover:bg-steel text-white font-extrabold py-3 rounded text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
+                >
+                  <Truck className="w-4 h-4" />
+                  <span>Order with COD</span>
                 </button>
               </div>
-            )}
+
+              {addedToCartToast && (
+                <div className="bg-steel/10 text-steel-dark border border-steel/30 p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between animate-fade-in">
+                  <span>✓ Added to cart with selected upgrades!</span>
+                  <button onClick={() => navigateTo('cart')} className="underline font-bold">
+                    View Cart
+                  </button>
+                </div>
+              )}
+
+              <a
+                href={getHubWhatsAppLink(listing)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center text-xs font-bold text-on-surface-variant hover:text-whatsapp-dark underline"
+              >
+                Have a question? Ask on WhatsApp
+              </a>
+            </div>
+          )}
+
+          {/* City delivery checker */}
+          <div className="bg-surface-container-low rounded p-4 border border-outline-variant text-xs space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-bold text-on-surface flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-steel-dark" />
+                Delivery to
+              </span>
+              <select
+                value={checkCity}
+                onChange={(e) => setCheckCity(e.target.value)}
+                className="bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-1.5 font-semibold"
+              >
+                {SERVICE_AREA_CITIES.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <ul className="text-on-surface-variant space-y-0.5">
+              <li>
+                Estimated delivery: <strong className="text-on-surface">{cityInfo?.days || 'Next day'}</strong> by local
+                rider, free
+              </li>
+              <li>Cash on Delivery: available, check the laptop before paying</li>
+              {cityInfo?.express && <li>Same-day express: {formatPKR(EXPRESS_DELIVERY_FEE)}</li>}
+            </ul>
           </div>
 
           {/* Key Trust Checkpoints */}
@@ -521,6 +726,72 @@ export const HubDetailView: React.FC<HubDetailViewProps> = ({
           )}
         </div>
       </section>
+
+      {/* Related laptops */}
+      {related.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-lg font-extrabold text-on-surface font-display">You may also like</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {related.map((item) => (
+              <a
+                key={item.id}
+                href={productPath(item)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo('hub_detail', { hubId: item.id });
+                }}
+                className="bg-surface-container-lowest border border-outline-variant rounded p-3 hover:shadow-card-hover transition-shadow"
+              >
+                <div className="aspect-4/3 bg-white rounded overflow-hidden">
+                  <img
+                    src={optimizeImage(item.images[0], 400)}
+                    alt={item.title}
+                    loading="lazy"
+                    className="w-full h-full object-contain p-2"
+                  />
+                </div>
+                <div className="text-xs font-semibold text-on-surface line-clamp-2 mt-2">{item.title}</div>
+                <div className="price text-sm mt-1">{formatPKR(item.sale_price)}</div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <RecentlyViewed excludeId={listing.id} />
+
+      {/* Mobile sticky purchase bar */}
+      {!soldOut && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant px-3 py-2.5 flex items-center gap-2 shadow-[0px_-4px_12px_rgba(26,32,44,0.08)]">
+          <div className="flex-1 min-w-0">
+            <div className="price text-base leading-tight">{formatPKR(finalPrice * quantity)}</div>
+            <div className="text-[10px] text-on-surface-variant truncate">Free delivery · Cash on Delivery</div>
+          </div>
+          <button
+            onClick={handleWhatsAppOrder}
+            aria-label="Order on WhatsApp"
+            className="bg-whatsapp text-white p-3 rounded"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleAddToCart}
+            className="bg-primary text-on-primary font-bold text-xs px-4 py-3 rounded flex items-center gap-1.5"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            <span>Add to Cart</span>
+          </button>
+        </div>
+      )}
+
+      {zoomOpen && (
+        <ImageZoomViewer
+          images={listing.images.map((img) => optimizeImage(img, 1600))}
+          startIndex={activeImageIndex}
+          alt={listing.title}
+          onClose={() => setZoomOpen(false)}
+        />
+      )}
 
       {/* Review Modal */}
       {showReviewModal && (

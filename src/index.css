@@ -140,3 +140,104 @@ textarea:focus-visible,
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* Modal / toast entrance used across the store */
+@keyframes scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-scale-up {
+  animation: scale-up 0.2s ease-out;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Printing shows only the receipt, as the same bordered card centred on the
+   page. No page margin, so the browser's own date/title/URL header and
+   footer are dropped. */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .print-receipt,
+  .print-receipt * {
+    visibility: visible !important;
+  }
+  .print-receipt {
+    position: fixed !important;
+    inset: 12mm 0 auto 0 !important;
+    margin: 0 auto !important;
+    width: calc(100% - 24mm) !important;
+    max-width: 540px !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page {
+    margin: 0;
+  }
+}
+
+/* Guided "How to order" tour (driver.js) in the store theme */
+.driver-popover.apna-tour {
+  background: var(--color-surface-container-lowest);
+  color: var(--color-ink);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 0.75rem;
+  padding: 16px 16px 14px;
+  max-width: 300px;
+  box-shadow: var(--shadow-panel);
+  font-family: var(--font-sans);
+}
+.apna-tour .driver-popover-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.apna-tour .driver-popover-description {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-ink-variant);
+}
+.apna-tour .apna-tour-ur {
+  display: block;
+  margin-top: 6px;
+  font-style: italic;
+  color: var(--color-copper-dark);
+}
+.apna-tour .driver-popover-progress-text {
+  font-size: 11px;
+  color: var(--color-outline);
+}
+.apna-tour .driver-popover-navigation-btns button {
+  text-shadow: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 0.375rem;
+  padding: 6px 12px;
+  border: 1px solid var(--color-outline-variant);
+  background: var(--color-surface-container-low);
+  color: var(--color-ink);
+}
+.apna-tour .driver-popover-navigation-btns .driver-popover-next-btn {
+  background: var(--color-steel);
+  border-color: var(--color-steel);
+  color: #fff;
+}

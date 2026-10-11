@@ -38,15 +38,99 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Orders: anyone (guest or signed-in customer) can place an order at
-    // checkout, and "My Orders" reads the order list client-side to find the
-    // buyer's own orders - so read is public but status changes/dispatch are
-    // admin-only. Order contact details (name/phone/address) are technically
-    // queryable by anyone with the Firestore SDK, same tradeoff most small
-    // storefronts accept; revisit if this needs to be locked down further.
+    function validPhoneKey(key) {
+      return key is string && key.matches('^923[0-9]{9}$');
+    }
+
+    // Orders: anyone (guest or signed-in customer) can place a new order,
+    // always starting as pending, and look up a single order by its exact,
+    // hard-to-guess ID for tracking. Nobody but an admin can list orders,
+    // except a signed-in customer listing their own ("My Orders"). Every new
+    // order must also update that phone number's daily limit (see
+    // phoneLimits) in the same write.
     match /orders/{orderId} {
-      allow create, read: if true;
+      allow create: if request.resource.data.order_number == orderId
+        && request.resource.data.status == 'pending'
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 50
+        && request.resource.data.total_price is number
+        && validPhoneKey(request.resource.data.phone_key)
+        && request.resource.data.buyer_id is string
+        && (request.resource.data.buyer_id.matches('^guest_.*$')
+            || (request.auth != null && request.resource.data.buyer_id == request.auth.uid))
+        && getAfter(/databases/$(database)/documents/phoneLimits/$(request.resource.data.phone_key)).data.lastOrderId == orderId;
+      allow get: if true;
+      allow list: if isAdmin()
+        || (request.auth != null && resource.data.buyer_id == request.auth.uid);
       allow update, delete: if isAdmin();
+    }
+
+    // At most 3 orders per phone number in any 24 hours (blocks order spam).
+    match /phoneLimits/{phoneKey} {
+      allow get: if true;
+      allow create: if validPhoneKey(phoneKey)
+        && request.resource.data.keys().hasOnly(['count', 'windowStart', 'lastOrderId'])
+        && request.resource.data.count == 1
+        && request.resource.data.windowStart == request.time
+        && getAfter(/databases/$(database)/documents/orders/$(request.resource.data.lastOrderId)).data.phone_key == phoneKey;
+      allow update: if request.resource.data.keys().hasOnly(['count', 'windowStart', 'lastOrderId'])
+        && getAfter(/databases/$(database)/documents/orders/$(request.resource.data.lastOrderId)).data.phone_key == phoneKey
+        && (
+          (request.time < resource.data.windowStart + duration.value(1, 'd')
+            && resource.data.count < 3
+            && request.resource.data.count == resource.data.count + 1
+            && request.resource.data.windowStart == resource.data.windowStart)
+          || (request.time >= resource.data.windowStart + duration.value(1, 'd')
+            && request.resource.data.count == 1
+            && request.resource.data.windowStart == request.time)
+        );
+      allow list, delete: if isAdmin();
+    }
+
+    // Loyalty points per phone number. Customers can only read one balance;
+    // the admin adds points on delivery and deducts redeemed points on
+    // confirmation.
+    match /loyalty/{phoneKey} {
+      allow get: if true;
+      allow list, write: if isAdmin();
+    }
+
+    // Checkout details saved before the order is placed, so the admin can
+    // follow up on carts that were never completed.
+    match /abandonedCarts/{phoneKey} {
+      allow create, update: if isAdmin() || (validPhoneKey(phoneKey)
+        && request.resource.data.phoneKey == phoneKey
+        && request.resource.data.keys().hasOnly(['phoneKey', 'name', 'phone', 'city', 'items', 'total', 'updatedAt', 'converted', 'orderId'])
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 50
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 100);
+      allow read, delete: if isAdmin();
+    }
+
+    // "Notify me when back in stock" requests.
+    match /backInStock/{requestId} {
+      allow create: if request.resource.data.keys().hasOnly(['id', 'productId', 'productName', 'contact', 'phoneKey', 'createdAt', 'notified'])
+        && request.resource.data.id == requestId
+        && request.resource.data.notified == false
+        && request.resource.data.contact is string
+        && request.resource.data.contact.size() <= 100
+        && request.resource.data.productName is string
+        && request.resource.data.productName.size() <= 200;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Discount codes: customers can check the exact code they typed, and
+    // list only the featured (advertised) code. Using a code may only add 1
+    // to its usage count. Everything else is admin only.
+    match /discounts/{code} {
+      allow get: if true;
+      allow list: if isAdmin() || resource.data.featured == true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usedCount'])
+            && request.resource.data.usedCount == resource.data.usedCount + 1);
     }
 
     // Reviews: the product page's review form lets any visitor leave one

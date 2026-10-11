@@ -2,6 +2,8 @@ import React from 'react';
 import { Laptop, ShieldCheck, Truck, CheckCircle2, MessageCircle, Heart, Instagram } from 'lucide-react';
 import { SERVICE_AREA_CITIES } from '../services/pricingEngine';
 import { User } from '../types';
+import { useShop } from '../services/store';
+import { discountLabel } from '../services/discounts';
 
 interface FooterProps {
   navigateTo: (route: string) => void;
@@ -10,6 +12,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, currentUser }) => {
+  const { featuredDiscount } = useShop();
   return (
     <footer className="bg-primary-container text-on-primary-container border-t border-outline-variant text-sm mt-16">
       {/* Trust Highlights Section */}
@@ -140,6 +143,21 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
                   My Orders
                 </button>
               </li>
+              <li>
+                <button onClick={() => navigateTo('track')} className="hover:text-steel transition-colors">
+                  Track Order
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigateTo('contact')} className="hover:text-steel transition-colors">
+                  Help & FAQs
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigateTo('about')} className="hover:text-steel transition-colors">
+                  About Us
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -212,7 +230,9 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
             </div>
           </div>
           <div className="text-[11px] text-steel font-semibold tracking-wide uppercase">
-            Apna Laptop © 2024 • Proudly Pakistani
+            {featuredDiscount
+              ? `Use code ${featuredDiscount.code} for ${discountLabel(featuredDiscount, false)}`
+              : 'Apna Laptop • Proudly Pakistani'}
           </div>
         </div>
 
@@ -221,6 +241,18 @@ export const Footer: React.FC<FooterProps> = ({ navigateTo, romanUrduMode, curre
           <p>© {new Date().getFullYear()} Apna Laptop Pakistan (Private). All rights reserved.</p>
           <p className="flex items-center gap-1">
             Built with <Heart className="w-3.5 h-3.5 text-error fill-error" /> for Pakistani tech enthusiasts.
+          </p>
+          <p>
+            A product of{' '}
+            <a
+              href="https://www.devtimize.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-on-primary hover:text-steel transition-colors"
+            >
+              Devtimize
+            </a>
+            .
           </p>
         </div>
       </div>

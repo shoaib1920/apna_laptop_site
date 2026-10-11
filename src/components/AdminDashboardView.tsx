@@ -14,11 +14,43 @@ import {
   X,
   Loader2,
   ImagePlus,
+  LayoutDashboard,
+  Boxes,
+  ShoppingBag,
+  BellRing,
+  Tag,
+  ArrowLeft,
+  ArrowRight,
+  Link2,
 } from 'lucide-react';
-import { HubListing, LaptopCondition, Order, OrderStatus, User } from '../types';
-import { formatPKR } from '../utils/helpers';
+import { HubListing, LaptopCondition, Order, User } from '../types';
+import { formatPKR, optimizeImage } from '../utils/helpers';
 import { BulkImportModal } from './BulkImportModal';
 import { uploadHubListingImage } from '../services/imageUpload';
+import { useShop } from '../services/store';
+import { AdminOrders } from './admin/AdminOrders';
+import {
+  AdminAbandonedCarts,
+  AdminCustomers,
+  AdminDiscounts,
+  AdminInventory,
+  AdminOverview,
+  AdminRestock,
+  useOpenRestockCount,
+} from './admin/AdminTabs';
+import { ImageEditorModal } from './admin/ImageEditorModal';
+import { isCountedSale } from './admin/adminUtils';
+
+type AdminTab =
+  | 'dashboard'
+  | 'orders'
+  | 'products'
+  | 'inventory'
+  | 'customers'
+  | 'carts'
+  | 'restock'
+  | 'discounts'
+  | 'analytics';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80';
 
@@ -27,7 +59,6 @@ interface AdminDashboardViewProps {
   orders: Order[];
   createHubListing: (listing: Omit<HubListing, 'id' | 'rating' | 'reviewCount'>) => HubListing;
   updateHubListing: (id: string, updates: Partial<HubListing>) => void;
-  updateOrderStatus: (orderId: string, status: OrderStatus, courierName?: string, trackingNumber?: string) => void;
   deleteHubListing: (id: string) => void;
   navigateTo: (route: string, params?: any) => void;
   currentUser: User | null;
@@ -79,24 +110,30 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   orders = [],
   createHubListing,
   updateHubListing,
-  updateOrderStatus,
   deleteHubListing,
   navigateTo,
   currentUser,
   onLogout,
 }) => {
-  const [activeTab, setActiveTab] = useState<'inventory' | 'orders' | 'analytics'>('inventory');
+  const { notify } = useShop();
+  const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+  const openRestockCount = useOpenRestockCount();
+  const pendingCount = orders.filter((o) => o.status === 'pending').length;
+  // Photos waiting to go through the editor, one at a time.
+  const [editQueue, setEditQueue] = useState<File[]>([]);
+  const [imageUrlDraft, setImageUrlDraft] = useState('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showBulkImport, setShowBulkImport] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [images, setImages] = useState<string[]>([]);
   const [uploadingImages, setUploadingImages] = useState(false);
-  const [courierDrafts, setCourierDrafts] = useState<Record<string, { courier: string; tracking: string }>>({});
 
-  // Revenue stats — tied to real order/listing data, not a phantom field
-  const totalSalesGMV = orders.reduce((sum, o) => sum + o.total_price, 0);
-  const totalMarginFromOrders = orders.reduce((sum, order) => {
+  // Revenue stats — tied to real order/listing data, not a phantom field.
+  // Cancelled and returned orders are not sales.
+  const soldOrders = orders.filter(isCountedSale);
+  const totalSalesGMV = soldOrders.reduce((sum, o) => sum + o.total_price, 0);
+  const totalMarginFromOrders = soldOrders.reduce((sum, order) => {
     const orderMargin = order.items.reduce((itemSum, item) => {
       const hubListing = hubListings.find((h) => h.id === item.listing_id);
       const unitCost = hubListing?.cost_price ?? item.unit_price * 0.88;
@@ -137,19 +174,42 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
     setShowModal(true);
   };
 
-  const handleImageFilesPicked = async (fileList: FileList | null) => {
+  // Each picked photo passes through the editor (crop, rotate, adjust)
+  // before it is uploaded.
+  const handleImageFilesPicked = (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
+    setEditQueue((prev) => [...prev, ...Array.from(fileList)]);
+  };
+
+  const uploadEditedImage = async (file: File) => {
     setUploadingImages(true);
     try {
-      const files = Array.from(fileList);
-      const urls = await Promise.all(files.map((file) => uploadHubListingImage(file)));
-      setImages((prev) => [...prev, ...urls]);
-    } catch (err) {
-      console.error('Failed to upload image(s):', err);
-      alert('One or more images failed to upload. Check the console for details.');
+      const url = await uploadHubListingImage(file);
+      setImages((prev) => [...prev, url]);
+      setEditQueue((prev) => prev.slice(1));
     } finally {
       setUploadingImages(false);
     }
+  };
+
+  const moveImage = (index: number, direction: -1 | 1) => {
+    setImages((prev) => {
+      const target = index + direction;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
+  const addImageUrl = () => {
+    const url = imageUrlDraft.trim();
+    if (!/^https?:\/\//i.test(url)) {
+      notify('Paste a full image link starting with https://', 'error');
+      return;
+    }
+    setImages((prev) => [...prev, url]);
+    setImageUrlDraft('');
   };
 
   const removeImage = (index: number) => {
@@ -197,23 +257,17 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
     setImages([]);
   };
 
-  const handleStatusChange = (orderId: string, status: OrderStatus) => {
-    if (status === 'shipped') {
-      setCourierDrafts((prev) => ({ ...prev, [orderId]: prev[orderId] || { courier: '', tracking: '' } }));
-      return;
-    }
-    updateOrderStatus(orderId, status);
-    setCourierDrafts((prev) => {
-      const next = { ...prev };
-      delete next[orderId];
-      return next;
-    });
-  };
-
-  const handleSaveCourier = (orderId: string) => {
-    const draft = courierDrafts[orderId];
-    updateOrderStatus(orderId, 'shipped', draft?.courier, draft?.tracking);
-  };
+  const tabs: { id: AdminTab; label: string; icon: React.ElementType; count?: number }[] = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'orders', label: 'Orders', icon: ShoppingCart, count: pendingCount },
+    { id: 'products', label: `Products (${hubListings.length})`, icon: Package },
+    { id: 'inventory', label: 'Inventory', icon: Boxes },
+    { id: 'customers', label: 'Customers', icon: Users },
+    { id: 'carts', label: 'Abandoned Carts', icon: ShoppingBag },
+    { id: 'restock', label: 'Restock', icon: BellRing, count: openRestockCount },
+    { id: 'discounts', label: 'Discounts', icon: Tag },
+    { id: 'analytics', label: 'Finances & Margin', icon: TrendingUp },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -233,54 +287,49 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Tab Controls */}
-          <div className="flex bg-primary p-1.5 rounded-lg overflow-x-auto text-xs">
+        {onLogout && (
           <button
-            onClick={() => setActiveTab('inventory')}
-            className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'inventory' ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
-            }`}
+            onClick={onLogout}
+            title="Log out"
+            className="shrink-0 self-start md:self-auto h-9 px-3 rounded-lg bg-primary text-on-primary-container hover:text-on-primary flex items-center gap-1.5 text-xs font-bold"
           >
-            <Package className="w-3.5 h-3.5" />
-            <span>Hub Inventory ({hubListings.length})</span>
+            <LogOut className="w-4 h-4" />
+            <span>Log out</span>
           </button>
-
-          <button
-            onClick={() => setActiveTab('orders')}
-            className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'orders' ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
-            }`}
-          >
-            <ShoppingCart className="w-3.5 h-3.5" />
-            <span>Orders ({orders.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-2 rounded-md font-bold flex items-center gap-1.5 transition-colors ${
-              activeTab === 'analytics' ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
-            }`}
-          >
-            <TrendingUp className="w-3.5 h-3.5" />
-            <span>Finances & Margin</span>
-          </button>
-          </div>
-
-          {onLogout && (
-            <button
-              onClick={onLogout}
-              title="Log out"
-              className="shrink-0 w-9 h-9 rounded-lg bg-primary text-on-primary-container hover:text-on-primary flex items-center justify-center"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
+      {/* Tab Controls */}
+      <div className="flex bg-primary p-1.5 rounded-lg overflow-x-auto text-xs gap-1">
+        {tabs.map(({ id, label, icon: Icon, count }) => (
+          <button
+            key={id}
+            onClick={() => setActiveTab(id)}
+            className={`px-3.5 py-2 rounded-md font-bold flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+              activeTab === id ? 'bg-steel text-white shadow' : 'text-on-primary-container hover:text-on-primary'
+            }`}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            <span>{label}</span>
+            {!!count && (
+              <span className="bg-copper text-white text-[10px] min-w-4 h-4 px-1 rounded-full flex items-center justify-center">
+                {count}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'dashboard' && <AdminOverview onOpenOrders={() => setActiveTab('orders')} />}
+      {activeTab === 'orders' && <AdminOrders />}
+      {activeTab === 'inventory' && <AdminInventory />}
+      {activeTab === 'customers' && <AdminCustomers />}
+      {activeTab === 'carts' && <AdminAbandonedCarts />}
+      {activeTab === 'restock' && <AdminRestock />}
+      {activeTab === 'discounts' && <AdminDiscounts />}
+
       {/* TAB 1: HUB INVENTORY MANAGER */}
-      {activeTab === 'inventory' && (
+      {activeTab === 'products' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-on-surface font-display">Verified Stock Lots & Margins</h2>
@@ -364,7 +413,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
-                            onClick={() => deleteHubListing(item.id)}
+                            onClick={() => window.confirm(`Delete "${item.title}"?`) && deleteHubListing(item.id)}
                             className="text-error hover:bg-error-container border border-outline-variant hover:border-error rounded-md p-1.5"
                             title="Delete listing"
                           >
@@ -374,125 +423,6 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                       </tr>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: ORDERS MANAGEMENT (CRM) */}
-      {activeTab === 'orders' && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-on-surface font-display">Customer Orders & COD Dispatch Tracker</h2>
-
-          <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-surface-container-low border-b border-outline-variant text-on-surface-variant font-bold">
-                  <tr>
-                    <th className="p-4">Order #</th>
-                    <th className="p-4">Customer & City</th>
-                    <th className="p-4">Phone (WhatsApp)</th>
-                    <th className="p-4">Items & Upgrades</th>
-                    <th className="p-4">Payable Amount</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4">Update / Dispatch</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-outline-variant/50">
-                  {orders.map((order) => (
-                    <tr key={order.id} className="hover:bg-surface-container-low align-top">
-                      <td className="p-4 font-mono-spec font-bold text-on-surface">{order.order_number}</td>
-                      <td className="p-4">
-                        <span className="font-bold text-on-surface block">{order.buyer_name}</span>
-                        <span className="text-[11px] text-on-surface-variant">{order.buyer_city}</span>
-                      </td>
-                      <td className="p-4">
-                        <a
-                          href={`https://wa.me/${order.buyer_phone.replace(/\D/g, '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-whatsapp-dark hover:underline font-bold"
-                        >
-                          {order.buyer_phone}
-                        </a>
-                      </td>
-                      <td className="p-4 text-on-surface-variant max-w-xs truncate">
-                        {order.items.map((i) => `${i.title} (x${i.qty})`).join(', ')}
-                      </td>
-                      <td className="p-4 price text-xs">{formatPKR(order.total_price)}</td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase ${
-                            order.status === 'delivered'
-                              ? 'bg-steel-tint text-steel-dark'
-                              : order.status === 'shipped'
-                              ? 'bg-secondary-container/60 text-on-secondary-container'
-                              : order.status === 'cancelled'
-                              ? 'bg-error-container text-on-error-container'
-                              : 'bg-surface-container-high text-on-surface-variant'
-                          }`}
-                        >
-                          {order.status}
-                        </span>
-                        {order.courier_name && (
-                          <div className="text-[10px] text-on-surface-variant mt-1">
-                            {order.courier_name} · {order.tracking_number}
-                          </div>
-                        )}
-                      </td>
-                      <td className="p-4 space-y-1.5">
-                        <select
-                          value={order.status}
-                          onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
-                          className="bg-surface-container-low border border-outline-variant rounded-md px-2 py-1 text-xs font-semibold text-on-surface"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-
-                        {courierDrafts[order.id] && (
-                          <div className="flex flex-col gap-1 pt-1 min-w-[160px]">
-                            <input
-                              type="text"
-                              placeholder="Courier name"
-                              value={courierDrafts[order.id].courier}
-                              onChange={(e) =>
-                                setCourierDrafts((prev) => ({
-                                  ...prev,
-                                  [order.id]: { ...prev[order.id], courier: e.target.value },
-                                }))
-                              }
-                              className="bg-surface-container-low border border-outline-variant rounded-md px-2 py-1 text-[11px]"
-                            />
-                            <input
-                              type="text"
-                              placeholder="Tracking number"
-                              value={courierDrafts[order.id].tracking}
-                              onChange={(e) =>
-                                setCourierDrafts((prev) => ({
-                                  ...prev,
-                                  [order.id]: { ...prev[order.id], tracking: e.target.value },
-                                }))
-                              }
-                              className="bg-surface-container-low border border-outline-variant rounded-md px-2 py-1 text-[11px]"
-                            />
-                            <button
-                              onClick={() => handleSaveCourier(order.id)}
-                              className="flex items-center justify-center gap-1 bg-steel hover:bg-steel-dark text-white font-bold text-[11px] px-2 py-1 rounded-md"
-                            >
-                              <Truck className="w-3 h-3" />
-                              <span>Mark Shipped</span>
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
                 </tbody>
               </table>
             </div>
@@ -513,12 +443,12 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
             <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm space-y-1">
               <span className="text-xs text-on-surface-variant font-semibold">Net Platform Margin (from orders)</span>
               <div className="price text-2xl">{formatPKR(totalMarginFromOrders)}</div>
-              <span className="text-[11px] text-on-surface-variant">Sale price − supplier cost + upgrades, across all orders</span>
+              <span className="text-[11px] text-on-surface-variant">Sale price − supplier cost + upgrades, excluding cancelled / returned</span>
             </div>
 
             <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm space-y-1">
               <span className="text-xs text-on-surface-variant font-semibold">Total Customer Orders</span>
-              <div className="text-2xl font-extrabold text-on-surface font-display">{orders.length}</div>
+              <div className="text-2xl font-extrabold text-on-surface font-display">{soldOrders.length}</div>
               <span className="text-[11px] text-on-surface-variant">
                 {orders.filter((o) => o.status === 'delivered').length} delivered so far
               </span>
@@ -543,8 +473,11 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                 <label className="font-bold text-on-surface-variant block mb-1">Photos</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {images.map((url, i) => (
-                    <div key={url + i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-outline-variant bg-surface-container-low shrink-0">
-                      <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                    <div key={url + i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-outline-variant bg-surface-container-low shrink-0">
+                      <img src={optimizeImage(url, 160)} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                      {i === 0 && (
+                        <span className="absolute top-0.5 left-0.5 bg-copper text-white text-[8px] font-bold px-1 rounded">MAIN</span>
+                      )}
                       <button
                         type="button"
                         onClick={() => removeImage(i)}
@@ -553,9 +486,17 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                       >
                         <X className="w-2.5 h-2.5" />
                       </button>
+                      <div className="absolute bottom-0 inset-x-0 flex justify-between bg-primary/70 text-white">
+                        <button type="button" onClick={() => moveImage(i, -1)} disabled={i === 0} title="Move earlier" className="p-0.5 disabled:opacity-30">
+                          <ArrowLeft className="w-3 h-3" />
+                        </button>
+                        <button type="button" onClick={() => moveImage(i, 1)} disabled={i === images.length - 1} title="Move later" className="p-0.5 disabled:opacity-30">
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   ))}
-                  <label className="w-16 h-16 rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer hover:bg-surface-container-low shrink-0 text-on-surface-variant">
+                  <label className="w-20 h-20 rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center cursor-pointer hover:bg-surface-container-low shrink-0 text-on-surface-variant">
                     {uploadingImages ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
@@ -573,6 +514,27 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                       }}
                     />
                   </label>
+                </div>
+                <div className="flex gap-2 mb-2">
+                  <div className="relative flex-1">
+                    <Link2 className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-outline" />
+                    <input
+                      type="url"
+                      value={imageUrlDraft}
+                      onChange={(e) => setImageUrlDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addImageUrl();
+                        }
+                      }}
+                      placeholder="or paste an image link"
+                      className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-8 pr-3 py-2"
+                    />
+                  </div>
+                  <button type="button" onClick={addImageUrl} className="px-3 bg-surface-container text-on-surface rounded-lg font-bold">
+                    Add
+                  </button>
                 </div>
                 {images.length === 0 && (
                   <p className="text-[10px] text-on-surface-variant">
@@ -724,6 +686,16 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
             </form>
           </div>
         </div>
+      )}
+
+      {editQueue.length > 0 && (
+        <ImageEditorModal
+          key={editQueue[0].name + editQueue[0].size + editQueue.length}
+          file={editQueue[0]}
+          remaining={editQueue.length - 1}
+          onCancel={() => setEditQueue((prev) => prev.slice(1))}
+          onApply={uploadEditedImage}
+        />
       )}
 
       {showBulkImport && (

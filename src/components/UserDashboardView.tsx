@@ -5,9 +5,12 @@ import {
   Clock,
   Truck,
   PackageCheck,
+  Package,
+  XCircle,
 } from 'lucide-react';
 import { Order, User } from '../types';
 import { formatPKR } from '../utils/helpers';
+import { STATUS_LABELS } from '../config';
 
 interface UserDashboardViewProps {
   currentUser: User | null;
@@ -19,9 +22,12 @@ interface UserDashboardViewProps {
 const statusStyles: Record<Order['status'], { badge: string; icon: React.ElementType }> = {
   pending: { badge: 'bg-surface-container-high text-on-surface-variant', icon: Clock },
   confirmed: { badge: 'bg-secondary-container/60 text-on-secondary-container', icon: CheckCircle2 },
+  packed: { badge: 'bg-secondary-container/60 text-on-secondary-container', icon: Package },
   shipped: { badge: 'bg-secondary-container/60 text-on-secondary-container', icon: Truck },
+  out_for_delivery: { badge: 'bg-secondary-container/60 text-on-secondary-container', icon: Truck },
   delivered: { badge: 'bg-steel-tint text-steel-dark', icon: PackageCheck },
-  cancelled: { badge: 'bg-error-container text-on-error-container', icon: Clock },
+  cancelled: { badge: 'bg-error-container text-on-error-container', icon: XCircle },
+  returned: { badge: 'bg-error-container text-on-error-container', icon: XCircle },
 };
 
 export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
@@ -56,7 +62,8 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
     );
   }
 
-  const myOrders = orders.filter((o) => o.buyer_id === currentUser.id);
+  // `orders` is already this customer's own list (their account plus this device).
+  const myOrders = orders;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6 pb-24">
@@ -97,14 +104,14 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
           </div>
         ) : (
           myOrders.map((order) => {
-            const style = statusStyles[order.status];
+            const style = statusStyles[order.status] || statusStyles.pending;
             const Icon = style.icon;
             return (
               <div key={order.id} className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-mono-spec text-xs font-bold text-on-surface">{order.order_number}</span>
                   <span className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase ${style.badge}`}>
-                    <Icon className="w-3 h-3" /> {order.status}
+                    <Icon className="w-3 h-3" /> {STATUS_LABELS[order.status] || order.status}
                   </span>
                 </div>
                 <p className="text-xs text-on-surface-variant truncate">
@@ -112,6 +119,12 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({
                 </p>
                 <div className="flex items-center justify-between pt-2 border-t border-outline-variant">
                   <span className="price">{formatPKR(order.total_price)}</span>
+                  <button
+                    onClick={() => navigateTo('track', { orderId: order.order_number })}
+                    className="text-[11px] font-bold text-steel-dark underline"
+                  >
+                    Track order
+                  </button>
                   {order.courier_name && (
                     <span className="text-[11px] text-on-surface-variant">
                       {order.courier_name} · {order.tracking_number}

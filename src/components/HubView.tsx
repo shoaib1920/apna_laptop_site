@@ -12,9 +12,16 @@ import {
   X,
   BadgeCheck,
   ChevronRight,
+  Eye,
+  BellRing,
 } from 'lucide-react';
 import { HubListing } from '../types';
-import { formatPKR, getHubWhatsAppLink } from '../utils/helpers';
+import { useShop } from '../services/store';
+import { LOW_STOCK_THRESHOLD } from '../config';
+import { formatPKR, getSupportWhatsAppLink, isOutOfStock, optimizeImage, productPath } from '../utils/helpers';
+
+const PLACEHOLDER_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f0efec'/%3E%3Cpath d='M20 28h40v24H20zM14 56h52' fill='none' stroke='%23c7c4bd' stroke-width='3'/%3E%3C/svg%3E";
 
 interface HubViewProps {
   hubListings: HubListing[];
@@ -24,6 +31,8 @@ interface HubViewProps {
   romanUrduMode: boolean;
   globalSearchQuery: string;
   setGlobalSearchQuery: (q: string) => void;
+  /** Set on a brand page (/laptops/<brand>). */
+  initialBrand?: string;
 }
 
 const conditionBadgeClasses = (condition: string) => {
@@ -40,13 +49,16 @@ export const HubView: React.FC<HubViewProps> = ({
   romanUrduMode,
   globalSearchQuery,
   setGlobalSearchQuery,
+  initialBrand,
 }) => {
-  const [selectedBrand, setSelectedBrand] = useState<string>('all');
+  const shop = useShop();
+  const [selectedBrand, setSelectedBrand] = useState<string>(initialBrand || 'all');
+  const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [selectedUseCase, setSelectedUseCase] = useState<string>('all');
   const [selectedCondition, setSelectedCondition] = useState<string>('all');
   const [selectedRam, setSelectedRam] = useState<string>('all');
   const [maxPrice, setMaxPrice] = useState<number>(300000);
-  const [sortBy, setSortBy] = useState<'featured' | 'price_low' | 'price_high' | 'rating'>('featured');
+  const [sortBy, setSortBy] = useState<'featured' | 'newest' | 'price_low' | 'price_high' | 'rating'>('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
 
   const brands = useMemo(() => {
@@ -70,15 +82,18 @@ export const HubView: React.FC<HubViewProps> = ({
         if (selectedCondition !== 'all' && item.condition !== selectedCondition) return false;
         if (selectedRam !== 'all' && !item.specs.ram.toLowerCase().includes(selectedRam.toLowerCase())) return false;
         if (item.sale_price > maxPrice) return false;
+        if (inStockOnly && isOutOfStock(item)) return false;
         return true;
       })
       .sort((a, b) => {
         if (sortBy === 'price_low') return a.sale_price - b.sale_price;
         if (sortBy === 'price_high') return b.sale_price - a.sale_price;
         if (sortBy === 'rating') return b.rating - a.rating;
+        // Listing ids carry their creation time (hub_<timestamp>).
+        if (sortBy === 'newest') return b.id.localeCompare(a.id, undefined, { numeric: true });
         return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
       });
-  }, [hubListings, globalSearchQuery, selectedBrand, selectedUseCase, selectedCondition, selectedRam, maxPrice, sortBy]);
+  }, [hubListings, globalSearchQuery, selectedBrand, selectedUseCase, selectedCondition, selectedRam, maxPrice, sortBy, inStockOnly]);
 
   const clearAllFilters = () => {
     setSelectedBrand('all');
@@ -86,8 +101,19 @@ export const HubView: React.FC<HubViewProps> = ({
     setSelectedCondition('all');
     setSelectedRam('all');
     setMaxPrice(300000);
+    setInStockOnly(false);
     setGlobalSearchQuery('');
   };
+
+  // Active filters, each removable on its own.
+  const activeFilters: { label: string; clear: () => void }[] = [
+    ...(selectedBrand !== 'all' ? [{ label: selectedBrand, clear: () => setSelectedBrand('all') }] : []),
+    ...(selectedUseCase !== 'all' ? [{ label: selectedUseCase, clear: () => setSelectedUseCase('all') }] : []),
+    ...(selectedCondition !== 'all' ? [{ label: selectedCondition, clear: () => setSelectedCondition('all') }] : []),
+    ...(selectedRam !== 'all' ? [{ label: `${selectedRam} RAM`, clear: () => setSelectedRam('all') }] : []),
+    ...(maxPrice < 300000 ? [{ label: `Under ${formatPKR(maxPrice)}`, clear: () => setMaxPrice(300000) }] : []),
+    ...(inStockOnly ? [{ label: 'In stock only', clear: () => setInStockOnly(false) }] : []),
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -96,7 +122,7 @@ export const HubView: React.FC<HubViewProps> = ({
         <div>
           <h1 className="text-xl font-extrabold font-display text-on-surface flex items-center gap-2">
             <Store className="w-5 h-5 text-steel-dark" />
-            <span>Laptop Hub</span>
+            <span>{initialBrand ? `${initialBrand} Laptops` : 'Laptop Hub'}</span>
             <span className="flex items-center gap-1 bg-copper-tint text-copper-dark text-[10px] px-2 py-0.5 rounded font-bold">
               <BadgeCheck className="w-3 h-3" /> Verified Stock
             </span>
@@ -161,6 +187,16 @@ export const HubView: React.FC<HubViewProps> = ({
               <span>Rs. 300k</span>
             </div>
           </div>
+
+          <label className="flex items-center gap-2 text-xs font-bold text-on-surface-variant cursor-pointer">
+            <input
+              type="checkbox"
+              checked={inStockOnly}
+              onChange={(e) => setInStockOnly(e.target.checked)}
+              className="accent-steel"
+            />
+            <span>In stock only</span>
+          </label>
 
           <div className="space-y-2">
             <label className="text-xs font-bold text-on-surface-variant">Primary Use-Case</label>
@@ -247,6 +283,14 @@ export const HubView: React.FC<HubViewProps> = ({
                   </button>
                 </span>
               )}
+              {activeFilters.map((f) => (
+                <span key={f.label} className="bg-steel-tint text-steel-dark px-2 py-0.5 rounded-md flex items-center gap-1">
+                  {f.label}
+                  <button onClick={f.clear} className="hover:text-error" aria-label={`Remove ${f.label} filter`}>
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -264,6 +308,7 @@ export const HubView: React.FC<HubViewProps> = ({
                   className="bg-surface-container-low border border-outline-variant text-on-surface font-semibold rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-steel"
                 >
                   <option value="featured">Featured / Best Deals</option>
+                  <option value="newest">Newest First</option>
                   <option value="price_low">Price: Low to High</option>
                   <option value="price_high">Price: High to Low</option>
                   <option value="rating">Highest Rated</option>
@@ -278,6 +323,10 @@ export const HubView: React.FC<HubViewProps> = ({
                 <label className="text-xs font-bold text-on-surface-variant block mb-1">Max Price: {formatPKR(maxPrice)}</label>
                 <input type="range" min="30000" max="300000" step="5000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-steel" />
               </div>
+              <label className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
+                <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} className="accent-steel" />
+                <span>In stock only</span>
+              </label>
               <div className="flex flex-wrap gap-1">
                 {brands.map((b) => (
                   <button key={b} onClick={() => setSelectedBrand(b)} className={`text-xs px-2 py-1 rounded ${selectedBrand === b ? 'bg-graphite text-on-graphite font-bold' : 'bg-surface-container text-on-surface-variant'}`}>
@@ -297,7 +346,7 @@ export const HubView: React.FC<HubViewProps> = ({
               </div>
               <div className="flex justify-center gap-3">
                 <button onClick={clearAllFilters} className="bg-graphite text-on-graphite text-xs font-semibold px-4 py-2 rounded-lg">Clear Filters</button>
-                <a href="https://wa.me/923016672356?text=Hi%20Apna%20Laptop%20team,%20I%20am%20looking%20for%20a%20specific%20laptop%20model" target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1.5">
+                <a href={getSupportWhatsAppLink('Hi Apna Laptop team, I am looking for a specific laptop model')} target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1.5">
                   <MessageCircle className="w-4 h-4" />
                   <span>Ask on WhatsApp</span>
                 </a>
@@ -321,13 +370,23 @@ export const HubView: React.FC<HubViewProps> = ({
                 const discount = listing.original_price && listing.original_price > listing.sale_price
                   ? Math.round((1 - listing.sale_price / listing.original_price) * 100)
                   : 0;
+                const soldOut = isOutOfStock(listing);
                 return (
                   <div
                     key={listing.id}
                     className="grid grid-cols-[56px_1fr_auto] md:grid-cols-[56px_1fr_120px_80px_110px_120px_110px] gap-3 items-center px-4 py-3 border-b border-outline-variant last:border-b-0 hover:bg-surface-container-low transition-colors"
                   >
                     <button onClick={() => navigateTo('hub_detail', { hubId: listing.id })} className="w-14 h-14 bg-white rounded border border-outline-variant overflow-hidden shrink-0 relative">
-                      <img src={listing.images[0]} alt={listing.title} className="w-full h-full object-contain p-1" />
+                      <img
+                        src={optimizeImage(listing.images[0], 160)}
+                        alt={listing.title}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = PLACEHOLDER_IMAGE;
+                        }}
+                        className={`w-full h-full object-contain p-1 ${soldOut ? 'opacity-50' : ''}`}
+                      />
                       {discount > 0 && (
                         <span className="absolute -top-1 -left-1 bg-copper text-white text-[8px] font-extrabold px-1 rounded-sm">-{discount}%</span>
                       )}
@@ -335,11 +394,18 @@ export const HubView: React.FC<HubViewProps> = ({
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <h3
-                          onClick={() => navigateTo('hub_detail', { hubId: listing.id })}
-                          className="font-semibold text-on-surface text-xs sm:text-sm truncate cursor-pointer hover:text-steel-dark"
-                        >
-                          {listing.title}
+                        <h3 className="font-semibold text-on-surface text-xs sm:text-sm truncate">
+                          {/* A real link, so search engines can follow it. */}
+                          <a
+                            href={productPath(listing)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigateTo('hub_detail', { hubId: listing.id });
+                            }}
+                            className="hover:text-steel-dark"
+                          >
+                            {listing.title}
+                          </a>
                         </h3>
                         <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold shrink-0 ${conditionBadgeClasses(listing.condition)}`}>
                           {listing.condition.split(' ')[0]}
@@ -350,6 +416,13 @@ export const HubView: React.FC<HubViewProps> = ({
                       </p>
                       <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant mt-0.5">
                         <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> {listing.rating} ({listing.reviewCount})
+                        {soldOut ? (
+                          <span className="ml-1.5 text-error font-bold">Sold out</span>
+                        ) : (
+                          listing.stock_qty <= LOW_STOCK_THRESHOLD && (
+                            <span className="ml-1.5 text-copper-dark font-bold">Only {listing.stock_qty} left</span>
+                          )
+                        )}
                       </span>
                     </div>
 
@@ -362,16 +435,32 @@ export const HubView: React.FC<HubViewProps> = ({
                       {discount > 0 && <span className="text-[10px] text-outline line-through font-mono-spec">{formatPKR(listing.original_price!)}</span>}
                     </div>
 
-                    <div className="flex md:justify-end">
-                      <a
-                        href={getHubWhatsAppLink(listing)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-whatsapp hover:bg-whatsapp-dark text-white text-[11px] font-bold px-2.5 py-1.5 rounded flex items-center gap-1"
+                    <div className="flex md:justify-end gap-1">
+                      <button
+                        onClick={() => shop.setQuickViewId(listing.id)}
+                        title="Quick view"
+                        className="hidden md:flex border border-outline-variant text-on-surface-variant hover:text-on-surface px-2 py-1.5 rounded items-center"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span className="hidden lg:inline">WhatsApp</span>
-                      </a>
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
+                      {soldOut ? (
+                        <button
+                          onClick={() => shop.setRestockFor(listing)}
+                          className="bg-primary text-on-primary text-[11px] font-bold px-2.5 py-1.5 rounded flex items-center gap-1"
+                        >
+                          <BellRing className="w-3.5 h-3.5" />
+                          <span className="hidden lg:inline">Notify me</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => shop.orderOnWhatsApp(listing)}
+                          title="Order on WhatsApp"
+                          className="bg-whatsapp hover:bg-whatsapp-dark text-white text-[11px] font-bold px-2.5 py-1.5 rounded flex items-center gap-1"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span className="hidden lg:inline">Order</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

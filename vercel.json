@@ -1,5 +1,9 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/product/:key", "destination": "/api/render?page=product&key=:key" },
+    { "source": "/laptops/:key", "destination": "/api/render?page=brand&key=:key" },
+    { "source": "/:page(shop|about|contact)", "destination": "/api/render?page=:page" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

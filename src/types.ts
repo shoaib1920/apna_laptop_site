@@ -102,7 +102,21 @@ export interface CartItem {
 
 export type PaymentMethod = 'cod' | 'bank_transfer' | 'jazzcash_easypaisa';
 
-export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'packed'
+  | 'shipped'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'cancelled'
+  | 'returned';
+
+export interface OrderStatusEvent {
+  status: OrderStatus;
+  at: string; // ISO timestamp
+  note?: string;
+}
 
 export interface OrderItem {
   listing_id: string;
@@ -138,6 +152,66 @@ export interface Order {
   tracking_number?: string;
   created_at: string;
   notes?: string;
+  // Where the order came from.
+  source?: 'website' | 'ai-chat';
+  buyer_landmark?: string;
+  delivery_type?: 'standard' | 'express';
+  discount?: number;
+  discount_code?: string;
+  points_discount?: number;
+  status_history?: OrderStatusEvent[];
+  admin_notes?: string;
+  // Normalised customer mobile (923001234567) - see utils/phone.ts.
+  phone_key?: string;
+  // Stock and loyalty bookkeeping, done by the admin as the order moves
+  // between statuses and recorded here so each step is reversed exactly once.
+  stock_deducted?: boolean;
+  points_deducted?: number;
+  points_awarded?: number;
+  // When the store last asked the customer to confirm this order on WhatsApp.
+  confirmation_requested_at?: string;
+}
+
+// Stored in Firestore `discounts/{CODE}` (code in upper case is the document id).
+export interface DiscountCode {
+  code: string;
+  type: 'percent' | 'fixed';
+  value: number; // percent (1-90) or rupees
+  minSpend: number;
+  description: string;
+  active: boolean;
+  // The one code advertised across the site (top bar, promo popup, bag...).
+  featured: boolean;
+  expiresAt?: string; // ISO date (end of that day)
+  usageLimit?: number;
+  usedCount: number;
+  createdAt: string;
+}
+
+// Stored in Firestore `backInStock/{id}`.
+export interface BackInStockRequest {
+  id: string;
+  productId: string;
+  productName: string;
+  contact: string; // WhatsApp number
+  phoneKey?: string;
+  createdAt: string;
+  notified: boolean;
+}
+
+// Stored in Firestore `abandonedCarts/{phoneKey}` - checkout details saved
+// before the order was placed.
+export interface AbandonedCart {
+  phoneKey: string;
+  name: string;
+  phone: string;
+  city: string;
+  items: { name: string; quantity: number; price: number }[];
+  total: number;
+  updatedAt: string;
+  converted: boolean;
+  orderId?: string;
+  contacted?: boolean;
 }
 
 export interface ValuationFormInputs {
