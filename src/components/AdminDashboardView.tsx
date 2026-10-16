@@ -178,7 +178,10 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   // before it is uploaded.
   const handleImageFilesPicked = (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
-    setEditQueue((prev) => [...prev, ...Array.from(fileList)]);
+    // Copy now: the FileList is live and empties when the input is reset,
+    // which can happen before React runs the state updater.
+    const files = Array.from(fileList);
+    setEditQueue((prev) => [...prev, ...files]);
   };
 
   const uploadEditedImage = async (file: File) => {
